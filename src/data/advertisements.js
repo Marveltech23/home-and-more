@@ -1,4 +1,4 @@
-// TEMPORARY mock data. Replaced by the Supabase `advertisements` table (managed from the admin dashboard).
+// Advertisements mock data
 export const advertisements = [
   {
     id: 'a1',
@@ -8,10 +8,28 @@ export const advertisements = [
     description: 'Get Amazing Discounts on Premium Furniture',
     buttonText: 'Shop Christmas Offers',
     buttonUrl: '/shop',
-    desktopImage: '/images/ads/christmas-desktop.png',
-    mobileImage: '/images/ads/christmas-mobile.png',
+    placement: 'hero_bottom',
+    desktopImage: 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=1600&q=80',
+    mobileImage: 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=800&q=80',
     startDate: '2026-11-01',
     endDate: '2026-12-31',
     isActive: true,
+    clicks: 428,
+  },
+  {
+    id: 'a2',
+    title: 'New Year',
+    subtitle: 'Living Room Makeover',
+    tagline: 'Start 2027 in Absolute Comfort',
+    description: 'Save up to 25% on luxury sectional sofas and accent chairs',
+    buttonText: 'Explore Living Room',
+    buttonUrl: '/category/sofas-seating',
+    placement: 'shop_banner',
+    desktopImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
+    mobileImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    startDate: '2026-12-26',
+    endDate: '2027-01-31',
+    isActive: false,
+    clicks: 182,
   },
 ];

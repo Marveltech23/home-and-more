@@ -1,16 +1,57 @@
-// TEMPORARY mock data. Replaced by the Supabase `site_settings` table.
-// IMPORTANT: replace the phone / WhatsApp numbers with the real business numbers.
 export const siteSettings = {
   businessName: 'Home & More Furniture',
   slogan: 'Modern Living. Better You.',
   phone: '+234 801 234 5678',
   whatsappNumber: '+2348012345678',
+  email: 'hello@homeandmorefurniture.ng',
+  address: 'Plot 1042 Ahmadu Bello Way, Central Business District, Abuja, Nigeria',
   whatsappGreeting: 'Hello Home & More Furniture, I would like to enquire about',
-  social: { facebook: '#', instagram: '#', youtube: '#' },
+  currency: '₦',
+  announcement: {
+    badge1: 'Quality Guaranteed',
+    badge2: 'Fast Delivery in Abuja',
+    badge3: 'Trusted by Thousands',
+  },
+  social: {
+    facebook: 'https://facebook.com/homeandmorefurniture',
+    instagram: 'https://instagram.com/homeandmorefurniture',
+    youtube: 'https://youtube.com/@homeandmorefurniture',
+    whatsapp: 'https://wa.me/2348012345678',
+  },
 };
 
 export const heroSlides = [
-  { id: 'h1', eyebrow: 'Modern Living. Better You.', headingStart: 'Premium Furniture for Every', headingAccent: 'Space', subtitle: 'Stylish. Durable. Affordable.', image: '/images/hero/living-room.png' },
-  { id: 'h2', eyebrow: 'Bedroom Collection', headingStart: 'Restful Bedrooms,', headingAccent: 'Beautifully Made', subtitle: 'Beds and mattresses built for comfort.', image: '/images/hero/bedroom.png' },
-  { id: 'h3', eyebrow: 'Dining Collection', headingStart: 'Gather Around', headingAccent: 'Great Design', subtitle: 'Dining sets for every home.', image: '/images/hero/dining.png' },
+  {
+    id: 'h1',
+    eyebrow: 'MODERN LIVING. BETTER YOU.',
+    headingStart: 'Premium Furniture for Every',
+    headingAccent: 'Space',
+    subtitle: 'Stylish. Durable. Affordable.',
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1400&q=80',
+    primaryCta: 'Buy via WhatsApp',
+    secondaryCta: 'Discover Collection',
+    secondaryLink: '/shop',
+  },
+  {
+    id: 'h2',
+    eyebrow: 'TIMELESS ELEGANCE',
+    headingStart: 'Restful Bedrooms,',
+    headingAccent: 'Beautifully Made',
+    subtitle: 'Luxury upholstered beds and orthopedic mattresses.',
+    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80',
+    primaryCta: 'Shop Beds',
+    secondaryCta: 'View Mattresses',
+    secondaryLink: '/category/beds-mattresses',
+  },
+  {
+    id: 'h3',
+    eyebrow: 'THE ART OF GATHERING',
+    headingStart: 'Gather Around',
+    headingAccent: 'Great Design',
+    subtitle: 'Solid teak and walnut dining sets for family feasts.',
+    image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1400&q=80',
+    primaryCta: 'Explore Dining',
+    secondaryCta: 'Dining Guide',
+    secondaryLink: '/category/dining-sets',
+  },
 ];
