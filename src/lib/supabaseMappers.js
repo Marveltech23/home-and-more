@@ -293,3 +293,34 @@ export function mapSettingsToDb(s) {
     updated_at: new Date().toISOString(),
   };
 }
+
+// ==========================================
+// 8. MEDIA MAPPER
+// ==========================================
+export function mapMediaFromDb(m) {
+  if (!m) return null;
+  return {
+    id: m.id,
+    name: m.name || 'Photo.jpg',
+    url: m.url || '',
+    type: m.type || 'image/jpeg',
+    size: m.size || '1.2 MB',
+    dimensions: m.dimensions || '1920x1080',
+    category: m.category || 'Products',
+    createdAt: m.created_at || new Date().toISOString(),
+  };
+}
+
+export function mapMediaToDb(m) {
+  if (!m) return {};
+  const out = {};
+  if (m.id !== undefined) out.id = m.id;
+  if (m.name !== undefined) out.name = m.name;
+  if (m.url !== undefined) out.url = m.url;
+  if (m.type !== undefined) out.type = m.type;
+  if (m.size !== undefined) out.size = m.size;
+  if (m.dimensions !== undefined) out.dimensions = m.dimensions;
+  if (m.category !== undefined) out.category = m.category;
+  out.created_at = m.createdAt || m.created_at || new Date().toISOString();
+  return out;
+}

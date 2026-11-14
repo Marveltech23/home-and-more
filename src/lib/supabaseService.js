@@ -14,6 +14,8 @@ import {
   mapEnquiryToDb,
   mapSettingsFromDb,
   mapSettingsToDb,
+  mapMediaFromDb,
+  mapMediaToDb,
 } from './supabaseMappers.js';
 
 /**
@@ -77,7 +79,7 @@ export async function fetchAllSupabaseData() {
     }
 
     if (mediaRes.data) {
-      result.media = mediaRes.data;
+      result.media = mediaRes.data.map(mapMediaFromDb);
     }
 
     return result;
@@ -238,5 +240,27 @@ export async function syncSettingsToDb(settings) {
     await supabase.from('site_settings').upsert(payload, { onConflict: 'id' });
   } catch (e) {
     console.warn('Supabase settings upsert error:', e);
+  }
+}
+
+// ==========================================
+// MEDIA DB OPERATIONS
+// ==========================================
+export async function syncMediaToDb(mediaItem) {
+  if (!isSupabaseConfigured || !supabase) return;
+  try {
+    const payload = mapMediaToDb(mediaItem);
+    await supabase.from('media').upsert(payload, { onConflict: 'id' });
+  } catch (e) {
+    console.warn('Supabase media upsert error:', e);
+  }
+}
+
+export async function deleteMediaFromDb(id) {
+  if (!isSupabaseConfigured || !supabase) return;
+  try {
+    await supabase.from('media').delete().eq('id', id);
+  } catch (e) {
+    console.warn('Supabase media delete error:', e);
   }
 }

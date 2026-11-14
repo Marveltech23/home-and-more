@@ -26,7 +26,19 @@ import {
   updateEnquiryStatusInDb,
   deleteEnquiryFromDb,
   syncSettingsToDb,
+  syncMediaToDb,
+  deleteMediaFromDb,
 } from '../lib/supabaseService';
+import {
+  mapCategoryFromDb,
+  mapProductFromDb,
+  mapAdFromDb,
+  mapBlogFromDb,
+  mapTestimonialFromDb,
+  mapEnquiryFromDb,
+  mapSettingsFromDb,
+  mapMediaFromDb,
+} from '../lib/supabaseMappers';
 
 const StoreContext = createContext(null);
 
@@ -163,26 +175,118 @@ export function StoreProvider({ children }) {
 
     const channel = supabase
       .channel('public:realtime_store')
-      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
-        fetchAllSupabaseData().then((remoteData) => {
-          if (!remoteData) return;
-          if (remoteData.settings) setSettings(remoteData.settings);
-          if (remoteData.categories) setCategories(remoteData.categories);
-          if (remoteData.products) setProducts(remoteData.products);
-          if (remoteData.advertisements) setAdvertisements(remoteData.advertisements);
-          if (remoteData.blogs) setBlogs(remoteData.blogs);
-          if (remoteData.testimonials) setTestimonials(remoteData.testimonials);
-          if (remoteData.enquiries) setEnquiries(remoteData.enquiries);
-          if (remoteData.media) setMedia(remoteData.media);
-          notifyChange();
-        });
+      .on('postgres_changes', { event: '*', schema: 'public' }, (payload) => {
+        const table = payload.table;
+
+        if (table === 'categories') {
+          supabase
+            .from('categories')
+            .select('*')
+            .order('display_order', { ascending: true })
+            .then(({ data }) => {
+              if (data && data.length > 0) {
+                const mapped = data.map(mapCategoryFromDb);
+                setCategories((prev) => {
+                  const ids = new Set(mapped.map((c) => c.id));
+                  const pendingLocal = prev.filter((c) => !ids.has(c.id));
+                  const combined = [...pendingLocal, ...mapped];
+                  safeSetItem(STORAGE_KEYS.CATEGORIES, combined);
+                  return combined;
+                });
+              }
+            });
+        } else if (table === 'media') {
+          supabase
+            .from('media')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .then(({ data }) => {
+              if (data) {
+                const mapped = data.map(mapMediaFromDb);
+                setMedia(mapped);
+                safeSetItem(STORAGE_KEYS.MEDIA, mapped);
+              }
+            });
+        } else if (table === 'products') {
+          supabase
+            .from('products')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .then(({ data }) => {
+              if (data && data.length > 0) {
+                const mapped = data.map(mapProductFromDb);
+                setProducts(mapped);
+                safeSetItem(STORAGE_KEYS.PRODUCTS, mapped);
+              }
+            });
+        } else if (table === 'advertisements') {
+          supabase
+            .from('advertisements')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .then(({ data }) => {
+              if (data && data.length > 0) {
+                const mapped = data.map(mapAdFromDb);
+                setAdvertisements(mapped);
+                safeSetItem(STORAGE_KEYS.ADS, mapped);
+              }
+            });
+        } else if (table === 'blogs') {
+          supabase
+            .from('blogs')
+            .select('*')
+            .order('published_at', { ascending: false })
+            .then(({ data }) => {
+              if (data && data.length > 0) {
+                const mapped = data.map(mapBlogFromDb);
+                setBlogs(mapped);
+                safeSetItem(STORAGE_KEYS.BLOGS, mapped);
+              }
+            });
+        } else if (table === 'site_settings') {
+          supabase
+            .from('site_settings')
+            .select('*')
+            .limit(1)
+            .then(({ data }) => {
+              if (data && data[0]) {
+                const mapped = mapSettingsFromDb(data[0]);
+                setSettings(mapped);
+                safeSetItem(STORAGE_KEYS.SETTINGS, mapped);
+              }
+            });
+        } else if (table === 'testimonials') {
+          supabase
+            .from('testimonials')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .then(({ data }) => {
+              if (data && data.length > 0) {
+                const mapped = data.map(mapTestimonialFromDb);
+                setTestimonials(mapped);
+                safeSetItem(STORAGE_KEYS.TESTIMONIALS, mapped);
+              }
+            });
+        } else if (table === 'enquiries') {
+          supabase
+            .from('enquiries')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .then(({ data }) => {
+              if (data) {
+                const mapped = data.map(mapEnquiryFromDb);
+                setEnquiries(mapped);
+                safeSetItem(STORAGE_KEYS.ENQUIRIES, mapped);
+              }
+            });
+        }
       })
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [notifyChange]);
+  }, []);
 
   // Listen for updates from other tabs (Admin -> Storefront or Storefront -> Admin)
   useEffect(() => {
@@ -304,7 +408,11 @@ export function StoreProvider({ children }) {
           'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
       };
 
-      setCategories((prev) => [...prev, newCategory]);
+      setCategories((prev) => {
+        const next = [newCategory, ...prev.filter((c) => c.id !== newCategory.id && c.slug !== newCategory.slug)];
+        safeSetItem(STORAGE_KEYS.CATEGORIES, next);
+        return next;
+      });
       syncCategoryToDb(newCategory);
       notifyChange();
       addToast({ message: `Category "${newCategory.name}" created!`, type: 'success' });
@@ -489,16 +597,18 @@ export function StoreProvider({ children }) {
     (item) => {
       const newItem = {
         ...item,
-        id: `m_${Date.now()}`,
-        createdAt: new Date().toISOString().split('T')[0],
+        id: item.id || `m_${Date.now()}`,
         type: item.type || 'image/jpeg',
         size: item.size || '1.5 MB',
         dimensions: item.dimensions || '1920x1080',
+        createdAt: new Date().toISOString(),
       };
-      setMedia((prev) => [newItem, ...prev]);
-      if (isSupabaseConfigured && supabase) {
-        supabase.from('media').upsert(newItem).catch(console.warn);
-      }
+      setMedia((prev) => {
+        const next = [newItem, ...prev.filter((m) => m.id !== newItem.id)];
+        safeSetItem(STORAGE_KEYS.MEDIA, next);
+        return next;
+      });
+      syncMediaToDb(newItem);
       notifyChange();
       addToast({ message: `Image "${newItem.name}" added to Media Library!`, type: 'success' });
       return newItem;
@@ -508,10 +618,12 @@ export function StoreProvider({ children }) {
 
   const deleteMedia = useCallback(
     (id) => {
-      setMedia((prev) => prev.filter((m) => m.id !== id));
-      if (isSupabaseConfigured && supabase) {
-        supabase.from('media').delete().eq('id', id).catch(console.warn);
-      }
+      setMedia((prev) => {
+        const next = prev.filter((m) => m.id !== id);
+        safeSetItem(STORAGE_KEYS.MEDIA, next);
+        return next;
+      });
+      deleteMediaFromDb(id);
       notifyChange();
       addToast({ message: 'Image deleted from Media Library', type: 'info' });
     },
