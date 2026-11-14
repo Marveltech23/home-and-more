@@ -63,6 +63,26 @@ export default function WebsiteSettings() {
   const [instagram, setInstagram] = useState(settings.social?.instagram || 'https://instagram.com');
   const [youtube, setYoutube] = useState(settings.social?.youtube || 'https://youtube.com');
 
+  // Sync form inputs when settings are hydrated from Supabase
+  useEffect(() => {
+    if (settings) {
+      if (settings.businessName) setBusinessName(settings.businessName);
+      if (settings.slogan) setSlogan(settings.slogan);
+      if (settings.logoSubtitle !== undefined) setLogoSubtitle(settings.logoSubtitle);
+      if (settings.logoUrl !== undefined) setLogoUrl(settings.logoUrl);
+      if (settings.logoLightUrl !== undefined) setLogoLightUrl(settings.logoLightUrl);
+      if (settings.logoDisplayMode) setLogoDisplayMode(settings.logoDisplayMode);
+      if (settings.phone) setPhone(settings.phone);
+      if (settings.whatsappNumber) setWhatsappNumber(settings.whatsappNumber);
+      if (settings.whatsappGreeting) setWhatsappGreeting(settings.whatsappGreeting);
+      if (settings.email) setEmail(settings.email);
+      if (settings.address) setAddress(settings.address);
+      if (settings.social?.facebook) setFacebook(settings.social.facebook);
+      if (settings.social?.instagram) setInstagram(settings.social.instagram);
+      if (settings.social?.youtube) setYoutube(settings.social.youtube);
+    }
+  }, [settings]);
+
   const handleResetLogo = () => {
     setLogoUrl('');
     setLogoLightUrl('');

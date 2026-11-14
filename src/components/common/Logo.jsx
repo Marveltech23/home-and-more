@@ -112,17 +112,17 @@ export default function Logo({
           className={`${iconSizes[size]} shrink-0 relative flex items-center justify-center rounded-xl overflow-hidden shadow-xs transition-transform duration-200 group-hover:scale-105 ${
             hasCustomLogo
               ? isLight
-                ? 'bg-white/10 backdrop-blur-xs border border-white/20'
-                : 'bg-[#FFFAF5] border border-[#F0DFD1]'
+                ? 'bg-white/10 backdrop-blur-xs border border-white/20 p-0.5'
+                : 'bg-white border border-[#F0DFD1] p-0.5'
               : 'bg-gradient-to-br from-[#F36B0A] to-[#D94D00] text-white'
           }`}
         >
           {hasCustomLogo ? (
             <img
               src={activeLogoUrl}
-              alt=""
+              alt={businessName}
               onError={() => setImageError(true)}
-              className="w-full h-full object-contain p-1"
+              className="w-full h-full object-contain rounded-lg"
             />
           ) : (
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-5/6 h-5/6">

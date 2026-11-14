@@ -9,26 +9,28 @@ export default function SafeImage({
   fallbackSrc = null,
   showPlaceholderIcon = true,
   loading = 'lazy',
+  fit = 'cover', // 'cover' | 'contain'
   ...props
 }) {
+  const isDataUrl = typeof src === 'string' && src.startsWith('data:');
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // Base64 images are already in-memory, so do not delay them with loading state
+  const [isLoading, setIsLoading] = useState(!isDataUrl);
 
   // Reset error state if src changes
   useEffect(() => {
     setHasError(false);
-    setIsLoading(true);
-  }, [src]);
+    setIsLoading(!isDataUrl);
+  }, [src, isDataUrl]);
 
   if (!src || hasError) {
     if (fallbackSrc && !hasError) {
-      // try fallback
       return (
         <img
           src={fallbackSrc}
           alt={alt}
-          loading={loading}
-          className={className}
+          loading={isDataUrl ? undefined : loading}
+          className={`${className} object-${fit}`}
           onError={() => setHasError(true)}
           {...props}
         />
@@ -59,13 +61,13 @@ export default function SafeImage({
       <img
         src={src}
         alt={alt}
-        loading={loading}
+        loading={isDataUrl ? undefined : loading}
         onLoad={() => setIsLoading(false)}
         onError={() => {
           setIsLoading(false);
           setHasError(true);
         }}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
+        className={`w-full h-full object-${fit} transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         {...props}

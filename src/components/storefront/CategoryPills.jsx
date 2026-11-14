@@ -6,9 +6,9 @@ import { useStore } from '../../context/StoreContext';
 export default function CategoryPills() {
   const { categories } = useStore();
 
-  const activeCategories = categories
-    .filter((c) => c.isActive)
-    .sort((a, b) => (a.displayOrder || 99) - (b.displayOrder || 99));
+  const activeCategories = (categories || [])
+    .filter((c) => c.isActive !== false)
+    .sort((a, b) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
   return (
     <section className="container-page mt-14 sm:mt-16" aria-label="Shop by Category">
@@ -18,11 +18,11 @@ export default function CategoryPills() {
         actionTo="/shop"
       />
 
-      {/* Responsive Horizontal / Grid Scroll */}
-      <div className="grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-3 sm:gap-4">
+      {/* Responsive Grid for Any Number of Categories */}
+      <div className="grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4">
         {activeCategories.map((category) => (
           <Link
-            key={category.id}
+            key={category.id || category.slug}
             to={`/category/${category.slug}`}
             className="group flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1"
           >
@@ -31,8 +31,9 @@ export default function CategoryPills() {
               <SafeImage
                 src={category.image}
                 alt={category.name}
+                fit="contain"
                 aspectRatio="aspect-square"
-                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                className="w-full h-full transition-transform duration-300 group-hover:scale-110"
               />
             </div>
 
