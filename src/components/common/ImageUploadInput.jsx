@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { Upload, Image as ImageIcon, X, Check, Laptop, Link2, RefreshCw } from 'lucide-react';
+import { Upload, Image as ImageIcon, X, Check, Laptop, Link2, RefreshCw, Loader2 } from 'lucide-react';
+import { compressImage } from '../../utils/imageCompressor';
 import { useToast } from './Toast';
 
 export default function ImageUploadInput({
@@ -17,10 +18,11 @@ export default function ImageUploadInput({
 
   const [mode, setMode] = useState('device'); // 'device' | 'url'
   const [dragActive, setDragActive] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [fileName, setFileName] = useState('');
   const [fileSize, setFileSize] = useState('');
 
-  const processFile = (file) => {
+  const processFile = async (file) => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
@@ -28,21 +30,29 @@ export default function ImageUploadInput({
       return;
     }
 
-    // Read file size
-    const sizeInMb = (file.size / (1024 * 1024)).toFixed(2);
-    setFileName(file.name);
-    setFileSize(`${sizeInMb} MB`);
+    setIsProcessing(true);
+    try {
+      // Compress and optimize image to fit effortlessly in localStorage and load fast
+      const compressedDataUrl = await compressImage(file, 1400, 0.82);
+      const estSizeKb = Math.round((compressedDataUrl.length * 3) / 4 / 1024);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      onChange(dataUrl, file);
-      addToast({ message: `Image "${file.name}" loaded from device!`, type: 'success' });
-    };
-    reader.onerror = () => {
-      addToast({ message: 'Failed to read image from device', type: 'error' });
-    };
-    reader.readAsDataURL(file);
+      setFileName(file.name);
+      setFileSize(`${estSizeKb} KB (Optimized)`);
+      onChange(compressedDataUrl, file);
+      addToast({ message: `Image "${file.name}" ready and optimized!`, type: 'success' });
+    } catch (err) {
+      console.warn('Compression fallback', err);
+      // Fallback to FileReader if canvas compression encounters an issue
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        onChange(e.target.result, file);
+        setFileName(file.name);
+        addToast({ message: `Image "${file.name}" loaded!`, type: 'success' });
+      };
+      reader.readAsDataURL(file);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -129,10 +139,15 @@ export default function ImageUploadInput({
             className="hidden"
           />
 
-          {value ? (
+          {isProcessing ? (
+            <div className="border border-[#F0DFD1] rounded-2xl p-6 text-center bg-[#FFFAF5] flex items-center justify-center gap-3">
+              <Loader2 className="w-5 h-5 text-[#F36B0A] animate-spin" />
+              <span className="text-xs font-semibold text-[#24150F]">Optimizing image from device...</span>
+            </div>
+          ) : value ? (
             /* Image loaded preview */
             <div className="relative rounded-2xl overflow-hidden border border-[#F0DFD1] bg-[#FFFAF5] p-2.5 flex items-center gap-4">
-              <div className={`w-24 h-20 rounded-xl overflow-hidden shrink-0 border border-[#F0DFD1] bg-white`}>
+              <div className="w-24 h-20 rounded-xl overflow-hidden shrink-0 border border-[#F0DFD1] bg-white">
                 <img src={value} alt="Preview" className="w-full h-full object-cover" />
               </div>
 

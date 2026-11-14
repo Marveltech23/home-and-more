@@ -11,26 +11,41 @@ import { useToast } from '../components/common/Toast';
 
 const StoreContext = createContext(null);
 
+// Shared localStorage keys (shared across all tabs on this origin)
 const STORAGE_KEYS = {
-  PRODUCTS: 'hm_store_products_v1',
-  CATEGORIES: 'hm_store_categories_v1',
-  ADS: 'hm_store_ads_v1',
-  BLOGS: 'hm_store_blogs_v1',
-  MEDIA: 'hm_store_media_v1',
-  ENQUIRIES: 'hm_store_enquiries_v1',
-  TESTIMONIALS: 'hm_store_testimonials_v1',
-  SETTINGS: 'hm_store_settings_v1',
-  HERO: 'hm_store_hero_v1',
+  PRODUCTS: 'hm_store_products_v2',
+  CATEGORIES: 'hm_store_categories_v2',
+  ADS: 'hm_store_ads_v2',
+  BLOGS: 'hm_store_blogs_v2',
+  MEDIA: 'hm_store_media_v2',
+  ENQUIRIES: 'hm_store_enquiries_v2',
+  TESTIMONIALS: 'hm_store_testimonials_v2',
+  SETTINGS: 'hm_store_settings_v2',
+  HERO: 'hm_store_hero_v2',
 };
 
 function getStoredOr(key, fallback) {
   try {
-    const val = sessionStorage.getItem(key);
+    const val = localStorage.getItem(key);
     return val ? JSON.parse(val) : fallback;
-  } catch {
+  } catch (e) {
+    console.warn(`Error reading ${key} from storage:`, e);
     return fallback;
   }
 }
+
+function safeSetItem(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.warn(`Storage quota exceeded or error writing ${key}:`, e);
+  }
+}
+
+// Cross-tab broadcast channel for instantaneous sync between Admin and Storefront tabs
+const syncChannel = typeof window !== 'undefined' && 'BroadcastChannel' in window
+  ? new BroadcastChannel('hm_store_broadcast_channel')
+  : null;
 
 export function StoreProvider({ children }) {
   const { addToast } = useToast();
@@ -45,22 +60,61 @@ export function StoreProvider({ children }) {
   const [settings, setSettings] = useState(() => getStoredOr(STORAGE_KEYS.SETTINGS, initialSettings));
   const [heroSlides, setHeroSlides] = useState(() => getStoredOr(STORAGE_KEYS.HERO, initialHeroSlides));
 
-  // Sync to sessionStorage so navigation and refresh in same session keeps edits
+  // Sync to localStorage
   useEffect(() => {
-    try {
-      sessionStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(products));
-      sessionStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
-      sessionStorage.setItem(STORAGE_KEYS.ADS, JSON.stringify(advertisements));
-      sessionStorage.setItem(STORAGE_KEYS.BLOGS, JSON.stringify(blogs));
-      sessionStorage.setItem(STORAGE_KEYS.MEDIA, JSON.stringify(media));
-      sessionStorage.setItem(STORAGE_KEYS.ENQUIRIES, JSON.stringify(enquiries));
-      sessionStorage.setItem(STORAGE_KEYS.TESTIMONIALS, JSON.stringify(testimonials));
-      sessionStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-      sessionStorage.setItem(STORAGE_KEYS.HERO, JSON.stringify(heroSlides));
-    } catch (e) {
-      console.warn('Storage sync issue:', e);
-    }
+    safeSetItem(STORAGE_KEYS.PRODUCTS, products);
+    safeSetItem(STORAGE_KEYS.CATEGORIES, categories);
+    safeSetItem(STORAGE_KEYS.ADS, advertisements);
+    safeSetItem(STORAGE_KEYS.BLOGS, blogs);
+    safeSetItem(STORAGE_KEYS.MEDIA, media);
+    safeSetItem(STORAGE_KEYS.ENQUIRIES, enquiries);
+    safeSetItem(STORAGE_KEYS.TESTIMONIALS, testimonials);
+    safeSetItem(STORAGE_KEYS.SETTINGS, settings);
+    safeSetItem(STORAGE_KEYS.HERO, heroSlides);
   }, [products, categories, advertisements, blogs, media, enquiries, testimonials, settings, heroSlides]);
+
+  // Reload data from localStorage (used when another tab broadcasts an update)
+  const reloadFromStorage = useCallback(() => {
+    setProducts(getStoredOr(STORAGE_KEYS.PRODUCTS, initialProducts));
+    setCategories(getStoredOr(STORAGE_KEYS.CATEGORIES, initialCategories));
+    setAdvertisements(getStoredOr(STORAGE_KEYS.ADS, initialAds));
+    setBlogs(getStoredOr(STORAGE_KEYS.BLOGS, initialBlogs));
+    setMedia(getStoredOr(STORAGE_KEYS.MEDIA, initialMedia));
+    setEnquiries(getStoredOr(STORAGE_KEYS.ENQUIRIES, initialEnquiries));
+    setTestimonials(getStoredOr(STORAGE_KEYS.TESTIMONIALS, initialTestimonials));
+    setSettings(getStoredOr(STORAGE_KEYS.SETTINGS, initialSettings));
+    setHeroSlides(getStoredOr(STORAGE_KEYS.HERO, initialHeroSlides));
+  }, []);
+
+  // Listen for updates from other tabs (Admin -> Storefront or Storefront -> Admin)
+  useEffect(() => {
+    if (syncChannel) {
+      const handleBroadcast = (e) => {
+        if (e.data === 'sync_store') {
+          reloadFromStorage();
+        }
+      };
+      syncChannel.addEventListener('message', handleBroadcast);
+      return () => syncChannel.removeEventListener('message', handleBroadcast);
+    }
+  }, [reloadFromStorage]);
+
+  // Fallback native storage event listener
+  useEffect(() => {
+    const handleStorageEvent = (e) => {
+      if (Object.values(STORAGE_KEYS).includes(e.key)) {
+        reloadFromStorage();
+      }
+    };
+    window.addEventListener('storage', handleStorageEvent);
+    return () => window.removeEventListener('storage', handleStorageEvent);
+  }, [reloadFromStorage]);
+
+  const notifyChange = useCallback(() => {
+    try {
+      syncChannel?.postMessage('sync_store');
+    } catch {}
+  }, []);
 
   // PRODUCT ACTIONS
   const addProduct = useCallback((productData) => {
@@ -78,9 +132,10 @@ export function StoreProvider({ children }) {
       gallery: productData.gallery?.length ? productData.gallery : [productData.image],
     };
     setProducts((prev) => [newProduct, ...prev]);
+    notifyChange();
     addToast({ message: `Product "${newProduct.name}" added successfully!`, type: 'success' });
     return newProduct;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const updateProduct = useCallback((id, updates) => {
     setProducts((prev) =>
@@ -91,13 +146,15 @@ export function StoreProvider({ children }) {
         return { ...p, ...updates, price, discountPrice };
       })
     );
+    notifyChange();
     addToast({ message: 'Product updated successfully!', type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteProduct = useCallback((id) => {
     setProducts((prev) => prev.filter((p) => p.id !== id));
+    notifyChange();
     addToast({ message: 'Product deleted from store', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // CATEGORY ACTIONS
   const addCategory = useCallback((categoryData) => {
@@ -111,19 +168,22 @@ export function StoreProvider({ children }) {
       image: categoryData.image || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
     };
     setCategories((prev) => [...prev, newCategory]);
+    notifyChange();
     addToast({ message: `Category "${newCategory.name}" created!`, type: 'success' });
     return newCategory;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const updateCategory = useCallback((id, updates) => {
     setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates } : c)));
+    notifyChange();
     addToast({ message: 'Category updated successfully!', type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteCategory = useCallback((id) => {
     setCategories((prev) => prev.filter((c) => c.id !== id));
+    notifyChange();
     addToast({ message: 'Category removed', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // ADVERTISEMENT ACTIONS
   const addAd = useCallback((adData) => {
@@ -137,26 +197,30 @@ export function StoreProvider({ children }) {
       mobileImage: adData.mobileImage || adData.desktopImage || 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=800&q=80',
     };
     setAdvertisements((prev) => [newAd, ...prev]);
+    notifyChange();
     addToast({ message: `Advertisement "${newAd.title}" published!`, type: 'success' });
     return newAd;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const updateAd = useCallback((id, updates) => {
     setAdvertisements((prev) => prev.map((a) => (a.id === id ? { ...a, ...updates } : a)));
+    notifyChange();
     addToast({ message: 'Advertisement updated!', type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteAd = useCallback((id) => {
     setAdvertisements((prev) => prev.filter((a) => a.id !== id));
+    notifyChange();
     addToast({ message: 'Advertisement deleted', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const toggleAdStatus = useCallback((id) => {
     setAdvertisements((prev) =>
       prev.map((a) => (a.id === id ? { ...a, isActive: !a.isActive } : a))
     );
+    notifyChange();
     addToast({ message: 'Advertisement status updated', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // BLOG ACTIONS
   const addBlog = useCallback((blogData) => {
@@ -171,19 +235,22 @@ export function StoreProvider({ children }) {
       readTime: blogData.readTime || '4 min read',
     };
     setBlogs((prev) => [newBlog, ...prev]);
+    notifyChange();
     addToast({ message: `Article "${newBlog.title}" published!`, type: 'success' });
     return newBlog;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const updateBlog = useCallback((id, updates) => {
     setBlogs((prev) => prev.map((b) => (b.id === id ? { ...b, ...updates } : b)));
+    notifyChange();
     addToast({ message: 'Blog article updated!', type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteBlog = useCallback((id) => {
     setBlogs((prev) => prev.filter((b) => b.id !== id));
+    notifyChange();
     addToast({ message: 'Blog article deleted', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // MEDIA ACTIONS
   const addMedia = useCallback((item) => {
@@ -196,14 +263,16 @@ export function StoreProvider({ children }) {
       dimensions: item.dimensions || '1920x1080',
     };
     setMedia((prev) => [newItem, ...prev]);
-    addToast({ message: `Image "${newItem.name}" uploaded to Media Library!`, type: 'success' });
+    notifyChange();
+    addToast({ message: `Image "${newItem.name}" added to Media Library!`, type: 'success' });
     return newItem;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteMedia = useCallback((id) => {
     setMedia((prev) => prev.filter((m) => m.id !== id));
+    notifyChange();
     addToast({ message: 'Image deleted from Media Library', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // ENQUIRY ACTIONS
   const addEnquiry = useCallback((enquiryData) => {
@@ -214,9 +283,10 @@ export function StoreProvider({ children }) {
       status: 'pending',
     };
     setEnquiries((prev) => [newEnquiry, ...prev]);
+    notifyChange();
     addToast({ message: 'Enquiry sent successfully! Our representative will contact you.', type: 'success' });
     return newEnquiry;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const updateEnquiryStatus = useCallback((id, status, notes) => {
     setEnquiries((prev) =>
@@ -229,13 +299,15 @@ export function StoreProvider({ children }) {
         };
       })
     );
+    notifyChange();
     addToast({ message: `Enquiry status updated to ${status}`, type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteEnquiry = useCallback((id) => {
     setEnquiries((prev) => prev.filter((e) => e.id !== id));
+    notifyChange();
     addToast({ message: 'Enquiry removed', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // TESTIMONIAL ACTIONS
   const addTestimonial = useCallback((data) => {
@@ -248,32 +320,37 @@ export function StoreProvider({ children }) {
       photo: data.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     };
     setTestimonials((prev) => [newTestimonial, ...prev]);
+    notifyChange();
     addToast({ message: 'Testimonial added!', type: 'success' });
     return newTestimonial;
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const updateTestimonial = useCallback((id, updates) => {
     setTestimonials((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
+    notifyChange();
     addToast({ message: 'Testimonial updated!', type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const deleteTestimonial = useCallback((id) => {
     setTestimonials((prev) => prev.filter((t) => t.id !== id));
+    notifyChange();
     addToast({ message: 'Testimonial deleted', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   const toggleTestimonialPublish = useCallback((id) => {
     setTestimonials((prev) =>
       prev.map((t) => (t.id === id ? { ...t, isPublished: !t.isPublished } : t))
     );
+    notifyChange();
     addToast({ message: 'Testimonial status toggled', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // SETTINGS ACTION
   const updateSettings = useCallback((newSettings) => {
     setSettings((prev) => ({ ...prev, ...newSettings }));
+    notifyChange();
     addToast({ message: 'Website settings saved!', type: 'success' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // RESET TO DEFAULT
   const resetToDefaults = useCallback(() => {
@@ -286,9 +363,10 @@ export function StoreProvider({ children }) {
     setTestimonials(initialTestimonials);
     setSettings(initialSettings);
     setHeroSlides(initialHeroSlides);
-    sessionStorage.clear();
+    Object.values(STORAGE_KEYS).forEach((k) => localStorage.removeItem(k));
+    notifyChange();
     addToast({ message: 'All demo data has been reset to defaults', type: 'info' });
-  }, [addToast]);
+  }, [addToast, notifyChange]);
 
   // GETTERS & DERIVED DATA
   const activeAds = useMemo(() => advertisements.filter((a) => a.isActive), [advertisements]);
@@ -360,6 +438,7 @@ export function StoreProvider({ children }) {
         // Settings
         updateSettings,
         resetToDefaults,
+        reloadFromStorage,
       }}
     >
       {children}

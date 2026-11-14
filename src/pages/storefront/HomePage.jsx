@@ -4,6 +4,7 @@ import CategoryPills from '../../components/storefront/CategoryPills';
 import PopularPicks from '../../components/storefront/PopularPicks';
 import FeaturedCollections from '../../components/storefront/FeaturedCollections';
 import BenefitsStrip from '../../components/storefront/BenefitsStrip';
+import HomeBlogSection from '../../components/storefront/HomeBlogSection';
 import Testimonials from '../../components/storefront/Testimonials';
 import NewsletterSection from '../../components/storefront/NewsletterSection';
 
@@ -28,10 +29,13 @@ export default function HomePage() {
       {/* 6. Why Choose Us Strip */}
       <BenefitsStrip />
 
-      {/* 7. Customer Testimonials */}
+      {/* 7. Latest From Our Journal / Blog Posts */}
+      <HomeBlogSection />
+
+      {/* 8. Customer Testimonials */}
       <Testimonials />
 
-      {/* 8. Newsletter Section */}
+      {/* 9. Newsletter Section */}
       <NewsletterSection />
     </div>
   );
