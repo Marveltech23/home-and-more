@@ -1,6 +1,10 @@
 export const siteSettings = {
-  businessName: 'Home & More Furniture',
+  businessName: 'Home & More',
   slogan: 'Modern Living. Better You.',
+  logoSubtitle: 'FURNITURE',
+  logoUrl: '', // Custom logo image URL or base64 data
+  logoLightUrl: '', // Optional white/light logo for dark backgrounds (footer/sidebar)
+  logoDisplayMode: 'both', // 'both' (icon/image + text) | 'image_only' (image replaces everything)
   phone: '+234 801 234 5678',
   whatsappNumber: '+2348012345678',
   email: 'hello@homeandmorefurniture.ng',
