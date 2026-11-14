@@ -16,6 +16,7 @@ import {
 import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
 
@@ -424,36 +425,15 @@ export default function ProductManagement() {
             </div>
           </div>
 
-          {/* Image URL & Preset Picker */}
-          <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Image URL *
-            </label>
-            <input
-              type="url"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              required
-            />
-            <div className="mt-2">
-              <span className="text-[11px] font-semibold text-[#82746B]">Or select from catalog presets:</span>
-              <div className="flex gap-2 overflow-x-auto pt-1 pb-1">
-                {PRESET_IMAGES.map((img, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setImage(img)}
-                    className={`shrink-0 w-12 h-12 rounded-xl overflow-hidden border-2 transition-all ${
-                      image === img ? 'border-[#F36B0A] scale-105' : 'border-[#F0DFD1] opacity-70'
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+          {/* Product Primary Image (Device Upload or Presets) */}
+          <ImageUploadInput
+            label="Product Photo"
+            helpText="Upload high-res photo from your device, or choose from catalog presets."
+            value={image}
+            onChange={(newVal) => setImage(newVal)}
+            presets={PRESET_IMAGES}
+            required
+          />
 
           {/* Description */}
           <div>

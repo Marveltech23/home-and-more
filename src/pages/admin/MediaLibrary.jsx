@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Upload, Search, Trash2, Copy, Check, Eye, Image as ImageIcon, X } from 'lucide-react';
+import { Upload, Search, Trash2, Copy, Check, Eye, Image as ImageIcon, X, Plus } from 'lucide-react';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 import { useToast } from '../../components/common/Toast';
 
@@ -17,6 +18,7 @@ export default function MediaLibrary() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadName, setUploadName] = useState('');
   const [uploadUrl, setUploadUrl] = useState('');
+  const [uploadSize, setUploadSize] = useState('1.2 MB');
   const [uploadCategory, setUploadCategory] = useState('Sofas');
 
   // Delete State
@@ -29,15 +31,29 @@ export default function MediaLibrary() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handleImageSelected = (dataUrl, file) => {
+    setUploadUrl(dataUrl);
+    if (file) {
+      if (!uploadName) {
+        setUploadName(file.name);
+      }
+      const mb = (file.size / (1024 * 1024)).toFixed(2);
+      setUploadSize(`${mb} MB`);
+    }
+  };
+
   const handleUploadSubmit = (e) => {
     e.preventDefault();
-    if (!uploadName.trim() || !uploadUrl.trim()) return;
+    if (!uploadUrl.trim()) {
+      addToast({ message: 'Please select an image file to upload', type: 'error' });
+      return;
+    }
 
     addMedia({
-      name: uploadName.trim(),
+      name: uploadName.trim() || 'Uploaded Furniture Photo.jpg',
       url: uploadUrl.trim(),
       category: uploadCategory,
-      size: `${(Math.random() * 2 + 0.8).toFixed(1)} MB`,
+      size: uploadSize,
       dimensions: '1920x1080',
     });
 
@@ -220,12 +236,20 @@ export default function MediaLibrary() {
         isOpen={isUploadOpen}
         onClose={() => setIsUploadOpen(false)}
         title="Upload Image to Media Library"
-        maxWidth="max-w-md"
+        maxWidth="max-w-lg"
       >
         <form onSubmit={handleUploadSubmit} className="space-y-4">
+          <ImageUploadInput
+            label="Select Photo"
+            helpText="Choose an image directly from your Mac, phone, or computer."
+            value={uploadUrl}
+            onChange={handleImageSelected}
+            required
+          />
+
           <div>
             <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              File Name / Title *
+              File Name / Display Title
             </label>
             <input
               type="text"
@@ -233,27 +257,12 @@ export default function MediaLibrary() {
               onChange={(e) => setUploadName(e.target.value)}
               placeholder="e.g. Modern Sofa Front Angle.jpg"
               className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              required
             />
           </div>
 
           <div>
             <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Image URL *
-            </label>
-            <input
-              type="url"
-              value={uploadUrl}
-              onChange={(e) => setUploadUrl(e.target.value)}
-              placeholder="https://images.unsplash.com/..."
-              className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Category
+              Category Tag
             </label>
             <select
               value={uploadCategory}

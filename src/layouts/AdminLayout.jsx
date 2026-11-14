@@ -23,10 +23,12 @@ import {
 import Logo from '../components/common/Logo';
 import { useStore } from '../context/StoreContext';
 import { useToast } from '../components/common/Toast';
+import { useAuth } from '../context/AuthContext';
 
 export default function AdminLayout() {
   const { enquiries, activeAds } = useStore();
   const { addToast } = useToast();
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -53,8 +55,9 @@ export default function AdminLayout() {
   ];
 
   const handleLogout = () => {
+    logout();
     addToast({ message: 'Logged out of admin session', type: 'info' });
-    navigate('/');
+    navigate('/admin/login');
   };
 
   const handleAdminSearch = (e) => {

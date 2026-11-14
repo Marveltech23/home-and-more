@@ -10,9 +10,7 @@ import {
   ShieldCheck,
   Truck,
   Sparkles,
-  ArrowRight,
-  Shield,
-  LayoutDashboard
+  ArrowRight
 } from 'lucide-react';
 import Logo from '../common/Logo';
 import { WhatsAppIcon } from '../common/BrandIcons';
@@ -212,16 +210,6 @@ export default function Header() {
             )}
           </Link>
 
-          {/* Admin link badge */}
-          <Link
-            to="/admin"
-            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-[#82746B] border border-[#F0DFD1] hover:border-[#F36B0A] hover:text-[#F36B0A] transition-colors"
-            title="Switch to Admin Dashboard"
-          >
-            <LayoutDashboard className="w-3.5 h-3.5 text-[#F36B0A]" />
-            <span>Admin</span>
-          </Link>
-
           {/* WhatsApp CTA Button */}
           <a
             href={whatsAppLink}
@@ -336,14 +324,6 @@ export default function Header() {
                   {wishlistCount}
                 </span>
               )}
-            </Link>
-            <Link
-              to="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="py-2 text-base font-semibold text-[#F36B0A] flex items-center gap-2"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Admin Dashboard</span>
             </Link>
           </nav>
 

@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 // Layouts
 import StorefrontLayout from '../layouts/StorefrontLayout';
 import AdminLayout from '../layouts/AdminLayout';
+import ProtectedRoute from '../components/common/ProtectedRoute';
 
 // Storefront Pages
 import HomePage from '../pages/storefront/HomePage';
@@ -18,6 +19,7 @@ import SearchResultsPage from '../pages/storefront/SearchResultsPage';
 import NotFoundPage from '../pages/storefront/NotFoundPage';
 
 // Admin Pages
+import AdminLoginPage from '../pages/admin/AdminLoginPage';
 import DashboardOverview from '../pages/admin/DashboardOverview';
 import ProductManagement from '../pages/admin/ProductManagement';
 import CategoryManagement from '../pages/admin/CategoryManagement';
@@ -29,7 +31,7 @@ import TestimonialsManagement from '../pages/admin/TestimonialsManagement';
 import WebsiteSettings from '../pages/admin/WebsiteSettings';
 
 export const router = createBrowserRouter([
-  // STOREFRONT ROUTES
+  // STOREFRONT ROUTES (Public for all customers)
   {
     path: '/',
     element: <StorefrontLayout />,
@@ -48,10 +50,20 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // ADMIN DASHBOARD ROUTES
+  // ADMIN LOGIN (Public login gateway)
+  {
+    path: '/admin/login',
+    element: <AdminLoginPage />,
+  },
+
+  // ADMIN DASHBOARD ROUTES (Protected: Only authenticated admin can access)
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { index: true, element: <DashboardOverview /> },
       { path: 'products', element: <ProductManagement /> },

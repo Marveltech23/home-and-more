@@ -18,6 +18,7 @@ import {
 import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 
 const PRESET_BANNERS = [
@@ -493,52 +494,24 @@ export default function AdvertisementManagement() {
             </div>
           </div>
 
-          {/* Banner Images */}
-          <div className="space-y-3">
-            <div>
-              <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-                Desktop Banner Image URL *
-              </label>
-              <input
-                type="url"
-                value={desktopImage}
-                onChange={(e) => setDesktopImage(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-                required
-              />
-            </div>
+          {/* Banner Images (Upload from Device or Web URL) */}
+          <div className="space-y-4 pt-2 border-t border-[#F0DFD1]">
+            <ImageUploadInput
+              label="Desktop Banner Image"
+              helpText="Upload wide format banner from your Mac or computer (recommended: 1600x600)."
+              value={desktopImage}
+              onChange={(newVal) => setDesktopImage(newVal)}
+              presets={PRESET_BANNERS.map((b) => ({ desktop: b.desktop, label: b.label }))}
+              required
+            />
 
-            <div>
-              <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-                Mobile Banner Image URL
-              </label>
-              <input
-                type="url"
-                value={mobileImage}
-                onChange={(e) => setMobileImage(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              />
-            </div>
-
-            {/* Presets */}
-            <div className="text-[11px] text-[#82746B] pt-1">
-              <span>Quick load campaign preset: </span>
-              <div className="flex gap-2 mt-1">
-                {PRESET_BANNERS.map((preset, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => {
-                      setDesktopImage(preset.desktop);
-                      setMobileImage(preset.mobile);
-                    }}
-                    className="px-2.5 py-1 rounded-lg border border-[#F0DFD1] bg-[#FFFAF5] hover:border-[#F36B0A] text-[#24150F]"
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <ImageUploadInput
+              label="Mobile Banner Image (Optional)"
+              helpText="Upload vertical/mobile banner from your device (recommended: 800x800). If empty, desktop image is used."
+              value={mobileImage}
+              onChange={(newVal) => setMobileImage(newVal)}
+              presets={PRESET_BANNERS.map((b) => ({ desktop: b.mobile, label: b.label }))}
+            />
           </div>
 
           <div className="pt-3 border-t border-[#F0DFD1]">

@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, Star, CheckCircle2, Eye, User } from 'lucide-reac
 import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 
 const PRESET_AVATARS = [
@@ -250,31 +251,13 @@ export default function TestimonialsManagement() {
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Photo URL
-            </label>
-            <input
-              type="url"
-              value={photo}
-              onChange={(e) => setPhoto(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-            />
-            <div className="flex gap-2 mt-2">
-              {PRESET_AVATARS.map((av, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setPhoto(av)}
-                  className={`w-10 h-10 rounded-full overflow-hidden border-2 transition-all ${
-                    photo === av ? 'border-[#F36B0A] scale-105' : 'border-[#F0DFD1] opacity-70'
-                  }`}
-                >
-                  <img src={av} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
+          <ImageUploadInput
+            label="Customer Photo / Avatar"
+            helpText="Upload a photo from your device or choose from presets."
+            value={photo}
+            onChange={(newVal) => setPhoto(newVal)}
+            presets={PRESET_AVATARS}
+          />
 
           <div className="pt-2 border-t border-[#F0DFD1]">
             <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#24150F]">

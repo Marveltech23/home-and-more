@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, FolderTree, ExternalLink, Check, Eye } from 'luci
 import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 
 const PRESET_CAT_IMAGES = [
@@ -240,32 +241,14 @@ export default function CategoryManagement() {
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Category Image URL *
-            </label>
-            <input
-              type="url"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              required
-            />
-            <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
-              {PRESET_CAT_IMAGES.map((img, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setImage(img)}
-                  className={`shrink-0 w-12 h-12 rounded-xl overflow-hidden border-2 transition-all ${
-                    image === img ? 'border-[#F36B0A] scale-105' : 'border-[#F0DFD1] opacity-70'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
+          <ImageUploadInput
+            label="Category Image"
+            helpText="Upload a category photo directly from your Mac or device."
+            value={image}
+            onChange={(newVal) => setImage(newVal)}
+            presets={PRESET_CAT_IMAGES}
+            required
+          />
 
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div>

@@ -4,6 +4,7 @@ import { Plus, Pencil, Trash2, FileText, ExternalLink, Calendar, User } from 'lu
 import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 
 const PRESET_BLOG_IMAGES = [
@@ -303,32 +304,14 @@ export default function BlogManagement() {
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Featured Image URL *
-            </label>
-            <input
-              type="url"
-              value={featuredImage}
-              onChange={(e) => setFeaturedImage(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              required
-            />
-            <div className="flex gap-2 mt-2">
-              {PRESET_BLOG_IMAGES.map((img, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setFeaturedImage(img)}
-                  className={`w-14 h-10 rounded-lg overflow-hidden border-2 transition-all ${
-                    featuredImage === img ? 'border-[#F36B0A]' : 'border-[#F0DFD1] opacity-70'
-                  }`}
-                >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
+          <ImageUploadInput
+            label="Featured Article Image"
+            helpText="Upload a featured image from your device or select from presets."
+            value={featuredImage}
+            onChange={(newVal) => setFeaturedImage(newVal)}
+            presets={PRESET_BLOG_IMAGES}
+            required
+          />
 
           <div className="pt-2 border-t border-[#F0DFD1] flex items-center justify-between">
             <div className="flex items-center gap-4 text-xs font-semibold">
