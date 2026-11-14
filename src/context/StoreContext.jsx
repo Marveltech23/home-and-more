@@ -8,6 +8,7 @@ import { enquiries as initialEnquiries } from '../data/enquiries';
 import { testimonials as initialTestimonials } from '../data/testimonials';
 import { siteSettings as initialSettings, heroSlides as initialHeroSlides } from '../data/siteSettings';
 import { useToast } from '../components/common/Toast';
+import { setBrowserFavicon } from '../utils/dynamicFavicon';
 
 const StoreContext = createContext(null);
 
@@ -109,6 +110,11 @@ export function StoreProvider({ children }) {
     window.addEventListener('storage', handleStorageEvent);
     return () => window.removeEventListener('storage', handleStorageEvent);
   }, [reloadFromStorage]);
+
+  // Dynamically synchronize the browser tab icon (favicon) with active brand logo
+  useEffect(() => {
+    setBrowserFavicon(settings?.logoUrl);
+  }, [settings?.logoUrl]);
 
   const notifyChange = useCallback(() => {
     try {

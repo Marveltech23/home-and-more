@@ -9,11 +9,13 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Globe,
 } from 'lucide-react';
 import Logo from '../../components/common/Logo';
 import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 import { useToast } from '../../components/common/Toast';
+import { setBrowserFavicon } from '../../utils/dynamicFavicon';
 
 const LOGO_PRESETS = [
   {
@@ -66,7 +68,13 @@ export default function WebsiteSettings() {
     setLogoLightUrl('');
     setLogoDisplayMode('both');
     setLogoSubtitle('FURNITURE');
-    addToast({ message: 'Logo reset to default signature brand style', type: 'info' });
+    setBrowserFavicon('');
+    addToast({ message: 'Logo and browser tab icon reset to default style', type: 'info' });
+  };
+
+  const handleLogoChange = (newUrl) => {
+    setLogoUrl(newUrl);
+    setBrowserFavicon(newUrl);
   };
 
   const handleSave = (e) => {
@@ -262,9 +270,9 @@ export default function WebsiteSettings() {
           <div className="pt-2">
             <ImageUploadInput
               value={logoUrl}
-              onChange={(newUrl) => setLogoUrl(newUrl)}
+              onChange={handleLogoChange}
               label="Primary Logo Image (Upload from Mac or Web URL)"
-              helpText="Upload your custom logo directly from your Mac, phone, or PC (PNG with transparent background recommended, SVG, JPG, WEBP)."
+              helpText="Upload your custom logo directly from your Mac, phone, or PC (PNG with transparent background recommended, SVG, JPG, WEBP). This automatically updates your browser tab icon too."
               presets={LOGO_PRESETS}
             />
           </div>
@@ -348,6 +356,32 @@ export default function WebsiteSettings() {
                     overrideBusinessName={businessName}
                     overrideSubtitle={logoSubtitle}
                   />
+                </div>
+              </div>
+
+              {/* Browser Tab Favicon Preview */}
+              <div className="rounded-2xl border border-[#F0DFD1] overflow-hidden bg-stone-100 shadow-xs sm:col-span-2">
+                <div className="px-3.5 py-2 bg-white border-b border-[#F0DFD1] flex items-center justify-between text-[11px] font-bold text-[#82746B]">
+                  <div className="flex items-center gap-1.5">
+                    <Globe className="w-3.5 h-3.5 text-[#F36B0A]" />
+                    <span>Browser Tab Icon (Favicon) Preview</span>
+                  </div>
+                  <span className="text-emerald-600 font-semibold">Active in Browser Tab</span>
+                </div>
+                <div className="p-4 bg-stone-200/50 flex items-center justify-start">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-t-xl bg-white border-t border-x border-stone-300 text-xs shadow-xs max-w-md">
+                    <div className="w-4 h-4 rounded-xs overflow-hidden shrink-0 flex items-center justify-center bg-stone-50">
+                      {logoUrl ? (
+                        <img src={logoUrl} alt="" className="w-full h-full object-contain" />
+                      ) : (
+                        <img src="/favicon.svg" alt="" className="w-full h-full object-contain" />
+                      )}
+                    </div>
+                    <span className="font-semibold text-stone-800 truncate text-[11px]">
+                      {businessName || 'Home & More Furniture'} | {slogan || 'Modern Living. Better You.'}
+                    </span>
+                    <span className="text-stone-400 text-[10px] ml-1">×</span>
+                  </div>
                 </div>
               </div>
             </div>
