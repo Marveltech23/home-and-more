@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import StorefrontLayout from '../layouts/StorefrontLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import ProtectedRoute from '../components/common/ProtectedRoute';
+import RouteErrorBoundary from '../components/common/RouteErrorBoundary';
 
 // Storefront Pages
 import HomePage from '../pages/storefront/HomePage';
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <StorefrontLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'shop', element: <ShopPage /> },
@@ -64,6 +66,7 @@ export const router = createBrowserRouter([
         <AdminLayout />
       </ProtectedRoute>
     ),
+    errorElement: <RouteErrorBoundary />,
     children: [
       { index: true, element: <DashboardOverview /> },
       { path: 'products', element: <ProductManagement /> },
