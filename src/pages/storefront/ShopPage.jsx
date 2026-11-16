@@ -4,6 +4,7 @@ import { Filter, SlidersHorizontal, Search, X, Check } from 'lucide-react';
 import ProductCard from '../../components/storefront/ProductCard';
 import SectionHeading from '../../components/common/SectionHeading';
 import EmptyState from '../../components/common/EmptyState';
+import SEO from '../../components/common/SEO';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
 
@@ -87,6 +88,16 @@ export default function ShopPage() {
 
   return (
     <div className="container-page py-8 sm:py-12">
+      <SEO
+        title={activeCategoryObj ? `${activeCategoryObj.name} in Abuja | Modern Furniture` : 'Shop Modern Furniture in Abuja | Sofas, Beds, Dining & More'}
+        description={
+          activeCategoryObj?.description
+            ? `${activeCategoryObj.description} Fast delivery in Abuja & across Nigeria.`
+            : 'Browse the complete Home & More Furniture catalog in Nigeria. Handcrafted luxury living room sets, dining tables, orthopedic mattresses, and storage.'
+        }
+        canonical={activeCategoryObj ? `/category/${activeCategoryObj.slug}` : '/shop'}
+      />
+
       {/* Header Banner */}
       <div className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#24150F] tracking-tight">

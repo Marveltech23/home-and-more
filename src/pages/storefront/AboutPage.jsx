@@ -15,6 +15,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import SectionHeading from '../../components/common/SectionHeading';
+import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 import { buildWhatsAppLink } from '../../utils/whatsapp';
@@ -76,6 +77,12 @@ export default function AboutPage() {
 
   return (
     <div className="py-8 sm:py-14 space-y-20">
+      <SEO
+        title="About Us | Craftsmanship, Heritage & Turnkey Projects"
+        description="Learn about Home & More Furniture, our timber craftsmanship, Abuja showroom, and bespoke residential & commercial interior design projects."
+        canonical="/about"
+      />
+
       {/* 1. HERO SECTION */}
       <section className="container-page">
         <div className="text-center max-w-3xl mx-auto space-y-4">

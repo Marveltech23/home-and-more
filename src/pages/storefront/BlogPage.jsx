@@ -3,6 +3,7 @@ import { Calendar, Clock, ArrowRight, User } from 'lucide-react';
 import SectionHeading from '../../components/common/SectionHeading';
 import SafeImage from '../../components/common/SafeImage';
 import EmptyState from '../../components/common/EmptyState';
+import SEO from '../../components/common/SEO';
 import { useStore } from '../../context/StoreContext';
 
 export default function BlogPage() {
@@ -13,6 +14,12 @@ export default function BlogPage() {
 
   return (
     <div className="container-page py-8 sm:py-14 space-y-12">
+      <SEO
+        title="Furniture Journal & Living Guides | Abuja Design Insights"
+        description="Interior design principles, timber craftsmanship insights, and space planning tips curated by our Abuja design team at Home & More Furniture."
+        canonical="/blog"
+      />
+
       {/* Header */}
       <div className="max-w-2xl">
         <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F36B0A]">

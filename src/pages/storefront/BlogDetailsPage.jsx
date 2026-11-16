@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Clock, User, ArrowLeft, Share2 } from 'lucide-react';
 import SafeImage from '../../components/common/SafeImage';
+import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 import { useToast } from '../../components/common/Toast';
@@ -41,8 +42,42 @@ export default function BlogDetailsPage() {
     .filter((b) => b.id !== blog.id && b.status === 'published')
     .slice(0, 2);
 
+  const blogImg = blog.featuredImage || blog.image;
+  const blogDt = blog.publishedAt || blog.date;
+
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: blog.title,
+    description: blog.excerpt,
+    image: blogImg,
+    datePublished: blogDt,
+    author: {
+      '@type': 'Person',
+      name: blog.author || 'Home & More Styling Team',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Home & More Furniture',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.homeandmorefurniture.com/favicon.svg',
+      },
+    },
+    mainEntityOfPage: `https://www.homeandmorefurniture.com/blog/${blog.slug}`,
+  };
+
   return (
     <div className="py-8 sm:py-12">
+      <SEO
+        title={`${blog.title} | Furniture & Living Journal`}
+        description={blog.excerpt}
+        canonical={`/blog/${blog.slug}`}
+        image={blogImg}
+        type="article"
+        schema={blogSchema}
+      />
+
       <article className="container-page max-w-4xl mx-auto space-y-8">
         {/* Back Link */}
         <Link

@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Home, ArrowLeft } from 'lucide-react';
+import SEO from '../../components/common/SEO';
 
 export default function NotFoundPage() {
   return (
     <div className="container-page py-24 text-center">
+      <SEO title="Page Not Found" description="The page you requested could not be found." />
       <div className="max-w-md mx-auto space-y-6">
         <div className="text-7xl font-extrabold text-[#F36B0A] tracking-tighter">
           404

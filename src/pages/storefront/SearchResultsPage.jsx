@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import ProductCard from '../../components/storefront/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
+import SEO from '../../components/common/SEO';
 import { useStore } from '../../context/StoreContext';
 
 export default function SearchResultsPage() {
@@ -33,6 +34,12 @@ export default function SearchResultsPage() {
 
   return (
     <div className="container-page py-8 sm:py-12 space-y-8">
+      <SEO
+        title={query ? `Search: "${query}"` : 'Search Furniture'}
+        description="Search modern sofas, dining sets, beds, and furniture at Home & More Furniture in Abuja, Nigeria."
+        canonical="/search"
+      />
+
       {/* Search Header Form */}
       <div className="max-w-2xl mx-auto text-center space-y-4">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#24150F]">

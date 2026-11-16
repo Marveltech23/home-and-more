@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Send, ChevronDown, CheckCircle2 } from 'lucide-react';
 import SectionHeading from '../../components/common/SectionHeading';
+import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 import { useToast } from '../../components/common/Toast';
@@ -75,6 +76,12 @@ export default function ContactPage() {
 
   return (
     <div className="py-8 sm:py-14 space-y-16">
+      <SEO
+        title="Contact Us & Showroom Location | Abuja, Nigeria"
+        description="Visit Home & More Furniture showroom at Plot 1042 Ahmadu Bello Way, Central Business District, Abuja. Call or WhatsApp our interior specialists today."
+        canonical="/contact"
+      />
+
       {/* 1. HEADER */}
       <section className="container-page text-center max-w-2xl mx-auto space-y-3">
         <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F36B0A]">

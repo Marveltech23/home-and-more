@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Heart, Trash2, ArrowRight } from 'lucide-react';
 import ProductCard from '../../components/storefront/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
+import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useWishlist } from '../../context/WishlistContext';
 import { useStore } from '../../context/StoreContext';
@@ -22,6 +23,12 @@ export default function WishlistPage() {
 
   return (
     <div className="container-page py-8 sm:py-12 space-y-8">
+      <SEO
+        title="Saved Furniture Wishlist"
+        description="Review your favorite saved furniture pieces on Home & More Furniture. Enquire directly via WhatsApp for delivery in Abuja."
+        canonical="/wishlist"
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#F0DFD1] pb-6">
         <div>

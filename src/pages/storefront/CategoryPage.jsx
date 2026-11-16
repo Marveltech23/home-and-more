@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import ProductCard from '../../components/storefront/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
+import SEO from '../../components/common/SEO';
 import { useStore } from '../../context/StoreContext';
 
 export default function CategoryPage() {
@@ -17,6 +18,7 @@ export default function CategoryPage() {
   if (!category) {
     return (
       <div className="container-page py-20 text-center">
+        <SEO title="Category Not Found" />
         <h2 className="text-2xl font-bold text-[#24150F]">Category not found</h2>
         <p className="text-[#82746B] mt-2">The category you requested does not exist.</p>
         <Link to="/shop" className="btn-primary mt-6 inline-flex">
@@ -26,8 +28,37 @@ export default function CategoryPage() {
     );
   }
 
+  const categorySchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${category.name} | Home & More Furniture`,
+    description: category.description,
+    url: `https://www.homeandmorefurniture.com/category/${category.slug}`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: categoryProducts.map((p, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `https://www.homeandmorefurniture.com/product/${p.slug}`,
+        name: p.name,
+      })),
+    },
+  };
+
   return (
     <div className="container-page py-8 sm:py-12">
+      <SEO
+        title={`${category.name} in Abuja | Luxury Furniture`}
+        description={
+          category.description
+            ? `${category.description} Shop luxury modern ${category.name.toLowerCase()} in Abuja with fast nationwide delivery.`
+            : `Discover luxury handcrafted ${category.name.toLowerCase()} in Abuja, Nigeria at Home & More Furniture.`
+        }
+        canonical={`/category/${category.slug}`}
+        image={category.image}
+        schema={categorySchema}
+      />
+
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-2 text-xs font-semibold text-[#82746B]">
         <Link to="/" className="hover:text-[#F36B0A]">Home</Link>

@@ -17,6 +17,7 @@ import SafeImage from '../../components/common/SafeImage';
 import ProductCard from '../../components/storefront/ProductCard';
 import SectionHeading from '../../components/common/SectionHeading';
 import Modal from '../../components/common/Modal';
+import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -122,8 +123,41 @@ export default function ProductDetailsPage() {
     ? product.gallery
     : [product.image];
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.image,
+    description: product.description || product.tagline,
+    sku: product.sku || product.id,
+    brand: {
+      '@type': 'Brand',
+      name: 'Home & More Furniture',
+    },
+    offers: {
+      '@type': 'Offer',
+      url: `https://www.homeandmorefurniture.com/product/${product.slug}`,
+      priceCurrency: 'NGN',
+      price: product.price,
+      availability: 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+      seller: {
+        '@type': 'Organization',
+        name: 'Home & More Furniture',
+      },
+    },
+  };
+
   return (
     <div className="container-page py-6 sm:py-10">
+      <SEO
+        title={`${product.name} | Premium Furniture Abuja`}
+        description={`${product.name} - ${formatNaira(product.price)}. ${product.tagline || product.description || 'Modern luxury furniture handcrafted for Nigerian homes.'} Fast delivery in Abuja.`}
+        canonical={`/product/${product.slug}`}
+        image={product.image}
+        schema={productSchema}
+      />
+
       {/* Back button */}
       <div className="mb-6">
         <button

@@ -1,3 +1,4 @@
+import SEO from '../../components/common/SEO';
 import HeroBanner from '../../components/storefront/HeroBanner';
 import PromotionalAd from '../../components/storefront/PromotionalAd';
 import CategoryPills from '../../components/storefront/CategoryPills';
@@ -11,6 +12,12 @@ import NewsletterSection from '../../components/storefront/NewsletterSection';
 export default function HomePage() {
   return (
     <div className="flex flex-col gap-0 pb-6">
+      <SEO
+        title="Modern Luxury Furniture in Abuja, Nigeria"
+        description="Shop the finest selection of modern luxury furniture in Abuja, Nigeria at Home & More Furniture. Explore handcrafted sofas, dining sets, orthopedic beds, TV stands, and wardrobes."
+        canonical="/"
+      />
+
       {/* 1. Large Hero Banner */}
       <HeroBanner />
 
