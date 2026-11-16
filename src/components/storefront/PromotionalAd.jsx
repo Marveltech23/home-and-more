@@ -6,11 +6,9 @@ import { useStore } from '../../context/StoreContext';
 export default function PromotionalAd() {
   const { advertisements, activeAds } = useStore();
 
-  // Find the active advertisement for hero_bottom, or use the latest active ad, or latest ad
-  const ad =
-    (activeAds && activeAds.find((a) => a.placement === 'hero_bottom')) ||
-    (activeAds && activeAds[0]) ||
-    (advertisements && advertisements[0]);
+  // Prioritize most recent active ad for hero_bottom, or most recent active ad, or latest ad
+  const heroBottomAds = activeAds ? activeAds.filter((a) => a.placement === 'hero_bottom') : [];
+  const ad = heroBottomAds[0] || (activeAds && activeAds[0]) || (advertisements && advertisements[0]);
 
   if (!ad) return null;
 

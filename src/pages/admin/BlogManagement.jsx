@@ -5,6 +5,7 @@ import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import ImageUploadInput from '../../components/common/ImageUploadInput';
+import SafeImage from '../../components/common/SafeImage';
 import { useStore } from '../../context/StoreContext';
 
 const PRESET_BLOG_IMAGES = [
@@ -66,7 +67,7 @@ export default function BlogManagement() {
     setCategory(b.category || 'Interior Design');
     setExcerpt(b.excerpt || '');
     setContent(b.content || '');
-    setFeaturedImage(b.featuredImage);
+    setFeaturedImage(b.featuredImage || b.image || PRESET_BLOG_IMAGES[0]);
     setReadTime(b.readTime || '4 min read');
     setStatus(b.status || 'published');
     setIsModalOpen(true);
@@ -149,11 +150,15 @@ export default function BlogManagement() {
                 <tr key={b.id} className="hover:bg-[#FFFAF5]/60 transition-colors">
                   <td className="py-3.5 px-4">
                     <div className="flex items-center gap-3">
-                      <img
-                        src={b.featuredImage}
-                        alt={b.title}
-                        className="w-14 h-10 rounded-xl object-cover border border-[#F0DFD1] shrink-0"
-                      />
+                      <div className="w-14 h-10 rounded-xl overflow-hidden border border-[#F0DFD1] shrink-0 bg-[#FFFAF5]">
+                        <SafeImage
+                          src={b.featuredImage || b.image}
+                          alt={b.title}
+                          aspectRatio="aspect-auto"
+                          fit="cover"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                       <div>
                         <p className="font-bold text-[#24150F] line-clamp-1">{b.title}</p>
                         <span className="text-[11px] text-[#82746B] line-clamp-1">{b.excerpt}</span>
@@ -165,7 +170,7 @@ export default function BlogManagement() {
 
                   <td className="py-3.5 px-4 text-xs text-[#82746B]">{b.author}</td>
 
-                  <td className="py-3.5 px-4 text-xs text-[#82746B]">{b.publishedAt}</td>
+                  <td className="py-3.5 px-4 text-xs text-[#82746B]">{b.publishedAt || b.date}</td>
 
                   <td className="py-3.5 px-4">
                     <Badge variant={b.status === 'published' ? 'published' : 'draft'}>

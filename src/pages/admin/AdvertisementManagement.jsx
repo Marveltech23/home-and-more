@@ -19,6 +19,7 @@ import Badge from '../../components/common/Badge';
 import Modal from '../../components/common/Modal';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import ImageUploadInput from '../../components/common/ImageUploadInput';
+import SafeImage from '../../components/common/SafeImage';
 import { useStore } from '../../context/StoreContext';
 
 const PRESET_BANNERS = [
@@ -221,10 +222,16 @@ export default function AdvertisementManagement() {
               <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#29160D] via-[#3d1a0d] to-[#241209] text-white p-5 sm:p-7 shadow-lg border border-amber-900/40">
                 <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-5">
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-md shrink-0 border border-amber-400/30">
-                      <img
-                        src={previewMode === 'desktop' ? previewAd.desktopImage : previewAd.mobileImage}
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-md shrink-0 border border-amber-400/30 bg-black/40">
+                      <SafeImage
+                        src={
+                          (previewMode === 'desktop' ? previewAd?.desktopImage : previewAd?.mobileImage) ||
+                          previewAd?.desktopImage ||
+                          previewAd?.mobileImage
+                        }
                         alt="Preview"
+                        aspectRatio="aspect-auto"
+                        fit="cover"
                         className="w-full h-full object-cover"
                       />
                     </div>
@@ -286,11 +293,17 @@ export default function AdvertisementManagement() {
                 >
                   <td className="py-3.5 px-4">
                     <div
-                      className="w-16 h-10 rounded-lg overflow-hidden border border-[#F0DFD1] cursor-pointer hover:scale-105 transition-transform"
+                      className="w-16 h-10 rounded-lg overflow-hidden border border-[#F0DFD1] cursor-pointer hover:scale-105 transition-transform bg-[#FFFAF5]"
                       onClick={() => setSelectedPreviewAdId(ad.id)}
                       title="Click to preview above"
                     >
-                      <img src={ad.desktopImage} alt={ad.title} className="w-full h-full object-cover" />
+                      <SafeImage
+                        src={ad.desktopImage || ad.mobileImage}
+                        alt={ad.title}
+                        aspectRatio="aspect-auto"
+                        fit="cover"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </td>
 

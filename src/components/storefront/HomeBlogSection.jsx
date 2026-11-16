@@ -29,7 +29,7 @@ export default function HomeBlogSection() {
             {/* Image */}
             <Link to={`/blog/${post.slug}`} className="relative aspect-[16/10] overflow-hidden bg-[#FFFAF5]">
               <SafeImage
-                src={post.featuredImage}
+                src={post.featuredImage || post.image}
                 alt={post.title}
                 aspectRatio="aspect-auto"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -44,7 +44,7 @@ export default function HomeBlogSection() {
               <div>
                 <div className="flex items-center gap-2 text-[11px] text-[#82746B] mb-1.5">
                   <Calendar className="w-3 h-3 text-[#F36B0A]" />
-                  <span>{post.publishedAt}</span>
+                  <span>{post.publishedAt || post.date}</span>
                   <span>•</span>
                   <span>{post.readTime}</span>
                 </div>

@@ -215,8 +215,14 @@ export function StoreProvider({ children }) {
             .then(({ data }) => {
               if (data && data.length > 0) {
                 const mapped = data.map(mapProductFromDb);
-                setProducts(mapped);
-                safeSetItem(STORAGE_KEYS.PRODUCTS, mapped);
+                setProducts((prev) => {
+                  const ids = new Set(mapped.map((p) => p.id));
+                  const slugs = new Set(mapped.map((p) => p.slug));
+                  const pendingLocal = prev.filter((p) => !ids.has(p.id) && !slugs.has(p.slug));
+                  const combined = [...pendingLocal, ...mapped];
+                  safeSetItem(STORAGE_KEYS.PRODUCTS, combined);
+                  return combined;
+                });
               }
             });
         } else if (table === 'advertisements') {
@@ -227,8 +233,13 @@ export function StoreProvider({ children }) {
             .then(({ data }) => {
               if (data && data.length > 0) {
                 const mapped = data.map(mapAdFromDb);
-                setAdvertisements(mapped);
-                safeSetItem(STORAGE_KEYS.ADS, mapped);
+                setAdvertisements((prev) => {
+                  const ids = new Set(mapped.map((a) => a.id));
+                  const pendingLocal = prev.filter((a) => !ids.has(a.id));
+                  const combined = [...pendingLocal, ...mapped];
+                  safeSetItem(STORAGE_KEYS.ADS, combined);
+                  return combined;
+                });
               }
             });
         } else if (table === 'blogs') {
@@ -239,8 +250,14 @@ export function StoreProvider({ children }) {
             .then(({ data }) => {
               if (data && data.length > 0) {
                 const mapped = data.map(mapBlogFromDb);
-                setBlogs(mapped);
-                safeSetItem(STORAGE_KEYS.BLOGS, mapped);
+                setBlogs((prev) => {
+                  const ids = new Set(mapped.map((b) => b.id));
+                  const slugs = new Set(mapped.map((b) => b.slug));
+                  const pendingLocal = prev.filter((b) => !ids.has(b.id) && !slugs.has(b.slug));
+                  const combined = [...pendingLocal, ...mapped];
+                  safeSetItem(STORAGE_KEYS.BLOGS, combined);
+                  return combined;
+                });
               }
             });
         } else if (table === 'site_settings') {
@@ -340,7 +357,11 @@ export function StoreProvider({ children }) {
         createdAt: new Date().toISOString(),
       };
 
-      setProducts((prev) => [newProduct, ...prev]);
+      setProducts((prev) => {
+        const next = [newProduct, ...prev.filter((p) => p.id !== newProduct.id && p.slug !== newProduct.slug)];
+        safeSetItem(STORAGE_KEYS.PRODUCTS, next);
+        return next;
+      });
       syncProductToDb(newProduct);
       notifyChange();
       addToast({ message: `Product "${newProduct.name}" added successfully!`, type: 'success' });
@@ -352,8 +373,8 @@ export function StoreProvider({ children }) {
   const updateProduct = useCallback(
     (id, updates) => {
       let updatedProduct = null;
-      setProducts((prev) =>
-        prev.map((p) => {
+      setProducts((prev) => {
+        const next = prev.map((p) => {
           if (p.id !== id && p.slug !== id) return p;
           const price = updates.price !== undefined ? Number(updates.price) : p.price;
           const discountPrice =
@@ -364,8 +385,10 @@ export function StoreProvider({ children }) {
               : p.discountPrice;
           updatedProduct = { ...p, ...updates, price, discountPrice };
           return updatedProduct;
-        })
-      );
+        });
+        safeSetItem(STORAGE_KEYS.PRODUCTS, next);
+        return next;
+      });
       if (updatedProduct) {
         syncProductToDb(updatedProduct);
       }
@@ -377,7 +400,11 @@ export function StoreProvider({ children }) {
 
   const deleteProduct = useCallback(
     (id) => {
-      setProducts((prev) => prev.filter((p) => p.id !== id && p.slug !== id));
+      setProducts((prev) => {
+        const next = prev.filter((p) => p.id !== id && p.slug !== id);
+        safeSetItem(STORAGE_KEYS.PRODUCTS, next);
+        return next;
+      });
       deleteProductFromDb(id);
       notifyChange();
       addToast({ message: 'Product deleted from store', type: 'info' });
@@ -455,22 +482,28 @@ export function StoreProvider({ children }) {
   // ==========================================
   const addAd = useCallback(
     (adData) => {
+      const desktop =
+        adData.desktopImage ||
+        adData.image ||
+        'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=1600&q=80';
+      const mobile = adData.mobileImage || desktop;
+
       const newAd = {
         ...adData,
-        id: `a_${Date.now()}`,
+        id: adData.id || `a_${Date.now()}`,
         isActive: adData.isActive !== undefined ? adData.isActive : true,
         clicks: 0,
         placement: adData.placement || 'hero_bottom',
-        desktopImage:
-          adData.desktopImage ||
-          'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=1600&q=80',
-        mobileImage:
-          adData.mobileImage ||
-          adData.desktopImage ||
-          'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=800&q=80',
+        desktopImage: desktop,
+        mobileImage: mobile,
+        createdAt: new Date().toISOString(),
       };
 
-      setAdvertisements((prev) => [newAd, ...prev]);
+      setAdvertisements((prev) => {
+        const next = [newAd, ...prev.filter((a) => a.id !== newAd.id)];
+        safeSetItem(STORAGE_KEYS.ADS, next);
+        return next;
+      });
       syncAdToDb(newAd);
       notifyChange();
       addToast({ message: `Advertisement "${newAd.title}" published!`, type: 'success' });
@@ -482,13 +515,17 @@ export function StoreProvider({ children }) {
   const updateAd = useCallback(
     (id, updates) => {
       let updatedAd = null;
-      setAdvertisements((prev) =>
-        prev.map((a) => {
+      setAdvertisements((prev) => {
+        const next = prev.map((a) => {
           if (a.id !== id) return a;
-          updatedAd = { ...a, ...updates };
+          const desktop = updates.desktopImage || updates.image || a.desktopImage;
+          const mobile = updates.mobileImage || desktop || a.mobileImage;
+          updatedAd = { ...a, ...updates, desktopImage: desktop, mobileImage: mobile };
           return updatedAd;
-        })
-      );
+        });
+        safeSetItem(STORAGE_KEYS.ADS, next);
+        return next;
+      });
       if (updatedAd) {
         syncAdToDb(updatedAd);
       }
@@ -500,7 +537,11 @@ export function StoreProvider({ children }) {
 
   const deleteAd = useCallback(
     (id) => {
-      setAdvertisements((prev) => prev.filter((a) => a.id !== id));
+      setAdvertisements((prev) => {
+        const next = prev.filter((a) => a.id !== id);
+        safeSetItem(STORAGE_KEYS.ADS, next);
+        return next;
+      });
       deleteAdFromDb(id);
       notifyChange();
       addToast({ message: 'Advertisement deleted', type: 'info' });
@@ -511,13 +552,15 @@ export function StoreProvider({ children }) {
   const toggleAdStatus = useCallback(
     (id) => {
       let updatedAd = null;
-      setAdvertisements((prev) =>
-        prev.map((a) => {
+      setAdvertisements((prev) => {
+        const next = prev.map((a) => {
           if (a.id !== id) return a;
           updatedAd = { ...a, isActive: !a.isActive };
           return updatedAd;
-        })
-      );
+        });
+        safeSetItem(STORAGE_KEYS.ADS, next);
+        return next;
+      });
       if (updatedAd) {
         syncAdToDb(updatedAd);
       }
@@ -539,20 +582,34 @@ export function StoreProvider({ children }) {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)/g, '');
 
+      const img =
+        blogData.featuredImage ||
+        blogData.image ||
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80';
+      const dt = blogData.publishedAt || blogData.date || new Date().toISOString().split('T')[0];
+
       const newBlog = {
         ...blogData,
-        id: `b_${Date.now()}`,
+        id: blogData.id || `b_${Date.now()}`,
         slug,
-        date: blogData.date || new Date().toISOString().split('T')[0],
+        title: blogData.title || '',
+        author: blogData.author || 'Home & More Styling Team',
+        category: blogData.category || 'Interior Design',
+        excerpt: blogData.excerpt || '',
+        content: blogData.content || '',
+        image: img,
+        featuredImage: img,
+        date: dt,
+        publishedAt: dt,
         status: blogData.status || 'published',
-        image:
-          blogData.image ||
-          blogData.featuredImage ||
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
         readTime: blogData.readTime || '4 min read',
       };
 
-      setBlogs((prev) => [newBlog, ...prev]);
+      setBlogs((prev) => {
+        const next = [newBlog, ...prev.filter((b) => b.id !== newBlog.id && b.slug !== newBlog.slug)];
+        safeSetItem(STORAGE_KEYS.BLOGS, next);
+        return next;
+      });
       syncBlogToDb(newBlog);
       notifyChange();
       addToast({ message: `Article "${newBlog.title}" published!`, type: 'success' });
@@ -564,13 +621,24 @@ export function StoreProvider({ children }) {
   const updateBlog = useCallback(
     (id, updates) => {
       let updatedBlog = null;
-      setBlogs((prev) =>
-        prev.map((b) => {
+      setBlogs((prev) => {
+        const next = prev.map((b) => {
           if (b.id !== id && b.slug !== id) return b;
-          updatedBlog = { ...b, ...updates };
+          const img = updates.featuredImage || updates.image || b.featuredImage || b.image;
+          const dt = updates.publishedAt || updates.date || b.publishedAt || b.date;
+          updatedBlog = {
+            ...b,
+            ...updates,
+            image: img,
+            featuredImage: img,
+            date: dt,
+            publishedAt: dt,
+          };
           return updatedBlog;
-        })
-      );
+        });
+        safeSetItem(STORAGE_KEYS.BLOGS, next);
+        return next;
+      });
       if (updatedBlog) {
         syncBlogToDb(updatedBlog);
       }
@@ -582,7 +650,11 @@ export function StoreProvider({ children }) {
 
   const deleteBlog = useCallback(
     (id) => {
-      setBlogs((prev) => prev.filter((b) => b.id !== id && b.slug !== id));
+      setBlogs((prev) => {
+        const next = prev.filter((b) => b.id !== id && b.slug !== id);
+        safeSetItem(STORAGE_KEYS.BLOGS, next);
+        return next;
+      });
       deleteBlogFromDb(id);
       notifyChange();
       addToast({ message: 'Blog article deleted', type: 'info' });

@@ -78,7 +78,7 @@ export default function BlogDetailsPage() {
               <span>•</span>
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-[#F36B0A]" />
-                Published {blog.publishedAt}
+                Published {blog.publishedAt || blog.date}
               </span>
             </div>
 
@@ -96,7 +96,7 @@ export default function BlogDetailsPage() {
         {/* Hero Image */}
         <div className="rounded-3xl overflow-hidden aspect-[16/9] shadow-lg border border-[#F0DFD1]">
           <SafeImage
-            src={blog.featuredImage}
+            src={blog.featuredImage || blog.image}
             alt={blog.title}
             aspectRatio="aspect-auto"
             className="w-full h-full object-cover"

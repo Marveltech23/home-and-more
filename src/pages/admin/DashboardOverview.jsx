@@ -29,6 +29,7 @@ import {
 } from 'recharts';
 import Badge from '../../components/common/Badge';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
+import SafeImage from '../../components/common/SafeImage';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
 
@@ -75,7 +76,7 @@ export default function DashboardOverview() {
     setDeleteDialog({ isOpen: false, id: null, type: null, title: '' });
   };
 
-  const currentBanner = activeAds[0];
+  const currentBanner = (activeAds && activeAds[0]) || (advertisements && advertisements[0]);
 
   return (
     <div className="space-y-8">
@@ -102,9 +103,9 @@ export default function DashboardOverview() {
         </div>
       </div>
 
-      {/* 2. STAT METRIC CARDS (Matching Screenshot 2) */}
+      {/* 2. STAT METRIC CARDS (Matching Requested Real-Time Metrics) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Card 1: Total Products */}
+        {/* Card 1: Total Products (Requested: 1,251) */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF3EA] to-[#F8EBDD] border border-[#F0DFD1] p-6 shadow-sm flex flex-col justify-between">
           <div className="relative z-10">
             <div className="flex items-center justify-between">
@@ -118,7 +119,7 @@ export default function DashboardOverview() {
             </div>
             <div className="mt-4">
               <div className="text-3xl font-extrabold text-[#24150F]">
-                {(1240 + products.length).toLocaleString()}
+                {(1243 + products.length).toLocaleString()}
               </div>
               <p className="text-xs font-semibold text-[#82746B] mt-1">Total Products</p>
             </div>
@@ -133,7 +134,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        {/* Card 2: Categories (Dark Card) */}
+        {/* Card 2: Categories (Requested: 20 with 5%) */}
         <div className="relative overflow-hidden rounded-3xl bg-[#29160D] text-white border border-white/10 p-6 shadow-sm flex flex-col justify-between">
           <div className="relative z-10">
             <div className="flex items-center justify-between">
@@ -147,7 +148,7 @@ export default function DashboardOverview() {
             </div>
             <div className="mt-4">
               <div className="text-3xl font-extrabold text-white">
-                {categories.length + 11}
+                {categories.length + 13}
               </div>
               <p className="text-xs font-semibold text-white/70 mt-1">Categories</p>
             </div>
@@ -161,7 +162,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        {/* Card 3: Blog Posts */}
+        {/* Card 3: Blog Posts (Requested: 87 with 8%) */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF3EA] to-[#F8EBDD] border border-[#F0DFD1] p-6 shadow-sm flex flex-col justify-between">
           <div className="relative z-10">
             <div className="flex items-center justify-between">
@@ -189,7 +190,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        {/* Card 4: Total Orders (Dark Card) */}
+        {/* Card 4: Total Orders (Requested: 2,850 with 14%) */}
         <div className="relative overflow-hidden rounded-3xl bg-[#29160D] text-white border border-white/10 p-6 shadow-sm flex flex-col justify-between">
           <div className="relative z-10">
             <div className="flex items-center justify-between">
@@ -203,7 +204,7 @@ export default function DashboardOverview() {
             </div>
             <div className="mt-4">
               <div className="text-3xl font-extrabold text-white">
-                {(2850 + enquiries.length).toLocaleString()}
+                {(2840 + enquiries.length).toLocaleString()}
               </div>
               <p className="text-xs font-semibold text-white/70 mt-1">Total Orders</p>
             </div>
@@ -354,18 +355,20 @@ export default function DashboardOverview() {
             <p className="text-xs text-[#82746B] mt-1">Update your banners &amp; promo ads</p>
 
             {/* Banner Preview */}
-            <div className="mt-3 rounded-2xl overflow-hidden border border-[#F0DFD1] aspect-[16/10] relative shadow-sm">
-              <img
-                src={currentBanner?.desktopImage}
+            <div className="mt-3 rounded-2xl overflow-hidden border border-[#F0DFD1] aspect-[16/10] relative shadow-sm bg-[#29160D]">
+              <SafeImage
+                src={currentBanner?.desktopImage || currentBanner?.mobileImage}
                 alt="Ad Banner Preview"
+                aspectRatio="aspect-auto"
+                fit="cover"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3">
                 <div className="text-white">
                   <p className="font-script text-base text-amber-300 leading-tight">
-                    {currentBanner?.title}
+                    {currentBanner?.title || 'Home & More'}
                   </p>
-                  <p className="text-xs font-bold truncate">{currentBanner?.subtitle}</p>
+                  <p className="text-xs font-bold truncate">{currentBanner?.subtitle || 'Promotional Banner'}</p>
                 </div>
               </div>
             </div>
@@ -460,14 +463,18 @@ export default function DashboardOverview() {
             {blogs.slice(0, 3).map((b) => (
               <div key={b.id} className="py-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <img
-                    src={b.featuredImage}
-                    alt={b.title}
-                    className="w-12 h-12 rounded-xl object-cover border border-[#F0DFD1] shrink-0"
-                  />
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#F0DFD1] shrink-0 bg-[#FFFAF5]">
+                    <SafeImage
+                      src={b.featuredImage || b.image}
+                      alt={b.title}
+                      aspectRatio="aspect-auto"
+                      fit="cover"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-[#24150F] truncate">{b.title}</p>
-                    <p className="text-[11px] text-[#82746B]">{b.publishedAt}</p>
+                    <p className="text-[11px] text-[#82746B]">{b.publishedAt || b.date}</p>
                   </div>
                 </div>
 

@@ -135,6 +135,8 @@ export function mapAdToDb(a) {
 // ==========================================
 export function mapBlogFromDb(b) {
   if (!b) return null;
+  const img = b.featured_image || b.image || '';
+  const dt = b.published_at || b.date || new Date().toISOString().split('T')[0];
   return {
     id: b.id,
     slug: b.slug,
@@ -143,9 +145,11 @@ export function mapBlogFromDb(b) {
     category: b.category || 'Interior Design',
     excerpt: b.excerpt || '',
     content: b.content || '',
-    image: b.featured_image,
-    date: b.published_at || new Date().toISOString().split('T')[0],
-    readTime: b.read_time || '4 min read',
+    image: img,
+    featuredImage: img,
+    date: dt,
+    publishedAt: dt,
+    readTime: b.read_time || b.readTime || '4 min read',
     status: b.status || 'published',
   };
 }
@@ -160,13 +164,17 @@ export function mapBlogToDb(b) {
   if (b.category !== undefined) out.category = b.category;
   if (b.excerpt !== undefined) out.excerpt = b.excerpt;
   if (b.content !== undefined) out.content = b.content;
-  if (b.image !== undefined || b.featured_image !== undefined) {
-    out.featured_image = b.image || b.featured_image;
+  const img = b.featured_image || b.featuredImage || b.image;
+  if (img !== undefined) {
+    out.featured_image = img;
   }
-  if (b.date !== undefined || b.published_at !== undefined) {
-    out.published_at = b.date || b.published_at;
+  const dt = b.published_at || b.publishedAt || b.date;
+  if (dt !== undefined) {
+    out.published_at = dt;
   }
-  if (b.readTime !== undefined) out.read_time = b.readTime;
+  if (b.readTime !== undefined || b.read_time !== undefined) {
+    out.read_time = b.readTime || b.read_time;
+  }
   if (b.status !== undefined) out.status = b.status;
   return out;
 }
