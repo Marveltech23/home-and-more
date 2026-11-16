@@ -258,19 +258,27 @@ export function mapSettingsFromDb(s) {
     logoUrl: social.logoUrl || '',
     logoLightUrl: social.logoLightUrl || '',
     logoDisplayMode: social.logoDisplayMode || 'both',
-    phone: s.phone || '+234 801 234 5678',
-    whatsappNumber: s.whatsapp_number || '+2348012345678',
+    phone: s.phone || '+234 803 351 3144',
+    whatsappNumber: s.whatsapp_number || '+2348033513144',
     whatsappGreeting:
       s.whatsapp_greeting || 'Hello Home & More Furniture, I would like to enquire about',
-    email: s.email || 'hello@homeandmorefurniture.ng',
+    email: s.email || 'Homeandmorefurnitures@gmail.com',
+    showroomAddress:
+      s.showroom_address ||
+      social.showroomAddress ||
+      '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
+    factoryAddress:
+      s.factory_address ||
+      social.factoryAddress ||
+      'Plot D10 Zauda Pazeri Dei-Dei, Abuja',
     address:
-      s.address || 'Plot 1042 Ahmadu Bello Way, Central Business District, Abuja, Nigeria',
+      s.address || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
     currency: '₦',
     social: {
-      facebook: social.facebook || 'https://facebook.com',
-      instagram: social.instagram || 'https://instagram.com',
-      youtube: social.youtube || 'https://youtube.com',
-      whatsapp: social.whatsapp || 'https://wa.me/2348012345678',
+      facebook: social.facebook || 'https://facebook.com/homeandmorefurniture',
+      instagram: social.instagram || 'https://instagram.com/homeandmorefurniture',
+      youtube: social.youtube || 'https://youtube.com/@homeandmorefurniture',
+      whatsapp: social.whatsapp || 'https://wa.me/2348033513144',
     },
   };
 }
@@ -281,13 +289,13 @@ export function mapSettingsToDb(s) {
     id: 'default_settings',
     business_name: s.businessName || 'Home & More Furniture',
     slogan: s.slogan || 'Modern Living. Better You.',
-    phone: s.phone || '+234 801 234 5678',
-    whatsapp_number: s.whatsappNumber || '+2348012345678',
+    phone: s.phone || '+234 803 351 3144',
+    whatsapp_number: s.whatsappNumber || '+2348033513144',
     whatsapp_greeting:
       s.whatsappGreeting || 'Hello Home & More Furniture, I would like to enquire about',
-    email: s.email || 'hello@homeandmorefurniture.ng',
+    email: s.email || 'Homeandmorefurnitures@gmail.com',
     address:
-      s.address || 'Plot 1042 Ahmadu Bello Way, Central Business District, Abuja, Nigeria',
+      s.address || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
     social: {
       facebook: s.social?.facebook || '',
       instagram: s.social?.instagram || '',
@@ -297,6 +305,8 @@ export function mapSettingsToDb(s) {
       logoLightUrl: s.logoLightUrl || '',
       logoDisplayMode: s.logoDisplayMode || 'both',
       logoSubtitle: s.logoSubtitle !== undefined ? s.logoSubtitle : 'FURNITURE',
+      showroomAddress: s.showroomAddress || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
+      factoryAddress: s.factoryAddress || 'Plot D10 Zauda Pazeri Dei-Dei, Abuja',
     },
     updated_at: new Date().toISOString(),
   };

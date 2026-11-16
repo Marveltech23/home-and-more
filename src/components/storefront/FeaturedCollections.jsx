@@ -8,7 +8,7 @@ const collections = [
     title: 'Living Room Sanctuary',
     subtitle: 'Warm terracotta, cloud sectionals & travertine tables',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
-    link: '/category/sofas-seating',
+    link: '/category/sofa-sets',
     tag: 'Curated Trend',
   },
   {
@@ -16,7 +16,7 @@ const collections = [
     title: 'Restful Bedroom Oasis',
     subtitle: 'Channeled velvet beds & orthopedic mattress support',
     image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80',
-    link: '/category/beds-mattresses',
+    link: '/category/bedroom-sets',
     tag: 'Rest & Wellness',
   },
   {

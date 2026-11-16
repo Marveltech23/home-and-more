@@ -44,15 +44,15 @@ const StoreContext = createContext(null);
 
 // Shared localStorage keys
 const STORAGE_KEYS = {
-  PRODUCTS: 'hm_store_products_v2',
-  CATEGORIES: 'hm_store_categories_v2',
-  ADS: 'hm_store_ads_v2',
-  BLOGS: 'hm_store_blogs_v2',
-  MEDIA: 'hm_store_media_v2',
-  ENQUIRIES: 'hm_store_enquiries_v2',
-  TESTIMONIALS: 'hm_store_testimonials_v2',
-  SETTINGS: 'hm_store_settings_v2',
-  HERO: 'hm_store_hero_v2',
+  PRODUCTS: 'hm_store_products_v3',
+  CATEGORIES: 'hm_store_categories_v3',
+  ADS: 'hm_store_ads_v3',
+  BLOGS: 'hm_store_blogs_v3',
+  MEDIA: 'hm_store_media_v3',
+  ENQUIRIES: 'hm_store_enquiries_v3',
+  TESTIMONIALS: 'hm_store_testimonials_v3',
+  SETTINGS: 'hm_store_settings_v3',
+  HERO: 'hm_store_hero_v3',
 };
 
 function getStoredOr(key, fallback) {

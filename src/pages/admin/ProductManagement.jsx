@@ -46,7 +46,7 @@ export default function ProductManagement() {
   // Form Fields
   const [name, setName] = useState('');
   const [sku, setSku] = useState('');
-  const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || 'sofas-seating');
+  const [categorySlug, setCategorySlug] = useState(categories[0]?.slug || 'sofa-sets');
   const [price, setPrice] = useState('');
   const [discountPrice, setDiscountPrice] = useState('');
   const [stock, setStock] = useState('5');
@@ -77,7 +77,7 @@ export default function ProductManagement() {
     setEditingId(null);
     setName('');
     setSku(`HM-${Math.floor(100 + Math.random() * 900)}`);
-    setCategorySlug(categories[0]?.slug || 'sofas-seating');
+    setCategorySlug(categories[0]?.slug || 'sofa-sets');
     setPrice('');
     setDiscountPrice('');
     setStock('5');

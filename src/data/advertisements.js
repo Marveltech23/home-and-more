@@ -23,7 +23,7 @@ export const advertisements = [
     tagline: 'Start 2027 in Absolute Comfort',
     description: 'Save up to 25% on luxury sectional sofas and accent chairs',
     buttonText: 'Explore Living Room',
-    buttonUrl: '/category/sofas-seating',
+    buttonUrl: '/category/sofa-sets',
     placement: 'shop_banner',
     desktopImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
     mobileImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',

@@ -17,15 +17,15 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- 3. Key Categories (Google Sitelinks Hierarchy) -->
+  <!-- 3. The 11 Product Categories (Google Sitelinks Hierarchy) -->
   <url>
-    <loc>https://www.homeandmorefurniture.com/category/sofas-seating</loc>
+    <loc>https://www.homeandmorefurniture.com/category/sofa-sets</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/category/chairs</loc>
+    <loc>https://www.homeandmorefurniture.com/category/office-furniture</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -37,81 +37,111 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/category/beds-mattresses</loc>
+    <loc>https://www.homeandmorefurniture.com/category/bedroom-sets</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/category/tv-stands</loc>
+    <loc>https://www.homeandmorefurniture.com/category/single-chairs</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/category/outdoor-furnitures</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/category/wardrobes</loc>
+    <loc>https://www.homeandmorefurniture.com/category/center-table</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/category/outdoor-furniture</loc>
+    <loc>https://www.homeandmorefurniture.com/category/tv-console</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/category/kitchen-cabinets</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/category/gift-items</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/category/tiles</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- 4. Top Products -->
+  <!-- 4. Featured Product Pages -->
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/accent-armchair</loc>
+    <loc>https://www.homeandmorefurniture.com/product/milano-7-seater-modular-fabric-sofa-set</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/modern-sofa-set</loc>
+    <loc>https://www.homeandmorefurniture.com/product/turin-curved-boucle-sectional-sofa</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/dining-table-set</loc>
+    <loc>https://www.homeandmorefurniture.com/product/prestige-executive-director-desk-set</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/luxury-lounge-chair</loc>
+    <loc>https://www.homeandmorefurniture.com/product/monarch-8-seater-marble-dining-table-set</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/king-plush-upholstered-bed</loc>
+    <loc>https://www.homeandmorefurniture.com/product/grand-king-plush-channeled-headboard-bed-suite</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/scandinavian-coffee-table</loc>
+    <loc>https://www.homeandmorefurniture.com/product/natural-travertine-fluted-marble-center-table</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/luxury-wooden-wardrobe</loc>
+    <loc>https://www.homeandmorefurniture.com/product/acoustic-slatted-american-walnut-tv-console</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/product/modern-acoustic-tv-stand</loc>
+    <loc>https://www.homeandmorefurniture.com/product/modular-high-gloss-island-kitchen-cabinet-set</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/product/calacatta-gold-glazed-polished-porcelain-floor-tiles</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- 5. Editorial & Blog Articles -->
+  <!-- 5. Editorial & Blog Articles (5 Solid In-Depth Guides) -->
   <url>
     <loc>https://www.homeandmorefurniture.com/blog</loc>
     <lastmod>2026-11-16</lastmod>
@@ -119,22 +149,34 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/blog/modern-living-tips-for-your-home</loc>
+    <loc>https://www.homeandmorefurniture.com/blog/modern-living-room-styling-abuja-sofas-center-tables</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/blog/choosing-the-right-furniture-style</loc>
+    <loc>https://www.homeandmorefurniture.com/blog/executive-office-furniture-guide-nigerian-professionals</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.homeandmorefurniture.com/blog/bedroom-design-ideas</loc>
+    <loc>https://www.homeandmorefurniture.com/blog/restful-bedroom-sanctuaries-choosing-upholstered-beds-mattresses</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/blog/contemporary-kitchen-cabinetry-island-trends-nigeria</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.homeandmorefurniture.com/blog/porcelain-vitrified-marble-tiles-flooring-guide-nigeria</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- 6. Essential Company Pages -->

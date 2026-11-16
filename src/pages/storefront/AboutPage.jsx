@@ -318,14 +318,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 6. ABUJA SHOWROOM LOCATION */}
+      {/* 6. ABUJA SHOWROOM & FACTORY LOCATION */}
       <section className="container-page">
         <div className="rounded-3xl bg-gradient-to-br from-[#FFF3EA] via-white to-[#F8EBDD] border border-[#F0DFD1] p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-sm space-y-5">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-[#24150F]">
-            Visit Our Abuja Showroom
+            Visit Our Abuja Showroom &amp; Factory Workshop
           </h2>
           <p className="text-sm sm:text-base text-[#82746B] max-w-xl mx-auto">
-            Experience our craftsmanship in person. Test cushion resilience, review timber wood finishes, inspect upholstery swatches, and consult directly with our design architects.
+            Experience our craftsmanship in person. Visit our luxury showroom at <strong>204 Pa Michael Imoudu Ave, 3rd Avenue Gwarinpa, Abuja</strong> or our state-of-the-art joinery factory at <strong>Plot D10 Zauda Pazeri Dei-Dei, Abuja</strong>. Test cushion resilience, review timber finishes, inspect porcelain tiles, and consult directly with our design architects.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a

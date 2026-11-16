@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, MessageSquare, Send, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, MessageSquare, Send, ChevronDown, CheckCircle2, Building2 } from 'lucide-react';
 import SectionHeading from '../../components/common/SectionHeading';
 import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
@@ -78,7 +78,7 @@ export default function ContactPage() {
     <div className="py-8 sm:py-14 space-y-16">
       <SEO
         title="Contact Us & Showroom Location | Abuja, Nigeria"
-        description="Visit Home & More Furniture showroom at Plot 1042 Ahmadu Bello Way, Central Business District, Abuja. Call or WhatsApp our interior specialists today."
+        description="Visit Home & More Furniture showroom at 204 Pa Michael Imoudu Ave, 3rd Avenue Gwarinpa, Abuja, or our factory at Plot D10 Zauda Pazeri Dei-Dei. Call or WhatsApp +234 803 351 3144."
         canonical="/contact"
       />
 
@@ -108,24 +108,54 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-bold text-base text-[#24150F]">Abuja Showroom</h3>
                 <p className="text-sm text-[#82746B] mt-1 leading-relaxed">
-                  {settings.address}
+                  {settings.showroomAddress || settings.address || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria'}
                 </p>
               </div>
             </div>
 
-            {/* Direct Phone */}
+            {/* Factory Address */}
+            <div className="card p-6 flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
+                <Building2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-[#24150F]">Factory &amp; Production Workshop</h3>
+                <p className="text-sm text-[#82746B] mt-1 leading-relaxed">
+                  {settings.factoryAddress || 'Plot D10 Zauda Pazeri Dei-Dei, Abuja'}
+                </p>
+              </div>
+            </div>
+
+            {/* Direct Phone & WhatsApp */}
             <div className="card p-6 flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
                 <Phone className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="font-bold text-base text-[#24150F]">Phone Consultation</h3>
-                <p className="text-sm text-[#82746B] mt-1">{settings.phone}</p>
+                <p className="text-sm text-[#82746B] mt-1">{settings.phone || '+234 803 351 3144'}</p>
                 <a
-                  href={`tel:${settings.phone.replace(/\s+/g, '')}`}
+                  href={`tel:${(settings.phone || '+2348033513144').replace(/\s+/g, '')}`}
                   className="text-xs font-semibold text-[#F36B0A] hover:underline mt-1 inline-block"
                 >
                   Call Now &rarr;
+                </a>
+              </div>
+            </div>
+
+            {/* Email Address */}
+            <div className="card p-6 flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
+                <Mail className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base text-[#24150F]">Email Inquiries</h3>
+                <p className="text-sm text-[#82746B] mt-1 break-all">{settings.email || 'Homeandmorefurnitures@gmail.com'}</p>
+                <a
+                  href={`mailto:${settings.email || 'Homeandmorefurnitures@gmail.com'}`}
+                  className="text-xs font-semibold text-[#F36B0A] hover:underline mt-1 inline-block"
+                >
+                  Send Email &rarr;
                 </a>
               </div>
             </div>
@@ -138,7 +168,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-bold text-base text-[#24150F]">Instant WhatsApp Support</h3>
                 <p className="text-sm text-[#82746B] mt-1">
-                  Chat directly with our design consultants for immediate quotes and photos.
+                  Chat directly with our design consultants for immediate quotes and photos ({settings.phone || '+234 803 351 3144'}).
                 </p>
                 <a
                   href={whatsAppLink}
@@ -213,7 +243,7 @@ export default function ContactPage() {
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+234 801 234 5678"
+                        placeholder="+234 803 351 3144"
                         className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A]"
                         required
                       />

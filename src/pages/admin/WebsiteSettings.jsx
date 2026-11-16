@@ -48,14 +48,20 @@ export default function WebsiteSettings() {
   const [showLightLogoSection, setShowLightLogoSection] = useState(Boolean(settings.logoLightUrl));
 
   // Contact Channels
-  const [phone, setPhone] = useState(settings.phone || '+234 801 234 5678');
-  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '+2348012345678');
+  const [phone, setPhone] = useState(settings.phone || '+234 803 351 3144');
+  const [whatsappNumber, setWhatsappNumber] = useState(settings.whatsappNumber || '+2348033513144');
   const [whatsappGreeting, setWhatsappGreeting] = useState(
     settings.whatsappGreeting || 'Hello Home & More Furniture, I would like to enquire about'
   );
-  const [email, setEmail] = useState(settings.email || 'hello@homeandmorefurniture.ng');
+  const [email, setEmail] = useState(settings.email || 'Homeandmorefurnitures@gmail.com');
   const [address, setAddress] = useState(
-    settings.address || 'Plot 1042 Ahmadu Bello Way, Central Business District, Abuja, Nigeria'
+    settings.address || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria'
+  );
+  const [showroomAddress, setShowroomAddress] = useState(
+    settings.showroomAddress || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria'
+  );
+  const [factoryAddress, setFactoryAddress] = useState(
+    settings.factoryAddress || 'Plot D10 Zauda Pazeri Dei-Dei, Abuja'
   );
 
   // Social Links
@@ -77,6 +83,8 @@ export default function WebsiteSettings() {
       if (settings.whatsappGreeting) setWhatsappGreeting(settings.whatsappGreeting);
       if (settings.email) setEmail(settings.email);
       if (settings.address) setAddress(settings.address);
+      if (settings.showroomAddress) setShowroomAddress(settings.showroomAddress);
+      if (settings.factoryAddress) setFactoryAddress(settings.factoryAddress);
       if (settings.social?.facebook) setFacebook(settings.social.facebook);
       if (settings.social?.instagram) setInstagram(settings.social.instagram);
       if (settings.social?.youtube) setYoutube(settings.social.youtube);
@@ -111,6 +119,8 @@ export default function WebsiteSettings() {
       whatsappGreeting: whatsappGreeting.trim(),
       email: email.trim(),
       address: address.trim(),
+      showroomAddress: showroomAddress.trim(),
+      factoryAddress: factoryAddress.trim(),
       social: {
         facebook: facebook.trim(),
         instagram: instagram.trim(),
@@ -468,12 +478,37 @@ export default function WebsiteSettings() {
             </div>
             <div>
               <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-                Abuja Showroom Address
+                Primary Contact Address
               </label>
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
+                Abuja Showroom Address
+              </label>
+              <input
+                type="text"
+                value={showroomAddress}
+                onChange={(e) => setShowroomAddress(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
+                Factory Address
+              </label>
+              <input
+                type="text"
+                value={factoryAddress}
+                onChange={(e) => setFactoryAddress(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
               />
             </div>

@@ -435,7 +435,7 @@ export default function ProductDetailsPage() {
               type="tel"
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
-              placeholder="+234 801 234 5678"
+              placeholder="+234 803 351 3144"
               className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A]"
               required
             />
