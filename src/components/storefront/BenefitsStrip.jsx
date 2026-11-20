@@ -1,50 +1,32 @@
-import { Award, Truck, ShieldCheck, Compass } from 'lucide-react';
+import { Gem, Truck, ShieldCheck, Handshake } from 'lucide-react';
 
-const credentials = [
-  {
-    icon: Award,
-    label: 'Kiln-Dried Hardwood Joinery',
-    desc: 'Grade-A seasoned teak & birch engineered for Nigeria’s climate.',
-  },
-  {
-    icon: Truck,
-    label: 'White-Glove Delivery & Placement',
-    desc: 'Unboxing and room placement by our trained logistics team.',
-  },
-  {
-    icon: ShieldCheck,
-    label: '10-Year Structural Guarantee',
-    desc: 'Every joint is mortise-and-tenoned for generational longevity.',
-  },
-  {
-    icon: Compass,
-    label: 'Private Showroom Consultations',
-    desc: 'Direct consultation with our architects in Gwarinpa, Abuja.',
-  },
+const benefits = [
+  { icon: Gem, label: 'Premium Quality', desc: 'Crafted with kiln-dried hardwoods & luxury fabrics' },
+  { icon: Truck, label: 'Fast Delivery in Abuja', desc: 'Careful white-glove setup and delivery' },
+  { icon: ShieldCheck, label: 'Dedicated Support', desc: 'Real furniture consultants on WhatsApp' },
+  { icon: Handshake, label: 'Trusted by Customers', desc: 'Over 2,800+ homes furnished in Nigeria' },
 ];
 
 export default function BenefitsStrip() {
   return (
-    <section aria-label="Our Craftsmanship Standards" className="container-page mt-16 sm:mt-24">
-      <div className="bg-[#1C1815] text-[#FBF9F5] p-8 sm:p-12 border border-white/10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-white/15">
-          {credentials.map(({ icon: Icon, label, desc }, i) => (
-            <div
-              key={label}
-              className={`space-y-3 ${i > 0 ? 'pt-6 sm:pt-0 sm:pl-8' : ''}`}
-            >
-              <div className="w-10 h-10 flex items-center justify-center text-[#B89358] border border-[#B89358]/30 bg-[#25201B]">
-                <Icon className="w-5 h-5" strokeWidth={1.5} />
-              </div>
-              <h4 className="font-luxury-serif text-lg font-normal tracking-wide text-white">
-                {label}
-              </h4>
-              <p className="text-xs text-white/65 font-light leading-relaxed">
-                {desc}
-              </p>
+    <section aria-label="Why choose Home & More Furniture" className="container-page mt-14 sm:mt-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 rounded-2xl border border-[#F0DFD1] bg-gradient-to-r from-[#FFFBF7] via-[#F8EBDD]/60 to-[#FFFBF7] p-5 sm:p-6 shadow-sm">
+        {benefits.map(({ icon: Icon, label, desc }, i) => (
+          <div
+            key={label}
+            className={`flex items-center gap-4 px-3 py-2 ${
+              i > 0 ? 'lg:border-l lg:border-[#F0DFD1]' : ''
+            }`}
+          >
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm border border-[#F0DFD1] text-[#F36B0A]">
+              <Icon className="h-6 w-6" strokeWidth={1.75} />
             </div>
-          ))}
-        </div>
+            <div>
+              <h4 className="text-sm font-bold text-[#24150F]">{label}</h4>
+              <p className="text-xs text-[#82746B] mt-0.5 line-clamp-1">{desc}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

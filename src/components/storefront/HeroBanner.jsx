@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { WhatsAppIcon } from '../common/BrandIcons';
 import SafeImage from '../common/SafeImage';
 import { useStore } from '../../context/StoreContext';
@@ -10,12 +10,12 @@ export default function HeroBanner() {
   const { heroSlides, settings } = useStore();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-  // Auto-slide every 7 seconds
+  // Auto-slide every 6 seconds
   useEffect(() => {
     if (!heroSlides || heroSlides.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 7000);
+    }, 6000);
     return () => clearInterval(timer);
   }, [heroSlides]);
 
@@ -25,113 +25,92 @@ export default function HeroBanner() {
 
   const whatsAppLink = buildWhatsAppLink(
     settings.whatsappNumber,
-    `${settings.whatsappGreeting} your current collection: ${currentSlide.headingStart} ${currentSlide.headingAccent}.`
+    `${settings.whatsappGreeting} your current collection.`
   );
 
   return (
-    <section className="relative overflow-hidden bg-[#FBF9F5] border-b border-[#E8E3DA] py-10 sm:py-16 lg:py-20">
+    <section className="relative overflow-hidden bg-[#FFFAF5] pt-6 pb-10 sm:py-12 lg:py-14">
       <div className="container-page">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          
-          {/* Left Column: Editorial & Showroom Rationale (5 cols) */}
-          <div className="lg:col-span-5 space-y-6 text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Left Column: Hero Text */}
+          <div className="lg:col-span-6 space-y-5 sm:space-y-6 text-center lg:text-left">
             {/* Eyebrow */}
-            <div className="flex items-center gap-3">
-              <span className="w-8 h-px bg-[#B89358]"></span>
-              <span className="text-[10px] sm:text-[11px] font-semibold tracking-ultra-caps text-[#B89358] uppercase">
-                {currentSlide.eyebrow || 'Contemporary Luxury • 2026 Edition'}
+            <div className="inline-flex items-center gap-2">
+              <span className="text-xs sm:text-sm font-bold tracking-widest text-[#F36B0A] uppercase">
+                {currentSlide.eyebrow}
               </span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-luxury-serif text-4xl sm:text-6xl font-light text-[#1C1815] tracking-tight leading-[1.08]">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#24150F] tracking-tight leading-[1.15]">
               {currentSlide.headingStart}{' '}
-              <span className="italic font-normal">{currentSlide.headingAccent}</span>
+              <span className="text-[#F36B0A]">{currentSlide.headingAccent}</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base text-[#5C554E] font-light leading-relaxed max-w-lg">
-              {currentSlide.subtitle || 'Sculptural curved sectionals, travertine monolithic tables, and seasoned teak crafted for Nigeria’s finest residences.'}
+            <p className="text-base sm:text-lg text-[#82746B] font-medium max-w-lg mx-auto lg:mx-0">
+              {currentSlide.subtitle}
             </p>
 
-            {/* Showroom Credential */}
-            <div className="flex items-center gap-2 text-xs text-[#7A7268] pt-1">
-              <MapPin className="w-3.5 h-3.5 text-[#B89358]" />
-              <span>Available to experience in person at our Gwarinpa Showroom, Abuja.</span>
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
-              <Link
-                to={currentSlide.secondaryLink || '/shop'}
-                className="btn-primary text-center"
-              >
-                <span>{currentSlide.secondaryCta || 'Discover Collection'}</span>
-                <ArrowRight className="w-3.5 h-3.5 ml-1" />
-              </Link>
-
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <a
                 href={whatsAppLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-secondary text-center"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#F36B0A] to-[#D94D00] text-white px-7 py-3.5 text-base font-semibold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5 transition-all duration-200"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5 fill-current" />
-                <span>Showroom Concierge</span>
+                <WhatsAppIcon className="w-5 h-5 fill-white" />
+                <span>Buy via WhatsApp</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
               </a>
+
+              {currentSlide.secondaryLink && (
+                <Link
+                  to={currentSlide.secondaryLink}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-[#F0DFD1] bg-white px-6 py-3.5 text-sm font-semibold text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] hover:bg-[#FFF3EA]/40 transition-all duration-200"
+                >
+                  <span>{currentSlide.secondaryCta || 'Discover Collection'}</span>
+                </Link>
+              )}
             </div>
 
-            {/* Architectural Slide Progress Indicators */}
+            {/* Carousel Navigation Dots */}
             {heroSlides.length > 1 && (
-              <div className="flex items-center gap-3 pt-6 border-t border-[#E8E3DA]">
+              <div className="flex items-center justify-center lg:justify-start gap-2 pt-4">
                 {heroSlides.map((slide, i) => (
                   <button
                     key={slide.id || i}
                     type="button"
                     onClick={() => setCurrentSlideIndex(i)}
-                    aria-label={`Slide ${i + 1}`}
-                    className="group py-2"
-                  >
-                    <div
-                      className={`h-0.5 transition-all duration-500 ${
-                        i === currentSlideIndex
-                          ? 'w-12 bg-[#1C1815]'
-                          : 'w-6 bg-[#E8E3DA] group-hover:bg-[#7A7268]'
-                      }`}
-                    />
-                    <span className="text-[9px] font-mono uppercase text-[#9A9185] block mt-1">
-                      0{i + 1}
-                    </span>
-                  </button>
+                    aria-label={`Go to slide ${i + 1}`}
+                    className={`h-2.5 transition-all duration-300 rounded-full ${
+                      i === currentSlideIndex
+                        ? 'w-8 bg-[#F36B0A]'
+                        : 'w-2.5 bg-[#F0DFD1] hover:bg-[#82746B]'
+                    }`}
+                  />
                 ))}
               </div>
             )}
           </div>
 
-          {/* Right Column: Architectural Furniture Photography (7 cols) */}
-          <div className="lg:col-span-7">
-            <div className="relative aspect-[16/11] bg-[#EFECE6] overflow-hidden border border-[#E8E3DA] group">
-              <SafeImage
-                src={currentSlide.image}
-                alt={`${currentSlide.headingStart} ${currentSlide.headingAccent}`}
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-102"
-              />
+          {/* Right Column: Hero Image */}
+          <div className="lg:col-span-6 relative">
+            <div className="relative mx-auto max-w-lg lg:max-w-none">
+              {/* Subtle background glow */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#F8EBDD] to-[#F36B0A]/10 rounded-3xl -rotate-1 transform scale-102 filter blur-sm pointer-events-none" />
 
-              {/* Subtle Ambient Corner Vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1C1815]/30 via-transparent to-transparent pointer-events-none" />
-
-              {/* Atelier Dimension & Origin Badge */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-[11px] font-light">
-                <span className="bg-[#1C1815]/85 backdrop-blur-xs px-3 py-1.5 border border-white/10 uppercase tracking-wider text-[10px]">
-                  Kiln-Dried Hardwood &bull; Master Joinery
-                </span>
-                <span className="hidden sm:inline bg-white/90 text-[#1C1815] px-3 py-1.5 text-[10px] uppercase tracking-wide-caps font-semibold">
-                  Abuja Stock
-                </span>
+              <div className="relative rounded-3xl overflow-hidden border border-[#F0DFD1] shadow-2xl bg-white aspect-[4/3] sm:aspect-[16/11]">
+                <SafeImage
+                  src={currentSlide.image}
+                  alt={currentSlide.headingStart || 'Living room furniture'}
+                  aspectRatio="aspect-auto"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>

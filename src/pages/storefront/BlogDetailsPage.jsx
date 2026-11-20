@@ -5,25 +5,22 @@ import SEO from '../../components/common/SEO';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 import { useToast } from '../../components/common/Toast';
-import { buildWhatsAppLink } from '../../utils/whatsapp';
 
 export default function BlogDetailsPage() {
   const { slug } = useParams();
-  const { blogs, settings } = useStore();
+  const { blogs } = useStore();
   const { addToast } = useToast();
 
   const blog = blogs.find((b) => b.slug === slug);
 
   if (!blog) {
     return (
-      <div className="bg-[#FBF9F5] min-h-screen py-24 text-center">
-        <div className="container-page max-w-md mx-auto space-y-4">
-          <h2 className="text-3xl font-luxury-serif text-[#1C1815]">Dispatch Not Located</h2>
-          <p className="text-sm text-[#70685E] font-light">The requested essay has been archived or relocated.</p>
-          <Link to="/blog" className="btn-luxury mt-6 inline-flex text-xs px-6 py-3">
-            Return to Gazette
-          </Link>
-        </div>
+      <div className="container-page py-20 text-center">
+        <h2 className="text-2xl font-bold text-[#24150F]">Article not found</h2>
+        <p className="text-[#82746B] mt-2">The article you requested could not be located.</p>
+        <Link to="/blog" className="btn-primary mt-6 inline-flex">
+          Back to Journal
+        </Link>
       </div>
     );
   }
@@ -37,7 +34,7 @@ export default function BlogDetailsPage() {
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href);
-      addToast({ message: 'Essay link copied to clipboard', type: 'success' });
+      addToast({ message: 'Article link copied!', type: 'success' });
     }
   };
 
@@ -57,7 +54,7 @@ export default function BlogDetailsPage() {
     datePublished: blogDt,
     author: {
       '@type': 'Person',
-      name: blog.author || 'Home & More Atelier Team',
+      name: blog.author || 'Home & More Styling Team',
     },
     publisher: {
       '@type': 'Organization',
@@ -70,15 +67,10 @@ export default function BlogDetailsPage() {
     mainEntityOfPage: `https://www.homeandmorefurniture.com/blog/${blog.slug}`,
   };
 
-  const whatsAppLink = buildWhatsAppLink(
-    settings.whatsappNumber || '+2348033513144',
-    `Hello Home & More Concierge, I was reading your journal essay "${blog.title}" and would like to consult with your design team.`
-  );
-
   return (
-    <div className="bg-[#FBF9F5] min-h-screen py-10 sm:py-16">
+    <div className="py-8 sm:py-12">
       <SEO
-        title={`${blog.title} | Atelier Gazette | Home & More Abuja`}
+        title={`${blog.title} | Furniture & Living Journal`}
         description={blog.excerpt}
         canonical={`/blog/${blog.slug}`}
         image={blogImg}
@@ -86,42 +78,41 @@ export default function BlogDetailsPage() {
         schema={blogSchema}
       />
 
-      <article className="container-page max-w-4xl mx-auto space-y-10">
+      <article className="container-page max-w-4xl mx-auto space-y-8">
         {/* Back Link */}
         <Link
           to="/blog"
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-ultra-caps text-[#70685E] hover:text-[#1C1815] transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#82746B] hover:text-[#F36B0A] transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Return to Gazette</span>
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to All Articles</span>
         </Link>
 
         {/* Header Block */}
-        <header className="space-y-6">
+        <header className="space-y-4">
           <div className="flex items-center gap-3">
-            <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+            <span className="bg-[#FFF3EA] text-[#F36B0A] text-xs font-bold px-3 py-1 rounded-full border border-[#F36B0A]/30 uppercase tracking-wider">
               {blog.category}
             </span>
-            <span className="text-xs text-[#A69E93]">•</span>
-            <span className="text-xs text-[#70685E] flex items-center gap-1 font-light">
-              <Clock className="w-3.5 h-3.5 stroke-[1.2]" />
+            <span className="text-xs text-[#82746B] flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5" />
               {blog.readTime}
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-luxury-serif font-light text-[#1C1815] tracking-tight leading-[1.15]">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#24150F] tracking-tight leading-tight">
             {blog.title}
           </h1>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-b border-[#E8E3DA] py-3.5 text-xs text-[#70685E]">
+          <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-b border-[#F0DFD1] py-3 text-xs text-[#82746B]">
             <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5 font-light text-[#1C1815]">
-                <User className="w-3.5 h-3.5 text-[#8C6D3B] stroke-[1.2]" />
+              <span className="flex items-center gap-1.5 font-semibold text-[#24150F]">
+                <User className="w-4 h-4 text-[#F36B0A]" />
                 {blog.author}
               </span>
               <span>•</span>
-              <span className="flex items-center gap-1.5 font-light">
-                <Calendar className="w-3.5 h-3.5 text-[#8C6D3B] stroke-[1.2]" />
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4 text-[#F36B0A]" />
                 Published {blog.publishedAt || blog.date}
               </span>
             </div>
@@ -129,16 +120,16 @@ export default function BlogDetailsPage() {
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-ultra-caps text-[#1C1815] hover:text-[#8C6D3B] transition-colors"
+              className="inline-flex items-center gap-1.5 font-semibold text-[#24150F] hover:text-[#F36B0A]"
             >
-              <Share2 className="w-3.5 h-3.5" />
-              <span>Share Essay</span>
+              <Share2 className="w-4 h-4" />
+              <span>Share Article</span>
             </button>
           </div>
         </header>
 
         {/* Hero Image */}
-        <div className="overflow-hidden aspect-[16/9] border border-[#E8E3DA] bg-[#EFECE6]">
+        <div className="rounded-3xl overflow-hidden aspect-[16/9] shadow-lg border border-[#F0DFD1]">
           <SafeImage
             src={blog.featuredImage || blog.image}
             alt={blog.title}
@@ -148,22 +139,22 @@ export default function BlogDetailsPage() {
         </div>
 
         {/* Article Excerpt Callout */}
-        <div className="p-8 bg-[#EFECE6]/50 border-l-2 border-[#8C6D3B] text-base font-luxury-serif text-[#1C1815] italic leading-relaxed">
+        <div className="p-6 rounded-2xl bg-[#FFF3EA]/60 border-l-4 border-[#F36B0A] text-base text-[#24150F] italic font-medium leading-relaxed">
           "{blog.excerpt}"
         </div>
 
         {/* Content Body */}
-        <div className="prose prose-stone max-w-none text-[#1C1815] leading-relaxed space-y-6 text-sm sm:text-base font-light">
+        <div className="prose prose-stone max-w-none text-[#24150F] leading-relaxed space-y-4 text-base">
           {blog.content.split('\n\n').map((paragraph, idx) => {
             if (paragraph.startsWith('### ')) {
               return (
-                <h3 key={idx} className="text-xl sm:text-2xl font-luxury-serif font-light text-[#1C1815] pt-6 pb-1 border-b border-[#E8E3DA]">
+                <h3 key={idx} className="text-xl font-bold text-[#24150F] pt-4">
                   {paragraph.replace('### ', '')}
                 </h3>
               );
             }
             return (
-              <p key={idx} className="text-[#332C26] leading-relaxed font-light">
+              <p key={idx} className="text-[#24150F]/90 leading-relaxed font-normal">
                 {paragraph}
               </p>
             );
@@ -171,56 +162,34 @@ export default function BlogDetailsPage() {
         </div>
 
         {/* Showroom WhatsApp Consultation Box */}
-        <div className="mt-14 p-8 sm:p-12 bg-[#1C1815] text-[#FBF9F5] border border-[#35302B] flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="space-y-2 text-center sm:text-left">
-            <span className="text-[10px] uppercase tracking-ultra-caps text-[#C4A470] font-semibold">
-              Interior Architecture Advisory
-            </span>
-            <h3 className="text-2xl font-luxury-serif text-[#FBF9F5]">Require Bespoke Styling Guidance?</h3>
-            <p className="text-xs text-[#A69E93] font-light max-w-md leading-relaxed">
-              Our Abuja interior architects provide material swatches, 3D room visualization, and white-glove bespoke commissions.
+        <div className="mt-12 p-8 rounded-3xl bg-gradient-to-br from-[#29160D] to-[#431B0E] text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="space-y-1 text-center sm:text-left">
+            <h3 className="text-xl font-bold text-white">Need Personal Design Consultation?</h3>
+            <p className="text-xs sm:text-sm text-white/80">
+              Our Abuja interior specialists help you select pieces and materials for your home.
             </p>
           </div>
-          <a
-            href={whatsAppLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-whatsapp text-xs py-3 px-6 shrink-0 shadow-none"
-          >
-            <WhatsAppIcon className="w-4 h-4 fill-white" />
-            <span>Consult via WhatsApp</span>
-          </a>
+          <Link to="/contact" className="btn-primary text-xs sm:text-sm py-3 px-6 shrink-0">
+            Contact Design Team
+          </Link>
         </div>
 
         {/* Related Articles */}
         {relatedArticles.length > 0 && (
-          <div className="pt-12 border-t border-[#E8E3DA] space-y-6">
-            <h3 className="text-2xl font-luxury-serif text-[#1C1815]">Related Essays</h3>
+          <div className="pt-12 border-t border-[#F0DFD1] space-y-6">
+            <h3 className="text-xl font-bold text-[#24150F]">Related Articles</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {relatedArticles.map((rel) => (
                 <Link
                   key={rel.id}
                   to={`/blog/${rel.slug}`}
-                  className="group border border-[#E8E3DA] bg-white p-5 flex gap-4 transition-colors hover:border-[#1C1815]"
+                  className="card p-5 group flex flex-col justify-between hover:shadow-card-hover transition-all"
                 >
-                  <div className="w-24 h-24 shrink-0 overflow-hidden bg-[#EFECE6]">
-                    <img
-                      src={rel.featuredImage || rel.image}
-                      alt={rel.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B]">
-                      {rel.category}
-                    </span>
-                    <h4 className="font-luxury-serif text-sm text-[#1C1815] group-hover:text-[#8C6D3B] line-clamp-2 leading-snug">
-                      {rel.title}
-                    </h4>
-                    <span className="text-[11px] text-[#70685E] font-light block">
-                      {rel.readTime}
-                    </span>
-                  </div>
+                  <span className="text-xs font-bold text-[#F36B0A] uppercase">{rel.category}</span>
+                  <h4 className="font-bold text-base text-[#24150F] group-hover:text-[#F36B0A] mt-1 transition-colors">
+                    {rel.title}
+                  </h4>
+                  <p className="text-xs text-[#82746B] mt-2 line-clamp-2">{rel.excerpt}</p>
                 </Link>
               ))}
             </div>
