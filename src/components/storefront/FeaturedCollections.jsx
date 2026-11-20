@@ -31,7 +31,7 @@ const collections = [
 
 export default function FeaturedCollections() {
   return (
-    <section className="container-page mt-16 sm:mt-20" aria-label="Featured Collections">
+    <section className="container-page mt-14 sm:mt-16" aria-label="Featured Collections">
       <SectionHeading
         title="Featured Collections"
         subtitle="Thoughtfully styled furniture sets designed to inspire modern homes"
@@ -44,38 +44,38 @@ export default function FeaturedCollections() {
           <Link
             key={col.id}
             to={col.link}
-            className="group relative overflow-hidden rounded-3xl aspect-[4/5] sm:aspect-[3/4] shadow-card hover:shadow-card-hover transition-all duration-500"
+            className="group relative overflow-hidden rounded-3xl aspect-[4/5] sm:aspect-[3/4] shadow-card hover:shadow-card-hover transition-all duration-300"
           >
             {/* Background Image */}
             <img
               src={col.image}
               alt={col.title}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
             />
 
             {/* Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#201611]/95 via-[#201611]/40 to-transparent opacity-90 transition-opacity group-hover:opacity-95" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#29160D] via-[#29160D]/40 to-transparent opacity-90 transition-opacity group-hover:opacity-95" />
 
             {/* Tag Badge */}
             <div className="absolute top-5 left-5">
-              <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-white/30 shadow-xs">
-                <Sparkles className="w-3 h-3 text-orange-200" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white border border-white/30">
+                <Sparkles className="w-3 h-3 text-[#F36B0A]" />
                 {col.tag}
               </span>
             </div>
 
-            {/* Content Area */}
-            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 space-y-2">
-              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-orange-200 transition-colors">
+            {/* Text & Action */}
+            <div className="absolute bottom-0 inset-x-0 p-6 flex flex-col justify-end text-white">
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight mb-1 group-hover:text-[#F36B0A] transition-colors">
                 {col.title}
               </h3>
-              <p className="text-xs sm:text-sm text-white/80 line-clamp-2 leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/80 mb-4 line-clamp-2">
                 {col.subtitle}
               </p>
-              <div className="pt-2 flex items-center gap-1.5 text-xs font-semibold text-[#E05A00] group-hover:text-white transition-colors">
-                <span>View Collection</span>
-                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-amber-300 group-hover:text-white transition-colors">
+                <span>Explore Collection</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           </Link>
