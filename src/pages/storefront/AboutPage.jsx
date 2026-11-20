@@ -58,12 +58,12 @@ const commercialProjects = [
     id: 'proj-4',
     category: 'Serviced Apartments',
     title: 'The Terraces Short-Let Development',
-    location: 'Guzape, Abuja',
-    scope: '14 Modern 2-Bedroom Serviced Units',
+    location: 'Jabi Lake District, Abuja',
+    scope: '16 Boutique Waterfront Apartments',
     description:
-      'Standardized production of contemporary slate sofas, fluted TV consoles, storage beds, and durable wipe-clean dining sets delivered and assembled on a rapid 3-week timeline.',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
-    tags: ['Turnkey Fit-Out', 'Storage Beds', 'Rapid Deployment'],
+      'Custom modular moisture-resistant kitchen cabinetry, minimalist TV entertainment consoles, dining suites, and heavy-wear contract bouclé sectionals with rapid delivery.',
+    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80',
+    tags: ['Modular Kitchens', 'TV Consoles', 'High-Traffic Bouclé'],
   },
 ];
 
@@ -71,104 +71,109 @@ export default function AboutPage() {
   const { settings } = useStore();
 
   const whatsAppLink = buildWhatsAppLink(
-    settings.whatsappNumber,
-    'Hello Home & More Furniture, I would like to enquire about your commercial and turnkey project services.'
+    settings.whatsappNumber || '+2348033513144',
+    'Hello Home & More Furniture, I am interested in discussing a commercial or bespoke residential fit-out.'
   );
 
   return (
-    <div className="py-8 sm:py-14 space-y-20">
+    <div className="bg-[#FBF9F5] py-10 sm:py-16 space-y-20">
       <SEO
-        title="About Us | Craftsmanship, Heritage & Turnkey Projects"
-        description="Learn about Home & More Furniture, our timber craftsmanship, Abuja showroom, and bespoke residential & commercial interior design projects."
+        title="About Us | Craftsmanship, Heritage & Turnkey Projects | Home & More"
+        description="Discover the atelier philosophy behind Home & More Furniture: kiln-dried solid hardwoods, our Gwarinpa showroom, Dei-Dei joinery factory, and turnkey architectural fit-outs in Abuja."
         canonical="/about"
       />
 
       {/* 1. HERO SECTION */}
       <section className="container-page">
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F36B0A]">
-            About Home &amp; More Furniture
+          <span className="text-[11px] font-semibold uppercase tracking-ultra-caps text-[#8C6D3B]">
+            The Atelier Philosophy
           </span>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#24150F] tracking-tight leading-tight">
-            Crafting Timeless Furniture For Modern Nigerian Homes &amp; Spaces
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-luxury-serif font-light text-[#1C1815] tracking-tight leading-[1.15]">
+            Crafting Spaces of Repose, Dignity &amp; Enduring Distinction
           </h1>
-          <p className="text-base sm:text-lg text-[#82746B] font-medium leading-relaxed">
-            We believe that a well-furnished space elevates every moment of life. Our mission is to blend international design sensibility with authentic local craftsmanship for private homes, luxury hotels, and corporate offices.
+          <p className="text-sm sm:text-base text-[#70685E] font-light leading-relaxed pt-2">
+            Home &amp; More Furniture was established to bridge international architectural sensibility with generational Nigerian woodworking. We craft honest, enduring furniture for distinguished residences, executive boardrooms, and luxury hospitality destinations.
           </p>
         </div>
 
-        {/* Hero Banner Image */}
-        <div className="mt-10 rounded-3xl overflow-hidden shadow-2xl border border-[#F0DFD1] aspect-[16/8]">
+        {/* Hero Architectural Image */}
+        <div className="mt-12 overflow-hidden border border-[#E8E3DA] aspect-[16/8] shadow-sm">
           <img
             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
-            alt="Home and More Furniture Showroom"
+            alt="Home and More Furniture Atelier Architecture"
             className="w-full h-full object-cover"
           />
         </div>
       </section>
 
-      {/* 2. STATS SECTION */}
-      <section className="bg-gradient-to-r from-[#29160D] via-[#3a1a0c] to-[#29160D] text-white py-14">
+      {/* 2. STATS SECTION (Architectural Espresso Strip) */}
+      <section className="bg-[#1C1815] text-[#FBF9F5] py-14 border-y border-[#35302B]">
         <div className="container-page grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="space-y-1">
-            <div className="text-3xl sm:text-5xl font-extrabold text-[#F36B0A]">2,800+</div>
-            <p className="text-xs sm:text-sm text-white/80 font-medium">Homes &amp; Offices Furnished</p>
+            <div className="text-3xl sm:text-4xl font-luxury-serif text-[#C4A470]">2,800+</div>
+            <p className="text-[11px] text-[#A69E93] uppercase tracking-ultra-caps">Homes &amp; Suites Furnished</p>
           </div>
           <div className="space-y-1">
-            <div className="text-3xl sm:text-5xl font-extrabold text-[#F36B0A]">65+</div>
-            <p className="text-xs sm:text-sm text-white/80 font-medium">Turnkey Hotel &amp; Office Projects</p>
+            <div className="text-3xl sm:text-4xl font-luxury-serif text-[#C4A470]">65+</div>
+            <p className="text-[11px] text-[#A69E93] uppercase tracking-ultra-caps">Commercial &amp; Hotel Fit-Outs</p>
           </div>
           <div className="space-y-1">
-            <div className="text-3xl sm:text-5xl font-extrabold text-[#F36B0A]">100%</div>
-            <p className="text-xs sm:text-sm text-white/80 font-medium">Kiln-Dried Hardwoods</p>
+            <div className="text-3xl sm:text-4xl font-luxury-serif text-[#C4A470]">100%</div>
+            <p className="text-[11px] text-[#A69E93] uppercase tracking-ultra-caps">Kiln-Dried Solid Hardwood</p>
           </div>
           <div className="space-y-1">
-            <div className="text-3xl sm:text-5xl font-extrabold text-[#F36B0A]">Abuja</div>
-            <p className="text-xs sm:text-sm text-white/80 font-medium">Central Showroom &amp; Workshop</p>
+            <div className="text-3xl sm:text-4xl font-luxury-serif text-[#C4A470]">Abuja</div>
+            <p className="text-[11px] text-[#A69E93] uppercase tracking-ultra-caps">Showroom &amp; Joinery Factory</p>
           </div>
         </div>
       </section>
 
       {/* 3. OUR STORY */}
       <section className="container-page">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-5">
-            <SectionHeading
-              title="Modern Living. Better You."
-              subtitle="The philosophy behind our craft"
-            />
-            <p className="text-sm sm:text-base text-[#24150F]/90 leading-relaxed font-normal">
-              Founded in Abuja, Home &amp; More Furniture was born from a desire to solve a common dilemma: clients shouldn't have to choose between exorbitant imported luxury or flimsy local alternatives.
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <span className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                Heritage &amp; Material Integrity
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-luxury-serif font-light text-[#1C1815]">
+                Modern Living. Better You.
+              </h2>
+            </div>
+            
+            <p className="text-sm sm:text-base text-[#70685E] leading-relaxed font-light">
+              Founded in Abuja, Home &amp; More Furniture was established to resolve an enduring frustration: discerning homeowners and architects were forced to choose between overpriced, fragile imports or generic local alternatives lacking structural discipline.
             </p>
-            <p className="text-sm sm:text-base text-[#24150F]/90 leading-relaxed font-normal">
-              Every sofa frame, dining table, and upholstered bed is constructed using kiln-dried solid teak, treated mahogany, and reinforced steel. We source top-tier fabrics and high-resilience memory foams that withstand daily life while maintaining sculptural beauty.
+            <p className="text-sm sm:text-base text-[#70685E] leading-relaxed font-light">
+              Every sofa armature, banquette bench, and dining table begins with kiln-dried African teak, treated mahogany, and precision-welded internal steel bracing. We pair these timeless frameworks with water-repellent Belgian linens, Italian velvet, and high-density memory foams engineered for decade-long structural resilience.
             </p>
 
-            <ul className="space-y-2.5 pt-2">
-              <li className="flex items-center gap-2.5 text-sm font-semibold text-[#24150F]">
-                <CheckCircle2 className="w-5 h-5 text-[#F36B0A] shrink-0" />
-                <span>Bespoke customization for room sizes, finishes, and fabrics</span>
+            <ul className="space-y-3 pt-2">
+              <li className="flex items-start gap-3 text-sm text-[#1C1815]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6D3B] mt-2 shrink-0" />
+                <span>Bespoke dimensional customization for private floorplans, custom stains, and curated textile swatches.</span>
               </li>
-              <li className="flex items-center gap-2.5 text-sm font-semibold text-[#24150F]">
-                <CheckCircle2 className="w-5 h-5 text-[#F36B0A] shrink-0" />
-                <span>Direct-from-workshop pricing in Nigerian Naira with no middleman markups</span>
+              <li className="flex items-start gap-3 text-sm text-[#1C1815]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6D3B] mt-2 shrink-0" />
+                <span>Direct-from-workshop pricing in Nigerian Naira with absolute transparency and zero intermediary markups.</span>
               </li>
-              <li className="flex items-center gap-2.5 text-sm font-semibold text-[#24150F]">
-                <CheckCircle2 className="w-5 h-5 text-[#F36B0A] shrink-0" />
-                <span>White-glove delivery, room placement, and expert installation</span>
+              <li className="flex items-start gap-3 text-sm text-[#1C1815]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6D3B] mt-2 shrink-0" />
+                <span>Dedicated white-glove logistics: room placement, unboxing, architectural assembly, and debris removal across Abuja.</span>
               </li>
             </ul>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl overflow-hidden shadow-md aspect-[3/4]">
+            <div className="border border-[#E8E3DA] overflow-hidden aspect-[3/4]">
               <img
                 src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80"
                 alt="Accent chair craftsmanship"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="rounded-2xl overflow-hidden shadow-md aspect-[3/4] translate-y-6">
+            <div className="border border-[#E8E3DA] overflow-hidden aspect-[3/4] translate-y-6">
               <img
                 src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=600&q=80"
                 alt="Dining woodworking"
@@ -180,97 +185,100 @@ export default function AboutPage() {
       </section>
 
       {/* 4. COMMERCIAL, HOTEL & CORPORATE PROJECTS SECTION */}
-      <section className="container-page space-y-10">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#F36B0A] bg-[#FFF3EA] px-3 py-1 rounded-full border border-[#F36B0A]/30 mb-3">
-            <Building2 className="w-3.5 h-3.5" />
-            <span>Commercial &amp; Contract Manufacturing</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#24150F] tracking-tight">
-            Turnkey Projects: Hotels, Corporate Offices &amp; Developments
+      <section className="container-page space-y-12">
+        <div className="max-w-2xl space-y-2">
+          <span className="text-[11px] font-semibold uppercase tracking-ultra-caps text-[#8C6D3B]">
+            Contract Manufacturing
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-luxury-serif font-light text-[#1C1815]">
+            Turnkey Suites: Hospitality &amp; Corporate Projects
           </h2>
-          <p className="text-sm sm:text-base text-[#82746B] mt-2 leading-relaxed">
-            Beyond private residences, Home &amp; More Furniture is the chosen manufacturing and fit-out partner for top Nigerian hospitality groups, corporate headquarters, and luxury property developers.
+          <p className="text-sm text-[#70685E] font-light leading-relaxed">
+            Beyond private residences, Home &amp; More is the contract manufacturing and fit-out partner of choice for luxury boutique hotels, corporate headquarters, and high-end residential developments across Abuja.
           </p>
         </div>
 
         {/* 3 Pillar Capabilities Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="card p-6 bg-white border border-[#F0DFD1] rounded-3xl space-y-3 hover:shadow-card-hover transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center border border-[#F36B0A]/20">
-              <Hotel className="w-6 h-6" />
+          <div className="p-8 bg-[#EFECE6]/50 border border-[#E8E3DA] space-y-3">
+            <div className="w-10 h-10 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center">
+              <Hotel className="w-5 h-5 stroke-[1.2]" />
             </div>
-            <h3 className="font-bold text-lg text-[#24150F]">Hotels &amp; Hospitality</h3>
-            <p className="text-xs sm:text-sm text-[#82746B] leading-relaxed">
-              Complete guest room packages, oversized acoustic headboards, lobby banquette pods, restaurant dining, and weather-resistant outdoor lounge furniture built to contract-grade durability.
+            <h3 className="font-luxury-serif text-lg text-[#1C1815]">Hotels &amp; Hospitality</h3>
+            <p className="text-xs text-[#70685E] leading-relaxed font-light">
+              Turnkey guest suite packages, oversized acoustic headboards, lobby banquettes, restaurant dining suites, and weather-resistant outdoor lounge pieces built to contract-grade durability.
             </p>
           </div>
 
-          <div className="card p-6 bg-white border border-[#F0DFD1] rounded-3xl space-y-3 hover:shadow-card-hover transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center border border-[#F36B0A]/20">
-              <Briefcase className="w-6 h-6" />
+          <div className="p-8 bg-[#EFECE6]/50 border border-[#E8E3DA] space-y-3">
+            <div className="w-10 h-10 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center">
+              <Briefcase className="w-5 h-5 stroke-[1.2]" />
             </div>
-            <h3 className="font-bold text-lg text-[#24150F]">Corporate &amp; Offices</h3>
-            <p className="text-xs sm:text-sm text-[#82746B] leading-relaxed">
-              Custom solid teak and walnut conference boardroom tables, ergonomic executive workstations, acoustic breakout booths, and reception visitor seating engineered with clean cable management.
+            <h3 className="font-luxury-serif text-lg text-[#1C1815]">Corporate &amp; Executive</h3>
+            <p className="text-xs text-[#70685E] leading-relaxed font-light">
+              Solid teak and walnut conference tables with concealed power channeling, ergonomic director seating, acoustic breakout pods, and reception consoles tailored to corporate identities.
             </p>
           </div>
 
-          <div className="card p-6 bg-white border border-[#F0DFD1] rounded-3xl space-y-3 hover:shadow-card-hover transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center border border-[#F36B0A]/20">
-              <Layers className="w-6 h-6" />
+          <div className="p-8 bg-[#EFECE6]/50 border border-[#E8E3DA] space-y-3">
+            <div className="w-10 h-10 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center">
+              <Layers className="w-5 h-5 stroke-[1.2]" />
             </div>
-            <h3 className="font-bold text-lg text-[#24150F]">Architect &amp; Developer Fit-Outs</h3>
-            <p className="text-xs sm:text-sm text-[#82746B] leading-relaxed">
-              We collaborate closely with architectural firms and interior designers, providing 3D CAD visualization review, custom wood staining, material specification, and rapid batch manufacturing.
+            <h3 className="font-luxury-serif text-lg text-[#1C1815]">Architectural Fit-Outs</h3>
+            <p className="text-xs text-[#70685E] leading-relaxed font-light">
+              Collaborating seamlessly with architectural practices and interior designers: full 3D CAD visualization reviews, custom timber staining, and rapid batch manufacturing in Dei-Dei.
             </p>
           </div>
         </div>
 
         {/* Featured Projects Portfolio Grid */}
-        <div className="space-y-6 pt-4">
-          <SectionHeading
-            title="Featured Turnkey Case Studies"
-            subtitle="A glimpse into recent spaces furnished by our Abuja project division"
-          />
+        <div className="space-y-8 pt-6">
+          <div className="border-b border-[#E8E3DA] pb-4">
+            <h3 className="text-2xl font-luxury-serif text-[#1C1815]">
+              Featured Turnkey Case Studies
+            </h3>
+            <p className="text-xs uppercase tracking-ultra-caps text-[#70685E] mt-1">
+              Recent contract installations completed by our Abuja project atelier
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {commercialProjects.map((proj) => (
               <div
                 key={proj.id}
-                className="card overflow-hidden rounded-3xl bg-white border border-[#F0DFD1] flex flex-col justify-between hover:shadow-card-hover group transition-all duration-300"
+                className="group border border-[#E8E3DA] bg-white flex flex-col justify-between transition-colors duration-300 hover:border-[#1C1815]"
               >
-                <div className="aspect-[16/10] overflow-hidden relative">
+                <div className="aspect-[16/10] overflow-hidden relative bg-[#EFECE6]">
                   <img
                     src={proj.image}
                     alt={proj.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute top-4 left-4">
-                    <span className="bg-[#29160D]/85 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1 rounded-full border border-white/20">
+                    <span className="bg-[#1C1815]/85 text-[#FBF9F5] text-[10px] font-semibold px-3 py-1 uppercase tracking-ultra-caps">
                       {proj.category}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4">
+                <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-5">
                   <div className="space-y-2">
-                    <div className="text-xs font-semibold text-[#F36B0A]">
+                    <div className="text-[11px] font-semibold text-[#8C6D3B] uppercase tracking-wider">
                       {proj.location} • {proj.scope}
                     </div>
-                    <h3 className="text-xl font-bold text-[#24150F] group-hover:text-[#F36B0A] transition-colors">
+                    <h4 className="text-xl font-luxury-serif text-[#1C1815]">
                       {proj.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#82746B] leading-relaxed">
+                    </h4>
+                    <p className="text-xs text-[#70685E] leading-relaxed font-light">
                       {proj.description}
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#F0DFD1] flex flex-wrap gap-1.5">
+                  <div className="pt-4 border-t border-[#E8E3DA] flex flex-wrap gap-2">
                     {proj.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="bg-[#FFFAF5] text-[#24150F] text-[10px] font-semibold px-2.5 py-1 rounded-md border border-[#F0DFD1]"
+                        className="bg-[#FBF9F5] text-[#1C1815] text-[10px] uppercase tracking-wider px-2.5 py-1 border border-[#E8E3DA]"
                       >
                         {tag}
                       </span>
@@ -285,16 +293,16 @@ export default function AboutPage() {
 
       {/* 5. COMMERCIAL CONTRACT CONSULTATION CTA */}
       <section className="container-page">
-        <div className="rounded-3xl bg-gradient-to-br from-[#29160D] via-[#3a1a0c] to-[#29160D] text-white p-8 sm:p-12 shadow-xl border border-orange-500/20 flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="space-y-2 text-center lg:text-left max-w-xl">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#F36B0A]">
+        <div className="bg-[#1C1815] text-[#FBF9F5] p-8 sm:p-14 border border-[#35302B] flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="space-y-3 text-center lg:text-left max-w-xl">
+            <span className="text-[10px] font-semibold uppercase tracking-ultra-caps text-[#C4A470]">
               Commercial Inquiries &amp; Tenders
             </span>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Planning a Hotel, Office or Turnkey Residential Project?
+            <h3 className="text-2xl sm:text-3xl font-luxury-serif text-[#FBF9F5]">
+              Furnishing a Hotel, Executive Boardroom, or Luxury Residence?
             </h3>
-            <p className="text-sm text-white/80 leading-relaxed">
-              Our project directors provide commercial quantity pricing, customized finish samples, and dedicated on-site installation timelines in Abuja and nationwide.
+            <p className="text-xs sm:text-sm text-[#A69E93] leading-relaxed font-light">
+              Our project directors provide commercial volume estimations, physical finish palettes, and guaranteed turnkey installation schedules across Nigeria.
             </p>
           </div>
 
@@ -303,16 +311,16 @@ export default function AboutPage() {
               href={whatsAppLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-whatsapp text-sm py-3 px-6 shadow-md"
+              className="btn-whatsapp text-xs py-3 px-6 shadow-none"
             >
-              <WhatsAppIcon className="w-5 h-5 fill-white" />
+              <WhatsAppIcon className="w-4 h-4 fill-white" />
               <span>Discuss Commercial Project</span>
             </a>
             <Link
               to="/contact"
-              className="px-6 py-3 rounded-full border border-white/20 bg-white/10 hover:bg-white hover:text-[#29160D] text-sm font-semibold text-white transition-all"
+              className="px-6 py-3 border border-[#E8E3DA]/30 text-xs font-semibold text-[#FBF9F5] tracking-ultra-caps uppercase hover:bg-white hover:text-[#1C1815] transition-all"
             >
-              Submit Project Tender
+              Submit Tender
             </Link>
           </div>
         </div>
@@ -320,25 +328,28 @@ export default function AboutPage() {
 
       {/* 6. ABUJA SHOWROOM & FACTORY LOCATION */}
       <section className="container-page">
-        <div className="rounded-3xl bg-gradient-to-br from-[#FFF3EA] via-white to-[#F8EBDD] border border-[#F0DFD1] p-8 sm:p-12 text-center max-w-3xl mx-auto shadow-sm space-y-5">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#24150F]">
-            Visit Our Abuja Showroom &amp; Factory Workshop
+        <div className="bg-[#EFECE6]/60 border border-[#E8E3DA] p-8 sm:p-14 text-center max-w-3xl mx-auto space-y-6">
+          <span className="text-[11px] font-semibold uppercase tracking-ultra-caps text-[#8C6D3B]">
+            Private Showroom &amp; Joinery Factory
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-luxury-serif font-light text-[#1C1815]">
+            Experience The Atelier In Person
           </h2>
-          <p className="text-sm sm:text-base text-[#82746B] max-w-xl mx-auto">
-            Experience our craftsmanship in person. Visit our luxury showroom at <strong>204 Pa Michael Imoudu Ave, 3rd Avenue Gwarinpa, Abuja</strong> or our state-of-the-art joinery factory at <strong>Plot D10 Zauda Pazeri Dei-Dei, Abuja</strong>. Test cushion resilience, review timber finishes, inspect porcelain tiles, and consult directly with our design architects.
+          <p className="text-xs sm:text-sm text-[#70685E] max-w-xl mx-auto font-light leading-relaxed">
+            Visit our flagship showroom at <strong className="text-[#1C1815] font-normal">204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, Abuja</strong> or our state-of-the-art joinery production factory at <strong className="text-[#1C1815] font-normal">Plot D10 Zauda Pazeri Dei-Dei, Abuja</strong>. Inspect hand-finished hardwood joints, select from 80+ imported upholstery swatches, and review custom architectural floorplans.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href={buildWhatsAppLink(settings.whatsappNumber, 'Hello Home & More, I would like to book an in-person showroom consultation.')}
+              href={buildWhatsAppLink(settings.whatsappNumber || '+2348033513144', 'Hello Home & More, I would like to book a private showroom consultation.')}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-whatsapp text-sm py-3 px-6 shadow-md"
+              className="btn-whatsapp text-xs py-3 px-6 shadow-none"
             >
-              <WhatsAppIcon className="w-5 h-5 fill-white" />
+              <WhatsAppIcon className="w-4 h-4 fill-white" />
               <span>Book Showroom Visit on WhatsApp</span>
             </a>
-            <Link to="/contact" className="btn-secondary text-sm py-3 px-6">
-              View Address &amp; Directions
+            <Link to="/contact" className="btn-luxury text-xs py-3 px-6">
+              View Addresses &amp; Directions
             </Link>
           </div>
         </div>

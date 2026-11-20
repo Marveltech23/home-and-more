@@ -31,22 +31,20 @@ export default function Logo({
   const businessName =
     overrideBusinessName !== undefined
       ? overrideBusinessName
-      : settings.businessName || 'Home & More Furniture';
+      : settings.businessName || 'Home & More';
 
   const subtitle =
     overrideSubtitle !== undefined
       ? overrideSubtitle
-      : settings.logoSubtitle !== undefined
+      : settings.logoSubtitle !== undefined && settings.logoSubtitle !== ''
       ? settings.logoSubtitle
-      : 'FURNITURE';
+      : 'ATELIER • ABUJA';
 
   const displayMode =
     overrideDisplayMode !== undefined
       ? overrideDisplayMode
       : settings.logoDisplayMode || 'both'; // 'both' | 'image_only'
 
-  // Pick appropriate logo URL:
-  // For dark backgrounds (footer, admin sidebar), prefer light variant if set, else fallback to primary logo
   const primaryLogo =
     overrideLogoUrl !== undefined ? overrideLogoUrl : settings.logoUrl || '';
 
@@ -57,40 +55,31 @@ export default function Logo({
 
   const activeLogoUrl = isLight ? lightLogo || primaryLogo : primaryLogo;
 
-  // Reset image error state whenever active logo URL changes
   useEffect(() => {
     setImageError(false);
   }, [activeLogoUrl]);
 
   const hasCustomLogo = Boolean(activeLogoUrl && !imageError);
 
-  const iconSizes = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10 sm:w-11 sm:h-11',
-    lg: 'w-12 h-12 sm:w-14 sm:h-14',
+  const badgeSizes = {
+    sm: 'w-7 h-7 text-xs',
+    md: 'w-9 h-9 text-sm',
+    lg: 'w-11 h-11 text-base',
   };
 
   const imageOnlyHeights = {
-    sm: 'h-8 max-h-8 max-w-[160px]',
-    md: 'h-10 sm:h-11 max-h-12 max-w-[220px]',
-    lg: 'h-12 sm:h-14 max-h-16 max-w-[280px]',
+    sm: 'h-7 max-h-7 max-w-[150px]',
+    md: 'h-9 max-h-9 max-w-[200px]',
+    lg: 'h-12 max-h-12 max-w-[260px]',
   };
 
   const textSizes = {
-    sm: { main: 'text-base font-bold', sub: 'text-[9px] font-bold tracking-[0.24em]' },
-    md: { main: 'text-lg sm:text-[22px] font-black tracking-tight', sub: 'text-[10px] sm:text-[11px] font-extrabold tracking-[0.28em]' },
-    lg: { main: 'text-2xl sm:text-[28px] font-black tracking-tight', sub: 'text-xs sm:text-[13px] font-extrabold tracking-[0.3em]' },
+    sm: { main: 'text-base sm:text-lg', sub: 'text-[8px] tracking-[0.24em]' },
+    md: { main: 'text-xl sm:text-2xl', sub: 'text-[9px] sm:text-[10px] tracking-[0.26em]' },
+    lg: { main: 'text-2xl sm:text-3xl', sub: 'text-[10px] sm:text-[11px] tracking-[0.3em]' },
   };
 
-  // Format typography: split name and subtitle gracefully
-  let mainText = businessName;
-  let subText = subtitle;
-  if (subText && mainText && mainText.toLowerCase().endsWith(subText.toLowerCase())) {
-    mainText = mainText.slice(0, -subText.length).trim();
-  }
-
   const renderContent = () => {
-    // Mode 1: Full Image Only (User uploaded a complete wordmark / banner logo)
     if (displayMode === 'image_only' && hasCustomLogo) {
       return (
         <div className="flex items-center">
@@ -98,23 +87,22 @@ export default function Logo({
             src={activeLogoUrl}
             alt={businessName}
             onError={() => setImageError(true)}
-            className={`${imageOnlyHeights[size]} w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]`}
+            className={`${imageOnlyHeights[size]} w-auto object-contain transition-transform duration-300 group-hover:scale-[1.02]`}
           />
         </div>
       );
     }
 
-    // Mode 2: Both (Custom emblem or signature house icon + brand typography)
     return (
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Brand Icon or Custom Emblem */}
+      <div className="flex items-center gap-3">
+        {/* Architectural Monogram Emblem */}
         <div
-          className={`${iconSizes[size]} shrink-0 relative flex items-center justify-center rounded-xl overflow-hidden shadow-xs transition-transform duration-200 group-hover:scale-105 ${
+          className={`${badgeSizes[size]} shrink-0 flex items-center justify-center font-luxury-serif font-semibold border transition-all duration-300 ${
             hasCustomLogo
-              ? isLight
-                ? 'bg-white/10 backdrop-blur-xs border border-white/20 p-1'
-                : 'bg-white border border-[#F0DFD1] p-1'
-              : 'bg-gradient-to-br from-[#F36B0A] to-[#D94D00] text-white shadow-sm'
+              ? 'bg-transparent p-0 border-0'
+              : isLight
+              ? 'bg-white/10 text-white border-white/25 group-hover:border-amber-300/60'
+              : 'bg-[#1C1815] text-[#FBF9F5] border-[#1C1815] group-hover:bg-[#B89358] group-hover:border-[#B89358]'
           }`}
         >
           {hasCustomLogo ? (
@@ -122,33 +110,29 @@ export default function Logo({
               src={activeLogoUrl}
               alt={businessName}
               onError={() => setImageError(true)}
-              className="w-full h-full object-contain rounded-lg"
+              className="w-full h-full object-contain"
             />
           ) : (
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-[85%] h-[85%] drop-shadow-xs">
-              {/* Signature Stylized Roof, Chimney & Architecture */}
-              <path d="M12 2.5L2 10.5h3v9.5c0 .55.45 1 1 1h4v-6h4v6h4c.55 0 1-.45 1-1v-9.5h3L12 2.5z" />
-              <path d="M17 3.5h2.5v4.5H17V3.5z" />
-            </svg>
+            <span className="tracking-tighter">HM</span>
           )}
         </div>
 
-        {/* Brand Typography */}
+        {/* Wordmark Typography */}
         <div className="flex flex-col justify-center leading-none">
           <span
-            className={`font-black tracking-tight transition-colors ${
+            className={`font-luxury-serif font-normal tracking-[0.14em] uppercase transition-colors ${
               textSizes[size].main
-            } ${isLight ? 'text-white' : 'text-[#24150F]'}`}
+            } ${isLight ? 'text-white' : 'text-[#1C1815]'}`}
           >
-            {mainText || 'Home & More'}
+            {businessName}
           </span>
-          {subText && (
+          {subtitle && (
             <span
-              className={`font-extrabold uppercase mt-0.5 ${
+              className={`font-sans font-medium uppercase mt-1 ${
                 textSizes[size].sub
-              } ${isLight ? 'text-orange-200/90' : 'text-[#82746B]'}`}
+              } ${isLight ? 'text-white/60' : 'text-[#7A7268]'}`}
             >
-              {subText}
+              {subtitle}
             </span>
           )}
         </div>

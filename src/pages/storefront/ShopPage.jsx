@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Filter, SlidersHorizontal, Search, X, Check } from 'lucide-react';
+import { SlidersHorizontal, Search, X, Check } from 'lucide-react';
 import ProductCard from '../../components/storefront/ProductCard';
 import SectionHeading from '../../components/common/SectionHeading';
 import EmptyState from '../../components/common/EmptyState';
@@ -20,7 +20,7 @@ export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
   const [searchQuery, setSearchQuery] = useState(queryParam);
   const [sortBy, setSortBy] = useState(sortParam);
-  const [priceRange, setPriceRange] = useState(600000); // Max budget slider
+  const [priceRange, setPriceRange] = useState(3000000); // Up to ₦3,000,000 for luxury suites
   const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
@@ -39,7 +39,7 @@ export default function ShopPage() {
     setSelectedCategory('all');
     setSearchQuery('');
     setSortBy('featured');
-    setPriceRange(600000);
+    setPriceRange(3000000);
     setInStockOnly(false);
     setSearchParams({});
   };
@@ -48,7 +48,6 @@ export default function ShopPage() {
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
-        // Only published products in storefront
         if (p.status !== 'published') return false;
 
         // Category filter
@@ -62,7 +61,8 @@ export default function ShopPage() {
           const matchesName = p.name.toLowerCase().includes(q);
           const matchesDesc = p.description?.toLowerCase().includes(q);
           const matchesTagline = p.tagline?.toLowerCase().includes(q);
-          if (!matchesName && !matchesDesc && !matchesTagline) return false;
+          const matchesMaterial = p.material?.toLowerCase().includes(q);
+          if (!matchesName && !matchesDesc && !matchesTagline && !matchesMaterial) return false;
         }
 
         // Max price filter
@@ -87,41 +87,50 @@ export default function ShopPage() {
   const activeCategoryObj = categories.find((c) => c.slug === selectedCategory);
 
   return (
-    <div className="container-page py-8 sm:py-12">
+    <div className="container-page py-8 sm:py-14 space-y-8">
       <SEO
-        title={activeCategoryObj ? `${activeCategoryObj.name} in Abuja | Modern Furniture` : 'Shop Modern Furniture in Abuja | Sofas, Beds, Dining & More'}
+        title={activeCategoryObj ? `${activeCategoryObj.name} | Luxury Furniture Catalogue` : 'The Furniture Catalogue | Contemporary Luxury in Abuja'}
         description={
           activeCategoryObj?.description
-            ? `${activeCategoryObj.description} Fast delivery in Abuja & across Nigeria.`
-            : 'Browse the complete Home & More Furniture catalog in Nigeria. Handcrafted luxury living room sets, dining tables, orthopedic mattresses, and storage.'
+            ? `${activeCategoryObj.description} Handcrafted in Abuja with white-glove nationwide delivery.`
+            : 'Browse the complete Home & More Furniture collection. Handcrafted curved sectionals, solid teak dining tables, executive director desks, and glazed porcelain tiles.'
         }
         canonical={activeCategoryObj ? `/category/${activeCategoryObj.slug}` : '/shop'}
       />
 
       {/* Header Banner */}
-      <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#24150F] tracking-tight">
-          {activeCategoryObj ? activeCategoryObj.name : 'All Furniture Collections'}
-        </h1>
-        <p className="text-sm sm:text-base text-[#82746B] mt-1.5 max-w-2xl">
-          {activeCategoryObj
-            ? activeCategoryObj.description
-            : 'Explore handcrafted, durable furniture for contemporary Nigerian homes. Hand-finished and delivered with care.'}
-        </p>
+      <div className="border-b border-[#E8E3DA] pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-2 max-w-2xl">
+          <span className="text-[10px] uppercase tracking-ultra-caps text-[#B89358] font-bold block">
+            HOME &amp; MORE ATELIER
+          </span>
+          <h1 className="font-luxury-serif text-4xl sm:text-5xl font-light text-[#1C1815] tracking-tight">
+            {activeCategoryObj ? activeCategoryObj.name : 'The Furniture Collection'}
+          </h1>
+          <p className="text-xs sm:text-sm text-[#7A7268] font-light leading-relaxed">
+            {activeCategoryObj
+              ? activeCategoryObj.description
+              : 'Discover handcrafted, durable furniture for contemporary Nigerian residences. Calibrated in proportions, timber seasoning, and tactile upholstery.'}
+          </p>
+        </div>
+
+        <div className="text-xs text-[#7A7268] font-mono">
+          Showing {filteredProducts.length} curated {filteredProducts.length === 1 ? 'piece' : 'pieces'}
+        </div>
       </div>
 
-      {/* Category Pills Strip */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar border-b border-[#F0DFD1]">
+      {/* Horizontal Category Switcher Strip */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 text-xs">
         <button
           type="button"
           onClick={() => handleCategorySelect('all')}
-          className={`shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+          className={`shrink-0 px-4 py-2 border uppercase tracking-wider text-[11px] transition-all ${
             selectedCategory === 'all'
-              ? 'bg-[#F36B0A] text-white shadow-sm'
-              : 'bg-white text-[#24150F] border border-[#F0DFD1] hover:border-[#F36B0A]'
+              ? 'bg-[#1C1815] text-white border-[#1C1815] font-semibold'
+              : 'bg-white text-[#5C554E] border-[#E8E3DA] hover:text-black hover:border-black'
           }`}
         >
-          All Furniture ({products.filter((p) => p.status === 'published').length})
+          All Collections ({products.filter((p) => p.status === 'published').length})
         </button>
 
         {categories.map((cat) => {
@@ -132,13 +141,13 @@ export default function ShopPage() {
 
           return (
             <button
-              key={cat.id}
+              key={cat.id || cat.slug}
               type="button"
               onClick={() => handleCategorySelect(cat.slug)}
-              className={`shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+              className={`shrink-0 px-4 py-2 border uppercase tracking-wider text-[11px] transition-all ${
                 isSelected
-                  ? 'bg-[#F36B0A] text-white shadow-sm'
-                  : 'bg-white text-[#24150F] border border-[#F0DFD1] hover:border-[#F36B0A]'
+                  ? 'bg-[#1C1815] text-white border-[#1C1815] font-semibold'
+                  : 'bg-white text-[#5C554E] border-[#E8E3DA] hover:text-black hover:border-black'
               }`}
             >
               {cat.name} ({count})
@@ -147,201 +156,128 @@ export default function ShopPage() {
         })}
       </div>
 
-      {/* Controls Bar: Search, Sort, Filter Toggle */}
-      <div className="my-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Controls Bar */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-2">
         {/* Search Input */}
         <div className="relative w-full md:max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#82746B]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9A9185]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, timber, style..."
-            className="w-full pl-10 pr-10 py-2.5 rounded-full border border-[#F0DFD1] bg-white text-sm focus:outline-none focus:border-[#F36B0A] shadow-inner text-[#24150F]"
+            placeholder="Search by piece name, teak, marble, bouclé..."
+            className="w-full pl-10 pr-10 py-2.5 border border-[#E8E3DA] bg-white text-xs focus:outline-none focus:border-[#1C1815] text-[#1C1815] placeholder-[#9A9185]"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#82746B] hover:text-[#24150F]"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#7A7268] hover:text-black"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
 
-        {/* Sort and Filters */}
-        <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto">
-          {/* Mobile Filter Toggle Button */}
+        {/* Sort & Mobile Filter Toggle */}
+        <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto text-xs">
           <button
             type="button"
             onClick={() => setMobileFilterOpen((prev) => !prev)}
-            className="md:hidden flex items-center gap-2 px-4 py-2 rounded-full border border-[#F0DFD1] bg-white text-xs font-semibold text-[#24150F]"
+            className="md:hidden flex items-center gap-2 px-3 py-2 border border-[#E8E3DA] bg-white font-semibold text-[#1C1815]"
           >
-            <Filter className="w-3.5 h-3.5 text-[#F36B0A]" />
-            <span>Filters</span>
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#B89358]" />
+            <span>Faceted Filters</span>
           </button>
 
-          {/* Sort Dropdown */}
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline text-xs font-medium text-[#82746B]">Sort by:</span>
+            <span className="hidden sm:inline text-xs text-[#7A7268] uppercase tracking-wide">Sort:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3.5 py-2 rounded-full border border-[#F0DFD1] bg-white text-xs sm:text-sm font-semibold text-[#24150F] focus:outline-none focus:border-[#F36B0A]"
+              className="px-3 py-2 border border-[#E8E3DA] bg-white text-xs uppercase tracking-wide-caps font-semibold text-[#1C1815] focus:outline-none focus:border-black cursor-pointer"
             >
-              <option value="featured">Featured Picks</option>
+              <option value="featured">Curated Selection</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
               <option value="name-asc">Alphabetical (A - Z)</option>
             </select>
           </div>
-
-          <span className="text-xs font-medium text-[#82746B]">
-            {filteredProducts.length} items
-          </span>
         </div>
       </div>
 
-      {/* Main Content Layout with Sidebar Filters on Desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Desktop Sidebar Filters */}
-        <aside className="hidden lg:block space-y-6">
-          <div className="card p-5 bg-white space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-[#F0DFD1]">
-              <div className="flex items-center gap-2">
-                <SlidersHorizontal className="w-4 h-4 text-[#F36B0A]" />
-                <h3 className="font-bold text-sm text-[#24150F]">Filter Products</h3>
+      {/* Main Layout: Desktop Sidebar Filters + Product Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Desktop Sidebar Filters (3 cols) */}
+        <aside className="hidden lg:block lg:col-span-3 space-y-6">
+          <div className="p-6 bg-white border border-[#E8E3DA] space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E8E3DA]">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1C1815]">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#B89358]" />
+                <span>Refine Selection</span>
               </div>
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="text-xs font-medium text-[#F36B0A] hover:underline"
+                className="text-[11px] text-[#B89358] hover:underline uppercase tracking-wider"
               >
-                Reset
+                Reset All
               </button>
             </div>
 
             {/* Price Slider */}
-            <div>
-              <div className="flex items-center justify-between text-xs font-semibold text-[#24150F] mb-2">
-                <span>Max Budget:</span>
-                <span className="text-[#F36B0A]">{formatNaira(priceRange)}</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-[#1C1815]">
+                <span className="font-semibold uppercase tracking-wider text-[11px]">Budget Ceiling:</span>
+                <span className="font-mono font-bold">{formatNaira(priceRange)}</span>
               </div>
               <input
                 type="range"
-                min="50000"
-                max="600000"
-                step="25000"
+                min="20000"
+                max="3000000"
+                step="50000"
                 value={priceRange}
                 onChange={(e) => setPriceRange(Number(e.target.value))}
-                className="w-full accent-[#F36B0A] cursor-pointer"
+                className="w-full accent-[#1C1815] cursor-pointer"
               />
-              <div className="flex justify-between text-[11px] text-[#82746B] mt-1">
-                <span>₦50,000</span>
-                <span>₦600,000+</span>
+              <div className="flex justify-between text-[10px] text-[#9A9185] font-mono">
+                <span>₦20k</span>
+                <span>₦3,000,000+</span>
               </div>
             </div>
 
-            {/* In Stock Only Checkbox */}
-            <div className="pt-3 border-t border-[#F0DFD1]">
-              <label className="flex items-center gap-2.5 cursor-pointer text-sm font-medium text-[#24150F]">
+            {/* In-Stock Filter */}
+            <div className="pt-4 border-t border-[#E8E3DA]">
+              <label className="flex items-center gap-3 cursor-pointer text-xs text-[#1C1815]">
                 <input
                   type="checkbox"
                   checked={inStockOnly}
                   onChange={(e) => setInStockOnly(e.target.checked)}
-                  className="rounded border-[#F0DFD1] text-[#F36B0A] focus:ring-[#F36B0A] w-4 h-4"
+                  className="accent-[#B89358] w-4 h-4 cursor-pointer"
                 />
-                <span>In Stock Only</span>
+                <span className="font-medium">In-Stock Abuja Showroom Only</span>
               </label>
             </div>
 
-            {/* WhatsApp Consultant Promo Box */}
-            <div className="rounded-2xl bg-gradient-to-br from-[#FFF3EA] to-[#F8EBDD] p-4 border border-[#F36B0A]/20 text-center">
-              <h4 className="text-xs font-bold text-[#24150F] uppercase tracking-wider">
-                Need Custom Sizing?
-              </h4>
-              <p className="text-[12px] text-[#82746B] mt-1">
-                We craft bespoke dimensions &amp; fabrics to fit your exact floor plan.
+            {/* Curated Materials Note */}
+            <div className="pt-4 border-t border-[#E8E3DA] space-y-2 text-xs text-[#7A7268]">
+              <span className="font-semibold uppercase tracking-wider text-[10px] text-[#1C1815] block">Materials Standard</span>
+              <p className="text-[11px] leading-relaxed">
+                All timber is sustainably harvested and kiln-dried in Nigeria. Upholstery utilizes rub-tested Italian bouclé and full-grain leather.
               </p>
             </div>
           </div>
         </aside>
 
-        {/* Mobile Filter Drawer */}
-        {mobileFilterOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-[#29160D]/60 backdrop-blur-sm p-4 flex items-end">
-            <div className="w-full bg-white rounded-3xl p-6 max-h-[85vh] overflow-y-auto space-y-6 animate-in slide-in-from-bottom">
-              <div className="flex items-center justify-between border-b border-[#F0DFD1] pb-3">
-                <h3 className="font-bold text-base text-[#24150F]">Filter Products</h3>
-                <button
-                  type="button"
-                  onClick={() => setMobileFilterOpen(false)}
-                  className="p-1 rounded-full text-[#82746B]"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Price Slider */}
-              <div>
-                <div className="flex items-center justify-between text-xs font-semibold text-[#24150F] mb-2">
-                  <span>Max Budget:</span>
-                  <span className="text-[#F36B0A]">{formatNaira(priceRange)}</span>
-                </div>
-                <input
-                  type="range"
-                  min="50000"
-                  max="600000"
-                  step="25000"
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(Number(e.target.value))}
-                  className="w-full accent-[#F36B0A]"
-                />
-              </div>
-
-              {/* In Stock */}
-              <label className="flex items-center gap-2.5 text-sm font-medium text-[#24150F]">
-                <input
-                  type="checkbox"
-                  checked={inStockOnly}
-                  onChange={(e) => setInStockOnly(e.target.checked)}
-                  className="rounded text-[#F36B0A]"
-                />
-                <span>In Stock Only</span>
-              </label>
-
-              <div className="flex gap-3 pt-4 border-t border-[#F0DFD1]">
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="w-1/2 py-2.5 rounded-full border border-[#F0DFD1] text-xs font-semibold text-[#24150F]"
-                >
-                  Reset
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMobileFilterOpen(false)}
-                  className="w-1/2 py-2.5 rounded-full bg-[#F36B0A] text-white text-xs font-semibold"
-                >
-                  Apply Filters
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Product Grid */}
-        <main className="lg:col-span-3">
+        {/* Product Grid (9 cols) */}
+        <main className="lg:col-span-9">
           {filteredProducts.length === 0 ? (
             <EmptyState
-              title="No furniture found"
-              message="No products match your selected filters or search terms. Try adjusting your search or budget."
-              actionLabel="Clear all filters"
-              onActionClick={handleResetFilters}
+              title="No pieces match your filters"
+              message="Try adjusting your maximum budget or clearing search keywords to view other pieces."
             />
           ) : (
-            <div className="grid grid-cols-1 min-[480px]:grid-cols-2 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

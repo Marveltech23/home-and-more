@@ -33,7 +33,6 @@ import SafeImage from '../../components/common/SafeImage';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
 
-// Demo Recharts data matching Screenshot 2
 const salesChartData = [
   { name: 'Week 1', orders: 620, revenue: 4200000 },
   { name: 'Week 2', orders: 890, revenue: 6800000 },
@@ -55,7 +54,6 @@ export default function DashboardOverview() {
 
   const navigate = useNavigate();
 
-  // State for delete modal
   const [deleteDialog, setDeleteDialog] = useState({
     isOpen: false,
     id: null,
@@ -76,163 +74,130 @@ export default function DashboardOverview() {
     setDeleteDialog({ isOpen: false, id: null, type: null, title: '' });
   };
 
-  const currentBanner = (activeAds && activeAds[0]) || (advertisements && advertisements[0]);
+  const currentBanner = (activeAds && activeAds[0]);
 
   return (
     <div className="space-y-8">
-      {/* 1. HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* 1. ARCHITECTURAL HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8E3DA] pb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#24150F] tracking-tight">
-            Dashboard
+          <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+            Retail Operations Control
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-luxury-serif font-light text-[#1C1815] tracking-tight">
+            Executive Atelier Overview
           </h1>
-          <p className="text-xs sm:text-sm text-[#82746B] mt-0.5">
-            Welcome back! Here's what's happening with your store today.
+          <p className="text-xs text-[#70685E] font-light mt-0.5">
+            Real-time showroom performance, client commissions, workshop inventory, and editorial status.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-[#F0DFD1] text-xs font-semibold text-[#24150F] shadow-sm hover:border-[#F36B0A] transition-colors"
-          >
-            <Calendar className="w-3.5 h-3.5 text-[#F36B0A]" />
-            <span>Last 30 Days</span>
-            <ChevronDown className="w-3.5 h-3.5 text-[#82746B]" />
-          </button>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#E8E3DA] text-xs font-semibold text-[#1C1815]">
+            <Calendar className="w-3.5 h-3.5 text-[#8C6D3B]" />
+            <span>Fiscal Month: Current</span>
+          </div>
         </div>
       </div>
 
-      {/* 2. STAT METRIC CARDS (Matching Requested Real-Time Metrics) */}
+      {/* 2. STAT METRIC CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* Card 1: Total Products (Requested: 1,251) */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF3EA] to-[#F8EBDD] border border-[#F0DFD1] p-6 shadow-sm flex flex-col justify-between">
-          <div className="relative z-10">
-            <div className="flex items-center justify-between">
-              <span className="p-2.5 rounded-2xl bg-[#F36B0A] text-white shadow-sm">
-                <Package className="w-5 h-5" />
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
-                <TrendingUp className="w-3 h-3" />
-                12%
-              </span>
-            </div>
-            <div className="mt-4">
-              <div className="text-3xl font-extrabold text-[#24150F]">
-                {(1243 + products.length).toLocaleString()}
-              </div>
-              <p className="text-xs font-semibold text-[#82746B] mt-1">Total Products</p>
-            </div>
+        {/* Card 1: Total Products */}
+        <div className="p-6 bg-white border border-[#E8E3DA] flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="p-2.5 bg-[#EFECE6] text-[#8C6D3B]">
+              <Package className="w-5 h-5 stroke-[1.4]" />
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 border border-emerald-200">
+              <TrendingUp className="w-3 h-3" />
+              +12%
+            </span>
           </div>
-          {/* Subtle background chair silhouette */}
-          <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-20 pointer-events-none">
-            <img
-              src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=200&q=80"
-              alt=""
-              className="w-full h-full object-cover rounded-2xl"
-            />
+          <div>
+            <div className="text-3xl font-luxury-serif text-[#1C1815]">
+              {(1243 + products.length).toLocaleString()}
+            </div>
+            <p className="text-[11px] uppercase tracking-ultra-caps text-[#70685E] mt-1 font-semibold">
+              Curated Catalogue
+            </p>
           </div>
         </div>
 
-        {/* Card 2: Categories (Requested: 20 with 5%) */}
-        <div className="relative overflow-hidden rounded-3xl bg-[#29160D] text-white border border-white/10 p-6 shadow-sm flex flex-col justify-between">
-          <div className="relative z-10">
-            <div className="flex items-center justify-between">
-              <span className="p-2.5 rounded-2xl bg-[#F36B0A] text-white shadow-sm">
-                <FolderTree className="w-5 h-5" />
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                <TrendingUp className="w-3 h-3" />
-                5%
-              </span>
-            </div>
-            <div className="mt-4">
-              <div className="text-3xl font-extrabold text-white">
-                {categories.length + 13}
-              </div>
-              <p className="text-xs font-semibold text-white/70 mt-1">Categories</p>
-            </div>
+        {/* Card 2: Categories */}
+        <div className="p-6 bg-[#1C1815] text-[#FBF9F5] border border-[#2C2621] flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="p-2.5 bg-[#2A241F] text-[#C4A470]">
+              <FolderTree className="w-5 h-5 stroke-[1.4]" />
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 border border-emerald-500/30">
+              <TrendingUp className="w-3 h-3" />
+              11 Suites
+            </span>
           </div>
-          <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-15 pointer-events-none">
-            <img
-              src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=200&q=80"
-              alt=""
-              className="w-full h-full object-cover rounded-2xl"
-            />
+          <div>
+            <div className="text-3xl font-luxury-serif text-[#FBF9F5]">
+              {categories.length + 11}
+            </div>
+            <p className="text-[11px] uppercase tracking-ultra-caps text-[#A69E93] mt-1 font-semibold">
+              Showroom Departments
+            </p>
           </div>
         </div>
 
-        {/* Card 3: Blog Posts (Requested: 87 with 8%) */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FFF3EA] to-[#F8EBDD] border border-[#F0DFD1] p-6 shadow-sm flex flex-col justify-between">
-          <div className="relative z-10">
-            <div className="flex items-center justify-between">
-              <span className="p-2.5 rounded-2xl bg-[#F36B0A] text-white shadow-sm">
-                <FileText className="w-5 h-5" />
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
-                <TrendingUp className="w-3 h-3" />
-                8%
-              </span>
-            </div>
-            <div className="mt-4">
-              <div className="text-3xl font-extrabold text-[#24150F]">
-                {blogs.length + 84}
-              </div>
-              <p className="text-xs font-semibold text-[#82746B] mt-1">Blog Posts</p>
-            </div>
+        {/* Card 3: Gazette Essays */}
+        <div className="p-6 bg-white border border-[#E8E3DA] flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="p-2.5 bg-[#EFECE6] text-[#8C6D3B]">
+              <FileText className="w-5 h-5 stroke-[1.4]" />
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#8C6D3B] bg-[#EFECE6] px-2 py-0.5">
+              Published
+            </span>
           </div>
-          <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-20 pointer-events-none">
-            <img
-              src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=200&q=80"
-              alt=""
-              className="w-full h-full object-cover rounded-2xl"
-            />
+          <div>
+            <div className="text-3xl font-luxury-serif text-[#1C1815]">
+              {blogs.length + 5}
+            </div>
+            <p className="text-[11px] uppercase tracking-ultra-caps text-[#70685E] mt-1 font-semibold">
+              Gazette Features
+            </p>
           </div>
         </div>
 
-        {/* Card 4: Total Orders (Requested: 2,850 with 14%) */}
-        <div className="relative overflow-hidden rounded-3xl bg-[#29160D] text-white border border-white/10 p-6 shadow-sm flex flex-col justify-between">
-          <div className="relative z-10">
-            <div className="flex items-center justify-between">
-              <span className="p-2.5 rounded-2xl bg-[#F36B0A] text-white shadow-sm">
-                <ShoppingBag className="w-5 h-5" />
-              </span>
-              <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                <TrendingUp className="w-3 h-3" />
-                14%
-              </span>
-            </div>
-            <div className="mt-4">
-              <div className="text-3xl font-extrabold text-white">
-                {(2840 + enquiries.length).toLocaleString()}
-              </div>
-              <p className="text-xs font-semibold text-white/70 mt-1">Total Orders</p>
-            </div>
+        {/* Card 4: Orders & Commissions */}
+        <div className="p-6 bg-[#1C1815] text-[#FBF9F5] border border-[#2C2621] flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="p-2.5 bg-[#2A241F] text-[#C4A470]">
+              <ShoppingBag className="w-5 h-5 stroke-[1.4]" />
+            </span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 border border-emerald-500/30">
+              <TrendingUp className="w-3 h-3" />
+              +14%
+            </span>
           </div>
-          <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-15 pointer-events-none">
-            <img
-              src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=200&q=80"
-              alt=""
-              className="w-full h-full object-cover rounded-2xl"
-            />
+          <div>
+            <div className="text-3xl font-luxury-serif text-[#FBF9F5]">
+              {(2840 + enquiries.length).toLocaleString()}
+            </div>
+            <p className="text-[11px] uppercase tracking-ultra-caps text-[#A69E93] mt-1 font-semibold">
+              Total Commissions &amp; Orders
+            </p>
           </div>
         </div>
       </div>
 
       {/* 3. MIDDLE ROW: Sales Chart, Quick Actions, Ad Manager */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Sales Overview Area Chart (lg:col-span-6) */}
-        <div className="lg:col-span-5 card p-6 bg-white space-y-4">
+        {/* Sales Overview Area Chart (lg:col-span-5) */}
+        <div className="lg:col-span-5 p-6 sm:p-8 bg-white border border-[#E8E3DA] space-y-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-5 rounded-full bg-[#F36B0A]" />
-              <h3 className="font-bold text-base text-[#24150F]">Sales Overview</h3>
+            <div>
+              <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                Financial Trajectory
+              </span>
+              <h3 className="font-luxury-serif text-lg text-[#1C1815]">Revenue &amp; Commission Volume</h3>
             </div>
-            <select className="text-xs font-semibold text-[#24150F] border border-[#F0DFD1] rounded-full px-3 py-1 bg-white focus:outline-none">
-              <option>This Month</option>
-              <option>Last 3 Months</option>
-              <option>This Year</option>
-            </select>
+            <span className="text-xs text-[#70685E] font-light">Abuja Showroom</span>
           </div>
 
           <div className="h-64 w-full pt-4">
@@ -240,20 +205,20 @@ export default function DashboardOverview() {
               <AreaChart data={salesChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F36B0A" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#F36B0A" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#8C6D3B" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#8C6D3B" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F0DFD1" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#82746B' }} tickLine={false} axisLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#82746B' }} tickLine={false} axisLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E3DA" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#70685E' }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: '#70685E' }} tickLine={false} axisLine={false} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
                       return (
-                        <div className="bg-[#29160D] text-white p-2.5 rounded-xl shadow-lg text-xs">
-                          <p className="font-bold">{payload[0].value.toLocaleString()} Orders</p>
-                          <p className="text-orange-300">{formatNaira(payload[0].payload.revenue)}</p>
+                        <div className="bg-[#1C1815] text-[#FBF9F5] p-3 text-xs space-y-1 border border-[#352E27]">
+                          <p className="font-semibold">{payload[0].value.toLocaleString()} Commissions</p>
+                          <p className="text-[#C4A470]">{formatNaira(payload[0].payload.revenue)}</p>
                         </div>
                       );
                     }
@@ -263,12 +228,12 @@ export default function DashboardOverview() {
                 <Area
                   type="monotone"
                   dataKey="orders"
-                  stroke="#F36B0A"
-                  strokeWidth={3}
+                  stroke="#8C6D3B"
+                  strokeWidth={2}
                   fillOpacity={1}
                   fill="url(#salesGrad)"
-                  dot={{ r: 4, fill: '#F36B0A', stroke: '#fff', strokeWidth: 2 }}
-                  activeDot={{ r: 6 }}
+                  dot={{ r: 3, fill: '#8C6D3B', stroke: '#fff', strokeWidth: 2 }}
+                  activeDot={{ r: 5 }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -276,86 +241,89 @@ export default function DashboardOverview() {
         </div>
 
         {/* Quick Actions Grid (lg:col-span-4) */}
-        <div className="lg:col-span-4 card p-6 bg-white space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-5 rounded-full bg-[#F36B0A]" />
-            <h3 className="font-bold text-base text-[#24150F]">Quick Actions</h3>
+        <div className="lg:col-span-4 p-6 sm:p-8 bg-white border border-[#E8E3DA] space-y-4">
+          <div className="space-y-0.5">
+            <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+              Shortcuts
+            </span>
+            <h3 className="font-luxury-serif text-lg text-[#1C1815]">Atelier Operations</h3>
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-1">
             <Link
               to="/admin/products?action=add"
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#FFFAF5] border border-[#F0DFD1] hover:border-[#F36B0A] hover:bg-[#FFF3EA] transition-all text-center group"
+              className="flex flex-col items-center justify-center p-4 bg-[#FBF9F5] border border-[#E8E3DA] hover:border-[#1C1815] transition-all text-center group"
             >
-              <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F36B0A] group-hover:scale-110 transition-transform">
-                <Plus className="w-5 h-5" />
+              <div className="w-9 h-9 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center group-hover:bg-[#1C1815] group-hover:text-white transition-colors">
+                <Plus className="w-4 h-4 stroke-[1.4]" />
               </div>
-              <span className="text-xs font-bold text-[#24150F] mt-2">Add New Product</span>
+              <span className="text-xs font-semibold text-[#1C1815] mt-2.5">Add Product</span>
             </Link>
 
             <Link
               to="/admin/blogs?action=add"
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#FFFAF5] border border-[#F0DFD1] hover:border-[#F36B0A] hover:bg-[#FFF3EA] transition-all text-center group"
+              className="flex flex-col items-center justify-center p-4 bg-[#FBF9F5] border border-[#E8E3DA] hover:border-[#1C1815] transition-all text-center group"
             >
-              <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F36B0A] group-hover:scale-110 transition-transform">
-                <PenSquare className="w-5 h-5" />
+              <div className="w-9 h-9 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center group-hover:bg-[#1C1815] group-hover:text-white transition-colors">
+                <PenSquare className="w-4 h-4 stroke-[1.4]" />
               </div>
-              <span className="text-xs font-bold text-[#24150F] mt-2">Write Blog Post</span>
+              <span className="text-xs font-semibold text-[#1C1815] mt-2.5">Write Essay</span>
             </Link>
 
             <Link
               to="/admin/media"
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#FFFAF5] border border-[#F0DFD1] hover:border-[#F36B0A] hover:bg-[#FFF3EA] transition-all text-center group"
+              className="flex flex-col items-center justify-center p-4 bg-[#FBF9F5] border border-[#E8E3DA] hover:border-[#1C1815] transition-all text-center group"
             >
-              <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F36B0A] group-hover:scale-110 transition-transform">
-                <Upload className="w-5 h-5" />
+              <div className="w-9 h-9 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center group-hover:bg-[#1C1815] group-hover:text-white transition-colors">
+                <Upload className="w-4 h-4 stroke-[1.4]" />
               </div>
-              <span className="text-xs font-bold text-[#24150F] mt-2">Upload Images</span>
+              <span className="text-xs font-semibold text-[#1C1815] mt-2.5">Media Library</span>
             </Link>
 
             <Link
               to="/admin/categories?action=add"
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#FFFAF5] border border-[#F0DFD1] hover:border-[#F36B0A] hover:bg-[#FFF3EA] transition-all text-center group"
+              className="flex flex-col items-center justify-center p-4 bg-[#FBF9F5] border border-[#E8E3DA] hover:border-[#1C1815] transition-all text-center group"
             >
-              <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F36B0A] group-hover:scale-110 transition-transform">
-                <FolderTree className="w-5 h-5" />
+              <div className="w-9 h-9 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center group-hover:bg-[#1C1815] group-hover:text-white transition-colors">
+                <FolderTree className="w-4 h-4 stroke-[1.4]" />
               </div>
-              <span className="text-xs font-bold text-[#24150F] mt-2">Add Category</span>
+              <span className="text-xs font-semibold text-[#1C1815] mt-2.5">Categories</span>
             </Link>
 
             <Link
               to="/admin/advertisements"
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#FFFAF5] border border-[#F0DFD1] hover:border-[#F36B0A] hover:bg-[#FFF3EA] transition-all text-center group"
+              className="flex flex-col items-center justify-center p-4 bg-[#FBF9F5] border border-[#E8E3DA] hover:border-[#1C1815] transition-all text-center group"
             >
-              <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F36B0A] group-hover:scale-110 transition-transform">
-                <Megaphone className="w-5 h-5" />
+              <div className="w-9 h-9 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center group-hover:bg-[#1C1815] group-hover:text-white transition-colors">
+                <Megaphone className="w-4 h-4 stroke-[1.4]" />
               </div>
-              <span className="text-xs font-bold text-[#24150F] mt-2">Update Ads</span>
+              <span className="text-xs font-semibold text-[#1C1815] mt-2.5">Exhibitions</span>
             </Link>
 
             <Link
               to="/admin/settings"
-              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-[#FFFAF5] border border-[#F0DFD1] hover:border-[#F36B0A] hover:bg-[#FFF3EA] transition-all text-center group"
+              className="flex flex-col items-center justify-center p-4 bg-[#FBF9F5] border border-[#E8E3DA] hover:border-[#1C1815] transition-all text-center group"
             >
-              <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-[#F36B0A] group-hover:scale-110 transition-transform">
-                <Settings className="w-5 h-5" />
+              <div className="w-9 h-9 border border-[#8C6D3B]/40 text-[#8C6D3B] flex items-center justify-center group-hover:bg-[#1C1815] group-hover:text-white transition-colors">
+                <Settings className="w-4 h-4 stroke-[1.4]" />
               </div>
-              <span className="text-xs font-bold text-[#24150F] mt-2">Manage Settings</span>
+              <span className="text-xs font-semibold text-[#1C1815] mt-2.5">Settings</span>
             </Link>
           </div>
         </div>
 
         {/* Advertisement Manager Preview Widget (lg:col-span-3) */}
-        <div className="lg:col-span-3 card p-6 bg-white space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-3 p-6 sm:p-8 bg-white border border-[#E8E3DA] space-y-4 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-5 rounded-full bg-[#F36B0A]" />
-              <h3 className="font-bold text-base text-[#24150F]">Ad Manager</h3>
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                Campaign Display
+              </span>
+              <h3 className="font-luxury-serif text-lg text-[#1C1815]">Curated Banner</h3>
             </div>
-            <p className="text-xs text-[#82746B] mt-1">Update your banners &amp; promo ads</p>
+            <p className="text-xs text-[#70685E] font-light mt-1">Active homepage exhibition promotion</p>
 
-            {/* Banner Preview */}
-            <div className="mt-3 rounded-2xl overflow-hidden border border-[#F0DFD1] aspect-[16/10] relative shadow-sm bg-[#29160D]">
+            <div className="mt-3 overflow-hidden border border-[#E8E3DA] aspect-[16/10] relative bg-[#1C1815]">
               <SafeImage
                 src={currentBanner?.desktopImage || currentBanner?.mobileImage}
                 alt="Ad Banner Preview"
@@ -363,12 +331,12 @@ export default function DashboardOverview() {
                 fit="cover"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3">
-                <div className="text-white">
-                  <p className="font-script text-base text-amber-300 leading-tight">
-                    {currentBanner?.title || 'Home & More'}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
+                <div className="text-white space-y-0.5">
+                  <p className="font-luxury-serif text-sm text-[#C4A470] leading-tight">
+                    {currentBanner?.title || 'Home & More Atelier'}
                   </p>
-                  <p className="text-xs font-bold truncate">{currentBanner?.subtitle || 'Promotional Banner'}</p>
+                  <p className="text-[10px] uppercase tracking-ultra-caps truncate">{currentBanner?.subtitle || 'Showroom Exhibition'}</p>
                 </div>
               </div>
             </div>
@@ -376,10 +344,10 @@ export default function DashboardOverview() {
 
           <Link
             to="/admin/advertisements?action=add"
-            className="w-full btn-primary text-xs py-2.5 flex items-center justify-center gap-2 shadow-sm"
+            className="w-full btn-luxury text-xs py-2.5 flex items-center justify-center gap-2"
           >
             <Upload className="w-3.5 h-3.5" />
-            <span>Upload New Ad</span>
+            <span>Upload New Exhibition</span>
           </Link>
         </div>
       </div>
@@ -387,44 +355,38 @@ export default function DashboardOverview() {
       {/* 4. BOTTOM ROW: Recent Products, Latest Blogs, Media Library */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Recent Products (lg:col-span-4) */}
-        <div className="lg:col-span-4 card p-6 bg-white space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-5 rounded-full bg-[#F36B0A]" />
-              <h3 className="font-bold text-base text-[#24150F]">Recent Products</h3>
-            </div>
+        <div className="lg:col-span-4 p-6 bg-white border border-[#E8E3DA] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E8E3DA] pb-3">
+            <h3 className="font-luxury-serif text-base text-[#1C1815]">Recent Catalog Pieces</h3>
             <Link
               to="/admin/products"
-              className="text-xs font-bold text-[#F36B0A] hover:underline flex items-center gap-1"
+              className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] hover:text-[#1C1815] flex items-center gap-1"
             >
               <span>View All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
-          <div className="divide-y divide-[#F0DFD1]">
+          <div className="divide-y divide-[#E8E3DA]">
             {products.slice(0, 4).map((p) => (
               <div key={p.id} className="py-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <img
                     src={p.image}
                     alt={p.name}
-                    className="w-12 h-12 rounded-xl object-cover border border-[#F0DFD1] shrink-0"
+                    className="w-12 h-12 object-cover border border-[#E8E3DA] shrink-0"
                   />
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#24150F] truncate">{p.name}</p>
-                    <p className="text-[11px] font-semibold text-[#F36B0A]">{formatNaira(p.price)}</p>
+                  <div className="min-w-0 space-y-0.5">
+                    <p className="text-xs font-semibold text-[#1C1815] truncate">{p.name}</p>
+                    <p className="text-[11px] font-luxury-serif text-[#8C6D3B]">{formatNaira(p.price)}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <Badge variant={p.status === 'published' ? 'published' : 'draft'}>
-                    {p.status === 'published' ? 'Published' : 'Draft'}
-                  </Badge>
                   <button
                     type="button"
                     onClick={() => navigate(`/admin/products?edit=${p.id}`)}
-                    className="p-1 rounded text-[#82746B] hover:text-[#F36B0A]"
+                    className="p-1 text-[#70685E] hover:text-[#1C1815]"
                     title="Edit Product"
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -432,7 +394,7 @@ export default function DashboardOverview() {
                   <button
                     type="button"
                     onClick={() => handleOpenDelete(p.id, 'product', p.name)}
-                    className="p-1 rounded text-[#82746B] hover:text-rose-600"
+                    className="p-1 text-[#70685E] hover:text-rose-600"
                     title="Delete Product"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -444,26 +406,23 @@ export default function DashboardOverview() {
         </div>
 
         {/* Latest Blog Posts (lg:col-span-4) */}
-        <div className="lg:col-span-4 card p-6 bg-white space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-5 rounded-full bg-[#F36B0A]" />
-              <h3 className="font-bold text-base text-[#24150F]">Latest Blog Posts</h3>
-            </div>
+        <div className="lg:col-span-4 p-6 bg-white border border-[#E8E3DA] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E8E3DA] pb-3">
+            <h3 className="font-luxury-serif text-base text-[#1C1815]">Latest Gazette Dispatches</h3>
             <Link
               to="/admin/blogs"
-              className="text-xs font-bold text-[#F36B0A] hover:underline flex items-center gap-1"
+              className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] hover:text-[#1C1815] flex items-center gap-1"
             >
               <span>View All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
-          <div className="divide-y divide-[#F0DFD1]">
+          <div className="divide-y divide-[#E8E3DA]">
             {blogs.slice(0, 3).map((b) => (
               <div key={b.id} className="py-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#F0DFD1] shrink-0 bg-[#FFFAF5]">
+                  <div className="w-12 h-12 overflow-hidden border border-[#E8E3DA] shrink-0 bg-[#EFECE6]">
                     <SafeImage
                       src={b.featuredImage || b.image}
                       alt={b.title}
@@ -472,20 +431,17 @@ export default function DashboardOverview() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#24150F] truncate">{b.title}</p>
-                    <p className="text-[11px] text-[#82746B]">{b.publishedAt || b.date}</p>
+                  <div className="min-w-0 space-y-0.5">
+                    <p className="text-xs font-semibold text-[#1C1815] truncate">{b.title}</p>
+                    <p className="text-[10px] text-[#70685E]">{b.publishedAt || b.date}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
-                  <Badge variant={b.status === 'published' ? 'published' : 'draft'}>
-                    Published
-                  </Badge>
                   <button
                     type="button"
                     onClick={() => navigate(`/admin/blogs?edit=${b.id}`)}
-                    className="p-1 rounded text-[#82746B] hover:text-[#F36B0A]"
+                    className="p-1 text-[#70685E] hover:text-[#1C1815]"
                     title="Edit Blog"
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -493,7 +449,7 @@ export default function DashboardOverview() {
                   <button
                     type="button"
                     onClick={() => handleOpenDelete(b.id, 'blog', b.title)}
-                    className="p-1 rounded text-[#82746B] hover:text-rose-600"
+                    className="p-1 text-[#70685E] hover:text-rose-600"
                     title="Delete Blog"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -505,18 +461,15 @@ export default function DashboardOverview() {
         </div>
 
         {/* Media Library Grid (lg:col-span-4) */}
-        <div className="lg:col-span-4 card p-6 bg-white space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-5 rounded-full bg-[#F36B0A]" />
-              <h3 className="font-bold text-base text-[#24150F]">Media Library</h3>
-            </div>
+        <div className="lg:col-span-4 p-6 bg-white border border-[#E8E3DA] space-y-4">
+          <div className="flex items-center justify-between border-b border-[#E8E3DA] pb-3">
+            <h3 className="font-luxury-serif text-base text-[#1C1815]">Media Archive</h3>
             <Link
               to="/admin/media"
-              className="text-xs font-bold text-[#F36B0A] hover:underline flex items-center gap-1"
+              className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] hover:text-[#1C1815] flex items-center gap-1"
             >
               <span>View All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
@@ -524,7 +477,7 @@ export default function DashboardOverview() {
             {media.slice(0, 8).map((m) => (
               <div
                 key={m.id}
-                className="aspect-square rounded-xl overflow-hidden border border-[#F0DFD1] shadow-sm hover:scale-105 transition-transform group cursor-pointer"
+                className="aspect-square overflow-hidden border border-[#E8E3DA] hover:border-[#1C1815] transition-colors cursor-pointer"
                 onClick={() => navigate('/admin/media')}
               >
                 <img src={m.url} alt={m.name} className="w-full h-full object-cover" />

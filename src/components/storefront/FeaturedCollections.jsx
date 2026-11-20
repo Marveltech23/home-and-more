@@ -1,81 +1,81 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import SectionHeading from '../common/SectionHeading';
 
 const collections = [
   {
     id: 'col-1',
-    title: 'Living Room Sanctuary',
-    subtitle: 'Warm terracotta, cloud sectionals & travertine tables',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    title: 'The Living Sanctuary',
+    subtitle: 'Low-slung curved bouclé sectionals paired with natural honed travertine center tables.',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85',
     link: '/category/sofa-sets',
-    tag: 'Curated Trend',
+    tag: 'Architectural Seating',
   },
   {
     id: 'col-2',
-    title: 'Restful Bedroom Oasis',
-    subtitle: 'Channeled velvet beds & orthopedic mattress support',
-    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80',
+    title: 'Restful Master Bedroom',
+    subtitle: '7-foot channeled acoustic velvet headboards and concealed hydraulic storage beds.',
+    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=85',
     link: '/category/bedroom-sets',
     tag: 'Rest & Wellness',
   },
   {
     id: 'col-3',
-    title: 'Artisan Dining Space',
-    subtitle: 'Solid teak dining sets & linen upholstered chairs',
-    image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80',
+    title: 'Banquet & Dining Spaces',
+    subtitle: 'Solid kiln-dried Nigerian teak and sintered marble slabs seating up to 12 guests.',
+    image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85',
     link: '/category/dining-sets',
-    tag: 'Gatherings',
+    tag: 'Communal Feasts',
   },
 ];
 
 export default function FeaturedCollections() {
   return (
-    <section className="container-page mt-14 sm:mt-16" aria-label="Featured Collections">
+    <section className="container-page mt-16 sm:mt-24" aria-label="Curated Living Suites">
       <SectionHeading
-        title="Featured Collections"
-        subtitle="Thoughtfully styled furniture sets designed to inspire modern homes"
-        actionLabel="Explore All"
+        eyebrow="EDITORIAL CURATION"
+        title="Complete Interior Suites"
+        subtitle="Thoughtfully harmonized furniture ensembles curated to elevate modern Nigerian architecture."
+        actionLabel="Explore All Suites"
         actionTo="/shop"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {collections.map((col) => (
           <Link
             key={col.id}
             to={col.link}
-            className="group relative overflow-hidden rounded-3xl aspect-[4/5] sm:aspect-[3/4] shadow-card hover:shadow-card-hover transition-all duration-300"
+            className="group relative overflow-hidden aspect-[3/4] bg-[#EFECE6] border border-[#E8E3DA] transition-all duration-500 hover:border-[#B89358]"
           >
-            {/* Background Image */}
+            {/* Background Photography */}
             <img
               src={col.image}
               alt={col.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 brightness-[0.93]"
               loading="lazy"
             />
 
             {/* Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#29160D] via-[#29160D]/40 to-transparent opacity-90 transition-opacity group-hover:opacity-95" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1C1815]/90 via-[#1C1815]/35 to-transparent transition-opacity group-hover:opacity-95" />
 
-            {/* Tag Badge */}
-            <div className="absolute top-5 left-5">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white border border-white/30">
-                <Sparkles className="w-3 h-3 text-[#F36B0A]" />
+            {/* Editorial Category Tag */}
+            <div className="absolute top-6 left-6">
+              <span className="text-[10px] uppercase tracking-ultra-caps text-white/90 bg-[#1C1815]/80 backdrop-blur-xs px-3 py-1 border border-white/15">
                 {col.tag}
               </span>
             </div>
 
-            {/* Text & Action */}
-            <div className="absolute bottom-0 inset-x-0 p-6 flex flex-col justify-end text-white">
-              <h3 className="text-xl sm:text-2xl font-bold tracking-tight mb-1 group-hover:text-[#F36B0A] transition-colors">
+            {/* Bottom Typographic Layout */}
+            <div className="absolute bottom-0 inset-x-0 p-6 sm:p-8 flex flex-col justify-end text-white space-y-2">
+              <h3 className="font-luxury-serif text-2xl sm:text-3xl font-light tracking-tight group-hover:text-amber-200 transition-colors">
                 {col.title}
               </h3>
-              <p className="text-xs sm:text-sm text-white/80 mb-4 line-clamp-2">
+              <p className="text-xs text-white/75 font-light leading-relaxed line-clamp-2">
                 {col.subtitle}
               </p>
-              <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-amber-300 group-hover:text-white transition-colors">
-                <span>Explore Collection</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <div className="pt-2 inline-flex items-center gap-2 text-xs uppercase tracking-wide-caps text-amber-200 font-semibold group-hover:text-white transition-colors">
+                <span>Explore Suite</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           </Link>

@@ -10,23 +10,23 @@ import { buildWhatsAppLink } from '../../utils/whatsapp';
 const faqs = [
   {
     q: 'How fast is furniture delivery within Abuja?',
-    a: 'For in-stock items, delivery within Abuja (Maitama, Asokoro, Wuse 2, Gwarinpa, Jabi, Central Area) takes 24 to 48 hours. Our logistics team handles transport, unboxing, and room placement.',
+    a: 'For in-stock suites and catalog items, delivery within Abuja (Maitama, Asokoro, Wuse 2, Gwarinpa, Jabi, Central Area) is dispatched within 24 to 48 hours. Our dedicated logistics team handles white-glove transport, unboxing, and room placement.',
   },
   {
     q: 'Do you deliver outside of Abuja?',
-    a: 'Yes! We deliver across Nigeria (Lagos, Port Harcourt, Kano, Ibadan, Kaduna, etc.) via verified freight partners with wooden crating for protection.',
+    a: 'Yes. We deliver across Nigeria (Lagos, Port Harcourt, Kano, Ibadan, Kaduna, etc.) via verified freight partners using custom-built wooden protective crating.',
   },
   {
-    q: 'Can I customize dimensions, colors, and upholstery?',
-    a: 'Absolutely. We offer full bespoke customization. You can choose from over 60+ fabric swatches (linen, velvet, bouclé, leatherette) and adjust length, depth, and timber stains.',
+    q: 'Can I customize dimensions, finishes, and upholstery?',
+    a: 'Absolutely. We offer complete bespoke customization. You can choose from over 80+ imported fabric swatches (Belgian linen, bouclé, Italian velvet, premium leatherette) and specify exact room dimensions and timber stains.',
   },
   {
     q: 'What is your warranty policy?',
-    a: 'All our solid wood furniture pieces come with a 12-month structural craftsmanship warranty covering joint integrity, timber stability, and foam resilience.',
+    a: 'All our solid wood furniture pieces come with a 10-year structural integrity guarantee covering joint construction, kiln-dried timber stability, and internal framing.',
   },
   {
-    q: 'What payment methods do you accept?',
-    a: 'We accept bank transfers, POS card payments at our Abuja showroom, and verified online payments. For custom orders, a 70% production deposit is required.',
+    q: 'What payment and commission methods do you accept?',
+    a: 'We accept bank transfers, POS card payments at our Abuja showroom, and verified online payments. For bespoke architectural commissions, a 70% production deposit is standard.',
   },
 ];
 
@@ -60,7 +60,7 @@ export default function ContactPage() {
 
     setSubmitted(true);
     addToast({
-      message: 'Your message has been received! We will reach out within a few hours.',
+      message: 'Your inquiry has been received. Our concierge will reach out promptly.',
       type: 'success',
     });
     setName('');
@@ -70,28 +70,28 @@ export default function ContactPage() {
   };
 
   const whatsAppLink = buildWhatsAppLink(
-    settings.whatsappNumber,
-    'Hello Home & More Furniture, I would like to get in touch with your team.'
+    settings.whatsappNumber || '+2348033513144',
+    'Hello Home & More Concierge, I would like to schedule a private showroom consultation or inquire about a bespoke commission.'
   );
 
   return (
-    <div className="py-8 sm:py-14 space-y-16">
+    <div className="bg-[#FBF9F5] min-h-screen py-10 sm:py-16 space-y-16">
       <SEO
-        title="Contact Us & Showroom Location | Abuja, Nigeria"
-        description="Visit Home & More Furniture showroom at 204 Pa Michael Imoudu Ave, 3rd Avenue Gwarinpa, Abuja, or our factory at Plot D10 Zauda Pazeri Dei-Dei. Call or WhatsApp +234 803 351 3144."
+        title="Contact & Showroom Atelier | Home & More Abuja"
+        description="Visit Home & More Furniture flagship showroom at 204 Pa Michael Imoudu Ave, 3rd Avenue Gwarinpa, Abuja, or our Dei-Dei joinery factory. Call or WhatsApp +234 803 351 3144."
         canonical="/contact"
       />
 
-      {/* 1. HEADER */}
+      {/* 1. EDITORIAL HEADER */}
       <section className="container-page text-center max-w-2xl mx-auto space-y-3">
-        <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F36B0A]">
-          Get In Touch
+        <span className="text-[11px] font-semibold uppercase tracking-ultra-caps text-[#8C6D3B]">
+          Private Consultations &amp; Concierge
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#24150F] tracking-tight">
-          We'd Love To Hear From You
+        <h1 className="text-3xl sm:text-5xl font-luxury-serif font-light text-[#1C1815] tracking-tight">
+          Connect With Our Atelier
         </h1>
-        <p className="text-sm sm:text-base text-[#82746B]">
-          Have questions about our pieces, custom sizing, or showroom visits? Our Abuja consultants are ready to assist.
+        <p className="text-xs sm:text-sm text-[#70685E] font-light leading-relaxed">
+          Whether you are furnishing a private residence, planning a boutique hospitality fit-out, or scheduling a visit to our Gwarinpa showroom, our consultants are at your service.
         </p>
       </section>
 
@@ -101,206 +101,232 @@ export default function ContactPage() {
           {/* Left Column: Contact Cards */}
           <div className="lg:col-span-5 space-y-4">
             {/* Showroom Address */}
-            <div className="card p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
-                <MapPin className="w-6 h-6" />
+            <div className="p-6 bg-[#EFECE6]/50 border border-[#E8E3DA] flex items-start gap-4">
+              <div className="w-10 h-10 border border-[#8C6D3B]/30 text-[#8C6D3B] flex items-center justify-center shrink-0">
+                <MapPin className="w-5 h-5 stroke-[1.2]" />
               </div>
-              <div>
-                <h3 className="font-bold text-base text-[#24150F]">Abuja Showroom</h3>
-                <p className="text-sm text-[#82746B] mt-1 leading-relaxed">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                  Flagship Showroom
+                </span>
+                <h3 className="font-luxury-serif text-base text-[#1C1815]">Abuja Experience Gallery</h3>
+                <p className="text-xs text-[#70685E] leading-relaxed font-light">
                   {settings.showroomAddress || settings.address || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria'}
                 </p>
               </div>
             </div>
 
             {/* Factory Address */}
-            <div className="card p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
-                <Building2 className="w-6 h-6" />
+            <div className="p-6 bg-[#EFECE6]/50 border border-[#E8E3DA] flex items-start gap-4">
+              <div className="w-10 h-10 border border-[#8C6D3B]/30 text-[#8C6D3B] flex items-center justify-center shrink-0">
+                <Building2 className="w-5 h-5 stroke-[1.2]" />
               </div>
-              <div>
-                <h3 className="font-bold text-base text-[#24150F]">Factory &amp; Production Workshop</h3>
-                <p className="text-sm text-[#82746B] mt-1 leading-relaxed">
-                  {settings.factoryAddress || 'Plot D10 Zauda Pazeri Dei-Dei, Abuja'}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                  Joinery Factory
+                </span>
+                <h3 className="font-luxury-serif text-base text-[#1C1815]">Dei-Dei Production Workshop</h3>
+                <p className="text-xs text-[#70685E] leading-relaxed font-light">
+                  {settings.factoryAddress || 'Plot D10 Zauda Pazeri Dei-Dei, Abuja, Nigeria'}
                 </p>
               </div>
             </div>
 
             {/* Direct Phone & WhatsApp */}
-            <div className="card p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
-                <Phone className="w-6 h-6" />
+            <div className="p-6 bg-[#EFECE6]/50 border border-[#E8E3DA] flex items-start gap-4">
+              <div className="w-10 h-10 border border-[#8C6D3B]/30 text-[#8C6D3B] flex items-center justify-center shrink-0">
+                <Phone className="w-5 h-5 stroke-[1.2]" />
               </div>
-              <div>
-                <h3 className="font-bold text-base text-[#24150F]">Phone Consultation</h3>
-                <p className="text-sm text-[#82746B] mt-1">{settings.phone || '+234 803 351 3144'}</p>
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                  Direct Line
+                </span>
+                <h3 className="font-luxury-serif text-base text-[#1C1815]">Telephone Consultation</h3>
+                <p className="text-xs text-[#70685E]">{settings.phone || '+234 803 351 3144'}</p>
                 <a
                   href={`tel:${(settings.phone || '+2348033513144').replace(/\s+/g, '')}`}
-                  className="text-xs font-semibold text-[#F36B0A] hover:underline mt-1 inline-block"
+                  className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] hover:text-[#1C1815] transition-colors inline-block pt-1"
                 >
-                  Call Now &rarr;
+                  Call Atelier &rarr;
                 </a>
               </div>
             </div>
 
             {/* Email Address */}
-            <div className="card p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
-                <Mail className="w-6 h-6" />
+            <div className="p-6 bg-[#EFECE6]/50 border border-[#E8E3DA] flex items-start gap-4">
+              <div className="w-10 h-10 border border-[#8C6D3B]/30 text-[#8C6D3B] flex items-center justify-center shrink-0">
+                <Mail className="w-5 h-5 stroke-[1.2]" />
               </div>
-              <div>
-                <h3 className="font-bold text-base text-[#24150F]">Email Inquiries</h3>
-                <p className="text-sm text-[#82746B] mt-1 break-all">{settings.email || 'Homeandmorefurnitures@gmail.com'}</p>
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                  Written Correspondence
+                </span>
+                <h3 className="font-luxury-serif text-base text-[#1C1815]">Email Enquiries</h3>
+                <p className="text-xs text-[#70685E] break-all">{settings.email || 'Homeandmorefurnitures@gmail.com'}</p>
                 <a
                   href={`mailto:${settings.email || 'Homeandmorefurnitures@gmail.com'}`}
-                  className="text-xs font-semibold text-[#F36B0A] hover:underline mt-1 inline-block"
+                  className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] hover:text-[#1C1815] transition-colors inline-block pt-1"
                 >
-                  Send Email &rarr;
+                  Send Dispatch &rarr;
                 </a>
               </div>
             </div>
 
-            {/* WhatsApp Chat */}
-            <div className="card p-6 flex items-start gap-4 border-emerald-200 bg-gradient-to-br from-white to-emerald-50/30">
-              <div className="w-12 h-12 rounded-2xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center shrink-0 border border-[#25D366]/30">
-                <WhatsAppIcon className="w-6 h-6 fill-current" />
+            {/* WhatsApp Chat Card */}
+            <div className="p-6 bg-[#1C1815] text-[#FBF9F5] border border-[#35302B] flex items-start gap-4">
+              <div className="w-10 h-10 bg-[#25D366]/20 text-[#25D366] flex items-center justify-center shrink-0">
+                <WhatsAppIcon className="w-5 h-5 fill-[#25D366]" />
               </div>
-              <div>
-                <h3 className="font-bold text-base text-[#24150F]">Instant WhatsApp Support</h3>
-                <p className="text-sm text-[#82746B] mt-1">
-                  Chat directly with our design consultants for immediate quotes and photos ({settings.phone || '+234 803 351 3144'}).
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#C4A470] font-semibold">
+                  Instant Response
+                </span>
+                <h3 className="font-luxury-serif text-base text-[#FBF9F5]">WhatsApp Concierge</h3>
+                <p className="text-xs text-[#A69E93] leading-relaxed font-light">
+                  Speak directly with an interior advisor for fabric swatches, high-res photos, and instant estimates.
                 </p>
                 <a
                   href={whatsAppLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-semibold text-[#25D366] hover:underline mt-1.5 inline-block"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#25D366] hover:underline pt-1"
                 >
-                  Start WhatsApp Chat &rarr;
+                  <span>Open WhatsApp (+234 803 351 3144) &rarr;</span>
                 </a>
               </div>
             </div>
 
-            {/* Opening Hours */}
-            <div className="card p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#FFF3EA] text-[#F36B0A] flex items-center justify-center shrink-0 border border-[#F36B0A]/20">
-                <Clock className="w-6 h-6" />
+            {/* Operating Hours */}
+            <div className="p-6 bg-[#EFECE6]/50 border border-[#E8E3DA] flex items-start gap-4">
+              <div className="w-10 h-10 border border-[#8C6D3B]/30 text-[#8C6D3B] flex items-center justify-center shrink-0">
+                <Clock className="w-5 h-5 stroke-[1.2]" />
               </div>
-              <div>
-                <h3 className="font-bold text-base text-[#24150F]">Operating Hours</h3>
-                <p className="text-sm text-[#82746B] mt-1">Monday – Saturday: 9:00 AM – 7:00 PM</p>
-                <p className="text-sm text-[#82746B]">Sunday: 12:00 PM – 5:00 PM</p>
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                  Showroom Schedule
+                </span>
+                <h3 className="font-luxury-serif text-base text-[#1C1815]">Hours of Reception</h3>
+                <p className="text-xs text-[#70685E] font-light">Monday – Saturday: 9:00 AM – 7:00 PM</p>
+                <p className="text-xs text-[#70685E] font-light">Sunday: 12:00 PM – 5:00 PM</p>
               </div>
             </div>
           </div>
 
           {/* Right Column: Contact Enquiry Form */}
           <div className="lg:col-span-7">
-            <div className="card p-6 sm:p-8 bg-white">
-              <h2 className="text-xl font-bold text-[#24150F] mb-1">Send Us a Message</h2>
-              <p className="text-xs sm:text-sm text-[#82746B] mb-6">
-                Fill in the form below and we will get back to you promptly.
-              </p>
+            <div className="p-8 sm:p-10 bg-white border border-[#E8E3DA]">
+              <div className="space-y-2 mb-8">
+                <span className="text-[10px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+                  Direct Dispatch
+                </span>
+                <h2 className="text-2xl font-luxury-serif font-light text-[#1C1815]">
+                  Initiate a Private Consultation
+                </h2>
+                <p className="text-xs text-[#70685E] font-light">
+                  Provide your project details and a member of our senior interior team will get in touch.
+                </p>
+              </div>
 
               {submitted ? (
-                <div className="p-8 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
-                  <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-8 h-8" />
+                <div className="p-10 bg-[#EFECE6]/50 border border-[#E8E3DA] text-center space-y-4">
+                  <div className="w-12 h-12 rounded-full border border-[#8C6D3B] text-[#8C6D3B] flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-6 h-6 stroke-[1.2]" />
                   </div>
-                  <h3 className="text-lg font-bold text-emerald-900">Message Received!</h3>
-                  <p className="text-sm text-emerald-700 max-w-sm mx-auto">
-                    Thank you for reaching out to Home &amp; More Furniture. A sales representative will contact you via WhatsApp or phone shortly.
+                  <h3 className="text-xl font-luxury-serif text-[#1C1815]">Inquiry Received</h3>
+                  <p className="text-xs text-[#70685E] max-w-sm mx-auto font-light leading-relaxed">
+                    Thank you for reaching out to Home &amp; More Furniture. Our concierge will review your requirements and reach out via WhatsApp or phone promptly.
                   </p>
                   <button
                     type="button"
                     onClick={() => setSubmitted(false)}
-                    className="btn-primary text-xs py-2 px-5 mt-2"
+                    className="btn-luxury text-xs px-6 py-2.5 mt-2"
                   >
-                    Send Another Message
+                    Submit Another Inquiry
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-[#24150F] uppercase mb-1">
+                      <label className="block text-[11px] font-semibold text-[#1C1815] uppercase tracking-wider mb-1.5">
                         Full Name *
                       </label>
                       <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder="e.g. Tunde Balogun"
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A]"
+                        placeholder="e.g. Dr. Aminu Ibrahim"
+                        className="w-full px-4 py-3 bg-[#FBF9F5] border border-[#E8E3DA] text-xs text-[#1C1815] focus:outline-none focus:border-[#1C1815] transition-colors"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-[#24150F] uppercase mb-1">
-                        Phone (WhatsApp) *
+                      <label className="block text-[11px] font-semibold text-[#1C1815] uppercase tracking-wider mb-1.5">
+                        WhatsApp Phone *
                       </label>
                       <input
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="+234 803 351 3144"
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A]"
+                        className="w-full px-4 py-3 bg-[#FBF9F5] border border-[#E8E3DA] text-xs text-[#1C1815] focus:outline-none focus:border-[#1C1815] transition-colors"
                         required
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-[#24150F] uppercase mb-1">
+                      <label className="block text-[11px] font-semibold text-[#1C1815] uppercase tracking-wider mb-1.5">
                         Email Address
                       </label>
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="name@example.com"
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A]"
+                        placeholder="name@domain.com"
+                        className="w-full px-4 py-3 bg-[#FBF9F5] border border-[#E8E3DA] text-xs text-[#1C1815] focus:outline-none focus:border-[#1C1815] transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-[#24150F] uppercase mb-1">
-                        Subject
+                      <label className="block text-[11px] font-semibold text-[#1C1815] uppercase tracking-wider mb-1.5">
+                        Area of Interest
                       </label>
                       <select
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A] bg-white"
+                        className="w-full px-4 py-3 bg-[#FBF9F5] border border-[#E8E3DA] text-xs text-[#1C1815] focus:outline-none focus:border-[#1C1815] transition-colors"
                       >
-                        <option value="General Enquiry">General Enquiry</option>
-                        <option value="Custom Order / Sizing">Custom Order / Sizing</option>
-                        <option value="Showroom Appointment">Showroom Appointment</option>
-                        <option value="Interior Design Project">Interior Design Project</option>
-                        <option value="Delivery Status">Delivery Status</option>
+                        <option value="General Enquiry">General Inquiry</option>
+                        <option value="Living Room Suite / Sectional">Living Room Suite / Sectional</option>
+                        <option value="Executive Office Joinery">Executive Office Joinery</option>
+                        <option value="Private Showroom Appointment">Private Showroom Appointment</option>
+                        <option value="Hotel / Commercial Fit-Out">Hotel / Commercial Fit-Out</option>
+                        <option value="Kitchen Cabinetry & Tiles">Kitchen Cabinetry &amp; Tiles</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-[#24150F] uppercase mb-1">
-                      How can we help? *
+                    <label className="block text-[11px] font-semibold text-[#1C1815] uppercase tracking-wider mb-1.5">
+                      Your Requirements *
                     </label>
                     <textarea
-                      rows={4}
+                      rows={5}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      placeholder="Tell us about the furniture piece you're interested in or your room requirements..."
-                      className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-sm focus:outline-none focus:border-[#F36B0A]"
+                      placeholder="Describe your room dimensions, desired upholstery, timber stains, or project scope..."
+                      className="w-full px-4 py-3 bg-[#FBF9F5] border border-[#E8E3DA] text-xs text-[#1C1815] focus:outline-none focus:border-[#1C1815] transition-colors leading-relaxed"
                       required
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full btn-primary text-sm py-3.5 flex items-center justify-center gap-2 shadow-md"
+                    className="w-full btn-luxury text-xs py-3.5 flex items-center justify-center gap-2"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Send Message</span>
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Transmit Dispatch to Concierge</span>
                   </button>
                 </form>
               )}
@@ -310,12 +336,18 @@ export default function ContactPage() {
       </section>
 
       {/* 3. FREQUENTLY ASKED QUESTIONS */}
-      <section className="container-page max-w-3xl mx-auto">
-        <SectionHeading
-          title="Frequently Asked Questions"
-          subtitle="Answers to common questions regarding delivery, custom orders and quality"
-          className="text-center"
-        />
+      <section className="container-page max-w-3xl mx-auto space-y-8">
+        <div className="text-center space-y-2">
+          <span className="text-[11px] uppercase tracking-ultra-caps text-[#8C6D3B] font-semibold">
+            Common Inquiries
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-luxury-serif font-light text-[#1C1815]">
+            Frequently Addressed Questions
+          </h2>
+          <p className="text-xs text-[#70685E] font-light">
+            Details regarding delivery timelines, custom dimensions, timber durability, and guarantees.
+          </p>
+        </div>
 
         <div className="space-y-3">
           {faqs.map((faq, index) => {
@@ -323,22 +355,22 @@ export default function ContactPage() {
             return (
               <div
                 key={index}
-                className="card overflow-hidden border border-[#F0DFD1] transition-all"
+                className="border border-[#E8E3DA] bg-white transition-all"
               >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(isOpen ? -1 : index)}
-                  className="w-full flex items-center justify-between p-5 text-left font-bold text-sm sm:text-base text-[#24150F] hover:text-[#F36B0A] transition-colors"
+                  className="w-full flex items-center justify-between p-5 text-left font-luxury-serif text-base text-[#1C1815] hover:text-[#8C6D3B] transition-colors"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#F36B0A] transition-transform duration-200 shrink-0 ${
+                    className={`w-4 h-4 text-[#8C6D3B] transition-transform duration-200 shrink-0 ${
                       isOpen ? 'rotate-180' : ''
                     }`}
                   />
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-[#82746B] leading-relaxed border-t border-[#F0DFD1]/50 pt-3">
+                  <div className="px-5 pb-5 text-xs text-[#70685E] font-light leading-relaxed border-t border-[#E8E3DA] pt-3">
                     {faq.a}
                   </div>
                 )}
