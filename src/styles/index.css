@@ -2,17 +2,18 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-brand: #f36b0a;
-  --color-brand-deep: #d94d00;
-  --color-brand-light: #fff3ea;
-  --color-brand-muted: #ffedd5;
-  --color-ink: #29160d;
-  --color-ink-light: #3d2215;
-  --color-text: #24150f;
-  --color-muted: #82746b;
-  --color-cream: #fffaf5;
-  --color-beige: #f8ebdd;
-  --color-line: #f0dfd1;
+  /* Matured signature warm cognac-orange & deep espresso palette */
+  --color-brand: #e25b00;
+  --color-brand-deep: #c84800;
+  --color-brand-light: #fdf5ef;
+  --color-brand-muted: #fae8d8;
+  --color-ink: #201611;
+  --color-ink-light: #35251c;
+  --color-text: #1f1612;
+  --color-muted: #7a6e65;
+  --color-cream: #fcfaf7;
+  --color-beige: #f6efe8;
+  --color-line: #ede5dc;
   --color-success: #16a34a;
   --color-success-light: #dcfce7;
   --color-warning: #f59e0b;
@@ -22,12 +23,13 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-script: 'Great Vibes', cursive;
 
-  --shadow-subtle: 0 2px 10px -2px rgba(41, 22, 13, 0.05);
-  --shadow-card: 0 8px 30px -6px rgba(41, 22, 13, 0.08);
-  --shadow-card-hover: 0 16px 40px -8px rgba(243, 107, 10, 0.16);
-  --shadow-glow: 0 0 25px rgba(243, 107, 10, 0.25);
+  /* Diffused multi-layer ambient shadows */
+  --shadow-subtle: 0 2px 10px -2px rgba(32, 22, 17, 0.04);
+  --shadow-card: 0 4px 20px -2px rgba(32, 22, 17, 0.05), 0 1px 3px rgba(32, 22, 17, 0.03);
+  --shadow-card-hover: 0 16px 36px -8px rgba(226, 91, 0, 0.12), 0 4px 12px -2px rgba(32, 22, 17, 0.06);
+  --shadow-glow: 0 4px 20px rgba(226, 91, 0, 0.25);
   
-  --radius-card: 1rem;
+  --radius-card: 1.25rem;
   --radius-button: 9999px;
 }
 
@@ -44,7 +46,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
   ::selection {
-    background-color: #f36b0a;
+    background-color: #e25b00;
     color: #ffffff;
   }
   :focus-visible {
@@ -80,6 +82,7 @@
     border: 1px solid var(--color-line);
     background-color: #ffffff;
     box-shadow: var(--shadow-card);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
   }
 
   .btn-primary {
@@ -89,15 +92,16 @@
     gap: 0.5rem;
     border-radius: 9999px;
     background-color: var(--color-brand);
-    padding: 0.65rem 1.4rem;
+    padding: 0.7rem 1.5rem;
     font-weight: 500;
     color: #ffffff;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(226, 91, 0, 0.2);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-primary:hover {
     background-color: var(--color-brand-deep);
     box-shadow: var(--shadow-glow);
-    transform: translateY(-1px);
+    transform: translateY(-1.5px);
   }
   .btn-primary:active {
     transform: translateY(0);
@@ -110,15 +114,16 @@
     gap: 0.5rem;
     border-radius: 9999px;
     background-color: #25d366;
-    padding: 0.65rem 1.35rem;
+    padding: 0.7rem 1.4rem;
     font-weight: 500;
     color: #ffffff;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-whatsapp:hover {
     background-color: #1eb956;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+    transform: translateY(-1.5px);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
   }
 
   .btn-secondary {
@@ -129,15 +134,17 @@
     border-radius: 9999px;
     border: 1px solid var(--color-line);
     background-color: #ffffff;
-    padding: 0.65rem 1.4rem;
+    padding: 0.7rem 1.5rem;
     font-weight: 500;
     color: var(--color-text);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(32, 22, 17, 0.03);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-secondary:hover {
     border-color: var(--color-brand);
     color: var(--color-brand);
     background-color: var(--color-brand-light);
+    transform: translateY(-1px);
   }
 
   /* Custom scrollbar for preview trays */

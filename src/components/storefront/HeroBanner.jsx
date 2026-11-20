@@ -29,26 +29,26 @@ export default function HeroBanner() {
   );
 
   return (
-    <section className="relative overflow-hidden bg-[#FFFAF5] pt-6 pb-10 sm:py-12 lg:py-14">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#FAF8F5] via-[#FFFDFB] to-[#FAF8F5] pt-8 pb-12 sm:py-16 lg:py-20 border-b border-[#EDE5DC]/60">
       <div className="container-page">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           {/* Left Column: Hero Text */}
-          <div className="lg:col-span-6 space-y-5 sm:space-y-6 text-center lg:text-left">
+          <div className="lg:col-span-6 space-y-6 sm:space-y-7 text-center lg:text-left">
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2">
-              <span className="text-xs sm:text-sm font-bold tracking-widest text-[#F36B0A] uppercase">
+              <span className="text-xs font-bold tracking-widest text-[#E05A00] uppercase bg-[#FDF5EF] px-3.5 py-1 rounded-full border border-[#E05A00]/20">
                 {currentSlide.eyebrow}
               </span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#24150F] tracking-tight leading-[1.15]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#1F1612] tracking-tight leading-[1.12]">
               {currentSlide.headingStart}{' '}
-              <span className="text-[#F36B0A]">{currentSlide.headingAccent}</span>
+              <span className="text-[#E05A00]">{currentSlide.headingAccent}</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg text-[#82746B] font-medium max-w-lg mx-auto lg:mx-0">
+            <p className="text-base sm:text-lg text-[#7A6E65] font-normal leading-relaxed max-w-lg mx-auto lg:mx-0">
               {currentSlide.subtitle}
             </p>
 
@@ -58,7 +58,7 @@ export default function HeroBanner() {
                 href={whatsAppLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#F36B0A] to-[#D94D00] text-white px-7 py-3.5 text-base font-semibold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5 transition-all duration-200"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#E05A00] to-[#C84800] text-white px-8 py-3.5 text-base font-semibold shadow-md shadow-orange-900/15 hover:shadow-lg hover:shadow-orange-900/25 hover:-translate-y-0.5 transition-all duration-200"
               >
                 <WhatsAppIcon className="w-5 h-5 fill-white" />
                 <span>Buy via WhatsApp</span>
@@ -68,7 +68,7 @@ export default function HeroBanner() {
               {currentSlide.secondaryLink && (
                 <Link
                   to={currentSlide.secondaryLink}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-[#F0DFD1] bg-white px-6 py-3.5 text-sm font-semibold text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] hover:bg-[#FFF3EA]/40 transition-all duration-200"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full border border-[#EDE5DC] bg-white px-7 py-3.5 text-sm font-semibold text-[#1F1612] hover:border-[#E05A00] hover:text-[#E05A00] hover:bg-[#FDF5EF] shadow-xs hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <span>{currentSlide.secondaryCta || 'Discover Collection'}</span>
                 </Link>
@@ -77,17 +77,17 @@ export default function HeroBanner() {
 
             {/* Carousel Navigation Dots */}
             {heroSlides.length > 1 && (
-              <div className="flex items-center justify-center lg:justify-start gap-2 pt-4">
+              <div className="flex items-center justify-center lg:justify-start gap-2.5 pt-4">
                 {heroSlides.map((slide, i) => (
                   <button
                     key={slide.id || i}
                     type="button"
                     onClick={() => setCurrentSlideIndex(i)}
                     aria-label={`Go to slide ${i + 1}`}
-                    className={`h-2.5 transition-all duration-300 rounded-full ${
+                    className={`h-2 transition-all duration-300 rounded-full ${
                       i === currentSlideIndex
-                        ? 'w-8 bg-[#F36B0A]'
-                        : 'w-2.5 bg-[#F0DFD1] hover:bg-[#82746B]'
+                        ? 'w-8 bg-[#E05A00]'
+                        : 'w-2 bg-[#EDE5DC] hover:bg-[#7A6E65]'
                     }`}
                   />
                 ))}
@@ -99,14 +99,14 @@ export default function HeroBanner() {
           <div className="lg:col-span-6 relative">
             <div className="relative mx-auto max-w-lg lg:max-w-none">
               {/* Subtle background glow */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#F8EBDD] to-[#F36B0A]/10 rounded-3xl -rotate-1 transform scale-102 filter blur-sm pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#F6EFE8] to-[#E05A00]/10 rounded-3xl -rotate-1 transform scale-102 filter blur-md pointer-events-none" />
 
-              <div className="relative rounded-3xl overflow-hidden border border-[#F0DFD1] shadow-2xl bg-white aspect-[4/3] sm:aspect-[16/11]">
+              <div className="relative rounded-3xl overflow-hidden border border-[#EDE5DC] shadow-[0_20px_50px_-12px_rgba(32,22,17,0.12)] bg-white aspect-[4/3] sm:aspect-[16/11]">
                 <SafeImage
                   src={currentSlide.image}
                   alt={currentSlide.headingStart || 'Living room furniture'}
                   aspectRatio="aspect-auto"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-103"
                 />
               </div>
             </div>
