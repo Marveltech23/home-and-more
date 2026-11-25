@@ -1,6 +1,22 @@
 // Advertisements mock data
 export const advertisements = [
   {
+    id: 'a_top',
+    title: 'Christmas Festive Sale',
+    subtitle: 'Limited Offer',
+    tagline: 'Save Big on Luxury Sofas, Dining & Bedroom Sets This Season',
+    description: 'Enjoy exclusive Christmas showroom discounts across Abuja.',
+    buttonText: 'Shop Now',
+    buttonUrl: '/shop',
+    placement: 'top_banner',
+    desktopImage: '/images/stock/photo-1543258103-a62bdc069871.jpg',
+    mobileImage: '/images/stock/photo-1543258103-a62bdc069871.jpg',
+    startDate: '2026-11-01',
+    endDate: '2026-12-31',
+    isActive: true,
+    clicks: 0,
+  },
+  {
     id: 'a1',
     title: 'Christmas',
     subtitle: 'Special Offers',
