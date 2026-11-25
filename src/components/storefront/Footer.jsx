@@ -10,7 +10,7 @@ const quickLinks = [
   { label: 'Home', to: '/' },
   { label: 'Shop All Furniture', to: '/shop' },
   { label: 'About & Showroom', to: '/about' },
-  { label: 'Design Journal', to: '/blog' },
+  { label: 'Blog', to: '/blog' },
   { label: 'Saved Wishlist', to: '/wishlist' },
   { label: 'Contact Us', to: '/contact' },
 ];

@@ -23,12 +23,12 @@ export default function BlogPage() {
       {/* Header */}
       <div className="max-w-2xl">
         <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#F36B0A]">
-          Home &amp; Décor Journal
+          Home &amp; More Blog
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#24150F] tracking-tight mt-1">
-          Modern Living Inspirations &amp; Care Guides
+        <h1 className="font-editorial text-3xl sm:text-4xl font-semibold text-[#24150F] tracking-tight mt-1">
+          Our Blog — Living Inspirations &amp; Care Guides
         </h1>
-        <p className="text-sm sm:text-base text-[#82746B] mt-2">
+        <p className="text-sm sm:text-base text-[#786B62] mt-2">
           Interior design principles, timber craftsmanship insights, and space planning tips curated by our Abuja design team.
         </p>
       </div>

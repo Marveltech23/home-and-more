@@ -11,12 +11,12 @@ export default function HomeBlogSection() {
   if (!recentPosts || recentPosts.length === 0) return null;
 
   return (
-    <section className="container-page py-14 sm:py-16" aria-label="Design Journal">
+    <section className="container-page py-14 sm:py-16" aria-label="Our Blog">
       <SectionHeading
-        eyebrow="Editorial & Care Guides"
-        title="From Our Design Journal"
-        subtitle="Interior architecture tips, upholstery care, and room styling ideas from our Abuja team."
-        actionLabel="Read All Articles"
+        eyebrow="Our Blog"
+        title="Latest from Our Blog"
+        subtitle="Interior styling tips, furniture care guides, and showroom updates from our Abuja team."
+        actionLabel="View All Blog Posts"
         actionTo="/blog"
       />
 

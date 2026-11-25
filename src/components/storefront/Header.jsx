@@ -320,7 +320,7 @@ export default function Header() {
               About
             </NavLink>
             <NavLink to="/blog" className={navLinkClass}>
-              Journal
+              Blog
             </NavLink>
             <NavLink to="/contact" className={navLinkClass}>
               Contact
@@ -408,7 +408,7 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
               className="py-2 text-sm font-semibold uppercase tracking-wider text-[#24150F] hover:text-[#F36B0A]"
             >
-              Design Journal
+              Blog
             </Link>
             <Link
               to="/contact"
