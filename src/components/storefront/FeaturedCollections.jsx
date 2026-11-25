@@ -1,81 +1,72 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import SectionHeading from '../common/SectionHeading';
 
-const collections = [
+const rooms = [
   {
-    id: 'col-1',
-    title: 'Living Room Sanctuary',
-    subtitle: 'Warm terracotta, cloud sectionals & travertine tables',
-    image: '/images/stock/photo-1600585154340-be6161a56a0c.jpg',
+    id: 'room-living',
+    title: 'Living Room',
+    subtitle: 'Signature 7-seater sofa sets, corner sectionals & sculptural center tables',
+    image: '/images/catalog/kali-sofa-set.jpeg',
     link: '/category/sofa-sets',
-    tag: 'Curated Trend',
+    cta: 'Shop Living Room',
   },
   {
-    id: 'col-2',
-    title: 'Restful Bedroom Oasis',
-    subtitle: 'Channeled velvet beds & orthopedic mattress support',
-    image: '/images/stock/photo-1505693416388-ac5ce068fe85.jpg',
+    id: 'room-bedroom',
+    title: 'Master Bedroom',
+    subtitle: 'Quilted arched-headboard suites, matching benches & serene sanctuaries',
+    image: '/images/catalog/milano-bed-set.jpeg',
     link: '/category/bedroom-sets',
-    tag: 'Rest & Wellness',
+    cta: 'Shop Bedroom',
   },
   {
-    id: 'col-3',
-    title: 'Artisan Dining Space',
-    subtitle: 'Solid teak dining sets & linen upholstered chairs',
+    id: 'room-dining',
+    title: 'Dining & Executive',
+    subtitle: 'Sintered marble dining suites, solid teak tables & director offices',
     image: '/images/stock/photo-1617806118233-18e1de247200.jpg',
     link: '/category/dining-sets',
-    tag: 'Gatherings',
+    cta: 'Shop Dining Room',
   },
 ];
 
 export default function FeaturedCollections() {
   return (
-    <section className="container-page mt-14 sm:mt-16" aria-label="Featured Collections">
+    <section className="container-page py-14 sm:py-16" aria-label="Shop By Room">
       <SectionHeading
-        title="Featured Collections"
-        subtitle="Thoughtfully styled furniture sets designed to inspire modern homes"
-        actionLabel="Explore All"
+        align="center"
+        eyebrow="Curated Spaces"
+        title="Shop by Room"
+        subtitle="Explore complete furniture compositions designed to bring harmony to every corner of your home."
+        actionLabel="Browse All Rooms"
         actionTo="/shop"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {collections.map((col) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {rooms.map((room) => (
           <Link
-            key={col.id}
-            to={col.link}
-            className="group relative overflow-hidden rounded-3xl aspect-[4/5] sm:aspect-[3/4] shadow-card hover:shadow-card-hover transition-all duration-300"
+            key={room.id}
+            to={room.link}
+            className="group relative overflow-hidden rounded-xl aspect-[4/5] bg-[#24150F] border border-[#EAE2D9]"
           >
-            {/* Background Image */}
             <img
-              src={col.image}
-              alt={col.title}
+              src={room.image}
+              alt={room.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
             />
 
-            {/* Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#29160D] via-[#29160D]/40 to-transparent opacity-90 transition-opacity group-hover:opacity-95" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1A0F0A]/90 via-[#1A0F0A]/25 to-transparent" />
 
-            {/* Tag Badge */}
-            <div className="absolute top-5 left-5">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-3 py-1 text-xs font-semibold text-white border border-white/30">
-                <Sparkles className="w-3 h-3 text-[#F36B0A]" />
-                {col.tag}
-              </span>
-            </div>
-
-            {/* Text & Action */}
-            <div className="absolute bottom-0 inset-x-0 p-6 flex flex-col justify-end text-white">
-              <h3 className="text-xl sm:text-2xl font-bold tracking-tight mb-1 group-hover:text-[#F36B0A] transition-colors">
-                {col.title}
+            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7 space-y-2">
+              <h3 className="font-editorial text-2xl sm:text-3xl font-semibold text-white">
+                {room.title}
               </h3>
-              <p className="text-xs sm:text-sm text-white/80 mb-4 line-clamp-2">
-                {col.subtitle}
+              <p className="text-xs sm:text-sm text-white/80 line-clamp-2 leading-relaxed font-light">
+                {room.subtitle}
               </p>
-              <div className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-amber-300 group-hover:text-white transition-colors">
-                <span>Explore Collection</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-white border-b border-[#F36B0A] pb-1 group-hover:text-[#F36B0A] transition-colors">
+                <span>{room.cta}</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           </Link>

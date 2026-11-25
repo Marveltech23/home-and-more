@@ -53,13 +53,14 @@ const STORAGE_KEYS = {
   ENQUIRIES: 'hm_store_enquiries_v6',
   TESTIMONIALS: 'hm_store_testimonials_v6',
   SETTINGS: 'hm_store_settings_v6',
-  HERO: 'hm_store_hero_v6',
+  HERO: 'hm_store_hero_v7',
 };
 
 // Evict stale localStorage caches from previous versions
 if (typeof window !== 'undefined') {
   try {
     [
+      'hm_store_hero_v6',
       'hm_store_products_v5',
       'hm_store_categories_v5',
       'hm_store_ads_v5',

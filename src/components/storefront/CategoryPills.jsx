@@ -16,7 +16,6 @@ export default function CategoryPills() {
 
   const mediaPool = media && media.length > 0 ? media : initialMedia;
 
-  // Guarantee every category tile always resolves to a valid image from Media Library / catalog
   const resolveCategoryImage = (category, index) => {
     if (category.image && typeof category.image === 'string' && category.image.trim()) {
       return category.image;
@@ -25,48 +24,48 @@ export default function CategoryPills() {
       (p) => p.categorySlug === category.slug && p.image
     );
     if (matchingProduct?.image) return matchingProduct.image;
-
-    const mediaFallback = mediaPool[index % mediaPool.length]?.url;
-    return mediaFallback || DEFAULT_FALLBACK_IMAGE;
+    return mediaPool[index % mediaPool.length]?.url || DEFAULT_FALLBACK_IMAGE;
   };
 
   return (
-    <section className="container-page mt-14 sm:mt-16" aria-label="Shop by Category">
+    <section className="container-page py-14 sm:py-16" aria-label="Shop by Category">
       <SectionHeading
+        align="center"
+        eyebrow="Curated Departments"
         title="Shop by Category"
-        actionLabel="View All Categories"
+        subtitle="Discover our most loved furniture departments, thoughtfully crafted for contemporary Nigerian homes."
+        actionLabel="View All Furniture"
         actionTo="/shop"
       />
 
-      {/* Responsive Grid for Any Number of Categories */}
-      <div className="grid grid-cols-2 min-[420px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-3 sm:gap-4">
+      {/* Clean Baffi-inspired Framed Category Grid */}
+      <div className="grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">
         {activeCategories.map((category, idx) => {
           const imgSrc = resolveCategoryImage(category, idx);
-          const fallbackSrc =
-            mediaPool[idx % mediaPool.length]?.url || DEFAULT_FALLBACK_IMAGE;
+          const fallbackSrc = mediaPool[idx % mediaPool.length]?.url || DEFAULT_FALLBACK_IMAGE;
 
           return (
             <Link
               key={category.id || category.slug}
               to={`/category/${category.slug}`}
-              className="group flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1"
+              className="group flex flex-col bg-white rounded-xl border border-[#EAE2D9] overflow-hidden hover:border-[#F36B0A]/60 hover:shadow-card-hover transition-all duration-300"
             >
-              {/* Rounded Pill Card */}
-              <div className="w-full aspect-square rounded-2xl sm:rounded-3xl bg-white border border-[#F0DFD1] p-2 sm:p-2.5 flex items-center justify-center shadow-card group-hover:shadow-card-hover group-hover:border-[#F36B0A]/40 transition-all overflow-hidden">
+              <div className="w-full aspect-square overflow-hidden bg-[#FAF7F3]">
                 <SafeImage
                   src={imgSrc}
                   fallbackSrc={fallbackSrc}
                   alt={category.name}
                   fit="cover"
                   aspectRatio="aspect-square"
-                  className="w-full h-full rounded-xl sm:rounded-2xl transition-transform duration-300 group-hover:scale-108"
+                  className="w-full h-full transition-transform duration-500 group-hover:scale-106"
                 />
               </div>
 
-              {/* Label */}
-              <span className="mt-2.5 text-xs sm:text-sm font-semibold text-[#24150F] group-hover:text-[#F36B0A] transition-colors leading-tight line-clamp-2 px-1">
-                {category.name}
-              </span>
+              <div className="px-2.5 py-3 text-center border-t border-[#EAE2D9]/60 bg-white">
+                <span className="text-xs sm:text-[13px] font-semibold text-[#24150F] group-hover:text-[#F36B0A] transition-colors line-clamp-1">
+                  {category.name}
+                </span>
+              </div>
             </Link>
           );
         })}

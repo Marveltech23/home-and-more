@@ -71,9 +71,9 @@ export default function Logo({
   };
 
   const imageOnlyHeights = {
-    sm: 'h-8 max-h-8 max-w-[160px]',
-    md: 'h-10 sm:h-11 max-h-12 max-w-[220px]',
-    lg: 'h-12 sm:h-14 max-h-16 max-w-[280px]',
+    sm: 'h-9 max-h-9 max-w-[170px]',
+    md: 'h-12 sm:h-14 max-h-14 max-w-[240px]',
+    lg: 'h-14 sm:h-16 max-h-16 max-w-[280px]',
   };
 
   const textSizes = {
@@ -93,12 +93,18 @@ export default function Logo({
     // Mode 1: Full Image Only (User uploaded a complete wordmark / banner logo)
     if (displayMode === 'image_only' && hasCustomLogo) {
       return (
-        <div className="flex items-center">
+        <div
+          className={`flex items-center ${
+            isLight && !lightLogo
+              ? 'bg-white/95 px-2.5 py-1.5 rounded-xl shadow-xs'
+              : ''
+          }`}
+        >
           <img
             src={activeLogoUrl}
             alt={businessName}
             onError={() => setImageError(true)}
-            className={`${imageOnlyHeights[size]} w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]`}
+            className={`${imageOnlyHeights[size]} w-auto object-contain rounded-lg transition-transform duration-200 group-hover:scale-[1.02]`}
           />
         </div>
       );

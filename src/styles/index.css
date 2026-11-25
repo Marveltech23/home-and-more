@@ -1,18 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 @import 'tailwindcss';
 
 @theme {
+  /* Preserved Home & More brand colors refined for a luxury furniture showroom */
   --color-brand: #f36b0a;
   --color-brand-deep: #d94d00;
-  --color-brand-light: #fff3ea;
-  --color-brand-muted: #ffedd5;
-  --color-ink: #29160d;
-  --color-ink-light: #3d2215;
+  --color-brand-light: #fff6ef;
+  --color-brand-muted: #fde9d9;
+  --color-ink: #24150f;
+  --color-ink-light: #3b2419;
   --color-text: #24150f;
-  --color-muted: #82746b;
-  --color-cream: #fffaf5;
-  --color-beige: #f8ebdd;
-  --color-line: #f0dfd1;
+  --color-muted: #786b62;
+  --color-cream: #faf7f3;
+  --color-beige: #f3ece4;
+  --color-line: #eae2d9;
   --color-success: #16a34a;
   --color-success-light: #dcfce7;
   --color-warning: #f59e0b;
@@ -22,12 +23,13 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-script: 'Great Vibes', cursive;
 
-  --shadow-subtle: 0 2px 10px -2px rgba(41, 22, 13, 0.05);
-  --shadow-card: 0 8px 30px -6px rgba(41, 22, 13, 0.08);
-  --shadow-card-hover: 0 16px 40px -8px rgba(243, 107, 10, 0.16);
-  --shadow-glow: 0 0 25px rgba(243, 107, 10, 0.25);
-  
-  --radius-card: 1rem;
+  /* Restrained, gallery-grade shadows */
+  --shadow-subtle: 0 1px 4px rgba(36, 21, 15, 0.04);
+  --shadow-card: 0 2px 12px -2px rgba(36, 21, 15, 0.05);
+  --shadow-card-hover: 0 14px 32px -8px rgba(36, 21, 15, 0.12);
+  --shadow-glow: 0 6px 20px rgba(243, 107, 10, 0.25);
+
+  --radius-card: 0.75rem;
   --radius-button: 9999px;
 }
 
@@ -58,7 +60,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    max-width: 80rem; /* 1280px */
+    max-width: 82rem; /* 1312px wide showroom grid */
     padding-left: 1rem;
     padding-right: 1rem;
   }
@@ -75,11 +77,18 @@
     }
   }
 
+  .font-editorial {
+    font-family: var(--font-serif);
+  }
+
   .card {
     border-radius: var(--radius-card);
     border: 1px solid var(--color-line);
     background-color: #ffffff;
     box-shadow: var(--shadow-card);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s ease;
   }
 
   .btn-primary {
@@ -89,10 +98,10 @@
     gap: 0.5rem;
     border-radius: 9999px;
     background-color: var(--color-brand);
-    padding: 0.65rem 1.4rem;
+    padding: 0.7rem 1.5rem;
     font-weight: 500;
     color: #ffffff;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-primary:hover {
     background-color: var(--color-brand-deep);
@@ -109,16 +118,16 @@
     justify-content: center;
     gap: 0.5rem;
     border-radius: 9999px;
-    background-color: #25d366;
-    padding: 0.65rem 1.35rem;
-    font-weight: 500;
+    background-color: #1eaa52;
+    padding: 0.7rem 1.4rem;
+    font-weight: 600;
     color: #ffffff;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-whatsapp:hover {
-    background-color: #1eb956;
+    background-color: #179045;
     transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+    box-shadow: 0 6px 18px rgba(30, 170, 82, 0.28);
   }
 
   .btn-secondary {
@@ -129,10 +138,10 @@
     border-radius: 9999px;
     border: 1px solid var(--color-line);
     background-color: #ffffff;
-    padding: 0.65rem 1.4rem;
+    padding: 0.7rem 1.5rem;
     font-weight: 500;
     color: var(--color-text);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-secondary:hover {
     border-color: var(--color-brand);
