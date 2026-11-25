@@ -44,21 +44,30 @@ const StoreContext = createContext(null);
 
 // Shared localStorage keys
 const STORAGE_KEYS = {
-  PRODUCTS: 'hm_store_products_v4',
-  CATEGORIES: 'hm_store_categories_v4',
-  ADS: 'hm_store_ads_v4',
-  BLOGS: 'hm_store_blogs_v4',
-  MEDIA: 'hm_store_media_v4',
-  ENQUIRIES: 'hm_store_enquiries_v4',
-  TESTIMONIALS: 'hm_store_testimonials_v4',
-  SETTINGS: 'hm_store_settings_v4',
-  HERO: 'hm_store_hero_v4',
+  PRODUCTS: 'hm_store_products_v5',
+  CATEGORIES: 'hm_store_categories_v5',
+  ADS: 'hm_store_ads_v5',
+  BLOGS: 'hm_store_blogs_v5',
+  MEDIA: 'hm_store_media_v5',
+  ENQUIRIES: 'hm_store_enquiries_v5',
+  TESTIMONIALS: 'hm_store_testimonials_v5',
+  SETTINGS: 'hm_store_settings_v5',
+  HERO: 'hm_store_hero_v5',
 };
 
 // Evict stale localStorage caches from previous versions
 if (typeof window !== 'undefined') {
   try {
-    ['hm_store_categories_v3', 'hm_store_products_v3', 'hm_store_categories_v2', 'hm_store_categories_v1'].forEach((k) => localStorage.removeItem(k));
+    [
+      'hm_store_categories_v4',
+      'hm_store_products_v4',
+      'hm_store_media_v4',
+      'hm_store_categories_v3',
+      'hm_store_products_v3',
+      'hm_store_media_v3',
+      'hm_store_categories_v2',
+      'hm_store_categories_v1',
+    ].forEach((k) => localStorage.removeItem(k));
   } catch {}
 }
 

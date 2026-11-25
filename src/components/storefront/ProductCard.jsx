@@ -24,13 +24,14 @@ export default function ProductCard({ product, settings: propSettings }) {
         <Link
           to={`/shop/${product.slug}`}
           aria-label={`View ${product.name}`}
-          className="w-full block overflow-hidden rounded-xl"
+          className="w-full block overflow-hidden rounded-xl bg-white"
         >
           <SafeImage
             src={product.image}
             alt={product.name}
             aspectRatio="aspect-[4/3]"
-            className="w-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-xl"
+            fit="contain"
+            className="w-full transition-transform duration-500 group-hover:scale-105 rounded-xl bg-white"
           />
         </Link>
 

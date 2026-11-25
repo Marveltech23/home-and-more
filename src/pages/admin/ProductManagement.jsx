@@ -32,8 +32,12 @@ const PRESET_IMAGES = [
 ];
 
 export default function ProductManagement() {
-  const { products, categories, addProduct, updateProduct, deleteProduct } = useStore();
+  const { products, categories, media, addProduct, updateProduct, deleteProduct } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const mediaPresets = media?.length
+    ? media.map((m) => ({ url: m.url, label: m.name }))
+    : PRESET_IMAGES;
 
   // Search & Filter
   const [search, setSearch] = useState(searchParams.get('search') || '');
@@ -425,13 +429,13 @@ export default function ProductManagement() {
             </div>
           </div>
 
-          {/* Product Primary Image (Device Upload or Presets) */}
+          {/* Product Primary Image (Device Upload or Media Library) */}
           <ImageUploadInput
             label="Product Photo"
-            helpText="Upload high-res photo from your device, or choose from catalog presets."
+            helpText="Upload a high-res photo from your device, or pick directly from your Media Library."
             value={image}
             onChange={(newVal) => setImage(newVal)}
-            presets={PRESET_IMAGES}
+            presets={mediaPresets}
             required
           />
 

@@ -18,8 +18,12 @@ const PRESET_CAT_IMAGES = [
 ];
 
 export default function CategoryManagement() {
-  const { categories, products, addCategory, updateCategory, deleteCategory } = useStore();
+  const { categories, products, media, addCategory, updateCategory, deleteCategory } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const mediaPresets = media?.length
+    ? media.map((m) => ({ url: m.url, label: m.name }))
+    : PRESET_CAT_IMAGES;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -243,10 +247,10 @@ export default function CategoryManagement() {
 
           <ImageUploadInput
             label="Category Image"
-            helpText="Upload a category photo directly from your Mac or device."
+            helpText="Upload a category photo from your device, or pick directly from your Media Library."
             value={image}
             onChange={(newVal) => setImage(newVal)}
-            presets={PRESET_CAT_IMAGES}
+            presets={mediaPresets}
             required
           />
 
