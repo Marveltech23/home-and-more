@@ -16,12 +16,17 @@ import Logo from '../common/Logo';
 import { WhatsAppIcon } from '../common/BrandIcons';
 import { useStore } from '../../context/StoreContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { categories as initialCategories } from '../../data/categories';
 import { buildWhatsAppLink } from '../../utils/whatsapp';
 
 export default function Header() {
   const { settings, categories } = useStore();
   const { count: wishlistCount } = useWishlist();
   const navigate = useNavigate();
+
+  const activeCategories = (categories && categories.length > 0 ? categories : initialCategories)
+    .filter((c) => c.isActive !== false)
+    .sort((a, b) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
@@ -133,7 +138,7 @@ export default function Header() {
               onMouseEnter={() => setShopDropdownOpen(true)}
               className="flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium text-[#24150F] hover:text-[#F36B0A] hover:bg-[#F8EBDD]/50 transition-colors"
             >
-              <span>Shop</span>
+              <span>Shop All Furniture</span>
               <ChevronDown
                 className={`w-4 h-4 transition-transform duration-200 ${
                   shopDropdownOpen ? 'rotate-180 text-[#F36B0A]' : ''
@@ -158,7 +163,7 @@ export default function Header() {
                     <span>All Furniture</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
-                  {categories.map((cat) => (
+                  {activeCategories.map((cat) => (
                     <Link
                       key={cat.id}
                       to={`/category/${cat.slug}`}
@@ -280,7 +285,7 @@ export default function Header() {
 
             {/* Mobile Categories Submenu */}
             <div className="pl-4 border-l-2 border-[#F0DFD1] space-y-1.5 py-1">
-              {categories.map((c) => (
+              {activeCategories.map((c) => (
                 <Link
                   key={c.id}
                   to={`/category/${c.slug}`}

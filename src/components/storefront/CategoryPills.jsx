@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom';
 import SectionHeading from '../common/SectionHeading';
 import SafeImage from '../common/SafeImage';
 import { useStore } from '../../context/StoreContext';
+import { categories as initialCategories } from '../../data/categories';
 
 export default function CategoryPills() {
   const { categories } = useStore();
 
-  const activeCategories = (categories || [])
+  const activeCategories = (categories && categories.length > 0 ? categories : initialCategories)
     .filter((c) => c.isActive !== false)
     .sort((a, b) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
 

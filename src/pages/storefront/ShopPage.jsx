@@ -6,11 +6,18 @@ import SectionHeading from '../../components/common/SectionHeading';
 import EmptyState from '../../components/common/EmptyState';
 import SEO from '../../components/common/SEO';
 import { useStore } from '../../context/StoreContext';
+import { categories as initialCategories } from '../../data/categories';
 import { formatNaira } from '../../utils/format';
 
 export default function ShopPage() {
   const { products, categories } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const sortedCategories = useMemo(() => {
+    return (categories && categories.length > 0 ? categories : initialCategories)
+      .filter((c) => c.isActive !== false)
+      .sort((a, b) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99));
+  }, [categories]);
 
   // Filters state
   const categoryParam = searchParams.get('category') || 'all';
@@ -20,7 +27,7 @@ export default function ShopPage() {
   const [selectedCategory, setSelectedCategory] = useState(categoryParam);
   const [searchQuery, setSearchQuery] = useState(queryParam);
   const [sortBy, setSortBy] = useState(sortParam);
-  const [priceRange, setPriceRange] = useState(600000); // Max budget slider
+  const [priceRange, setPriceRange] = useState(3000000); // Max budget slider
   const [inStockOnly, setInStockOnly] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
@@ -39,7 +46,7 @@ export default function ShopPage() {
     setSelectedCategory('all');
     setSearchQuery('');
     setSortBy('featured');
-    setPriceRange(600000);
+    setPriceRange(3000000);
     setInStockOnly(false);
     setSearchParams({});
   };
@@ -84,7 +91,7 @@ export default function ShopPage() {
       });
   }, [products, selectedCategory, searchQuery, priceRange, inStockOnly, sortBy]);
 
-  const activeCategoryObj = categories.find((c) => c.slug === selectedCategory);
+  const activeCategoryObj = sortedCategories.find((c) => c.slug === selectedCategory);
 
   return (
     <div className="container-page py-8 sm:py-12">
@@ -124,7 +131,7 @@ export default function ShopPage() {
           All Furniture ({products.filter((p) => p.status === 'published').length})
         </button>
 
-        {categories.map((cat) => {
+        {sortedCategories.map((cat) => {
           const count = products.filter(
             (p) => p.categorySlug === cat.slug && p.status === 'published'
           ).length;
@@ -231,15 +238,15 @@ export default function ShopPage() {
               <input
                 type="range"
                 min="50000"
-                max="600000"
-                step="25000"
+                max="3000000"
+                step="50000"
                 value={priceRange}
                 onChange={(e) => setPriceRange(Number(e.target.value))}
                 className="w-full accent-[#F36B0A] cursor-pointer"
               />
               <div className="flex justify-between text-[11px] text-[#82746B] mt-1">
                 <span>₦50,000</span>
-                <span>₦600,000+</span>
+                <span>₦3,000,000+</span>
               </div>
             </div>
 
@@ -292,8 +299,8 @@ export default function ShopPage() {
                 <input
                   type="range"
                   min="50000"
-                  max="600000"
-                  step="25000"
+                  max="3000000"
+                  step="50000"
                   value={priceRange}
                   onChange={(e) => setPriceRange(Number(e.target.value))}
                   className="w-full accent-[#F36B0A]"

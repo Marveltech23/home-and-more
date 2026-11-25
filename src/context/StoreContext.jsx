@@ -44,16 +44,23 @@ const StoreContext = createContext(null);
 
 // Shared localStorage keys
 const STORAGE_KEYS = {
-  PRODUCTS: 'hm_store_products_v3',
-  CATEGORIES: 'hm_store_categories_v3',
-  ADS: 'hm_store_ads_v3',
-  BLOGS: 'hm_store_blogs_v3',
-  MEDIA: 'hm_store_media_v3',
-  ENQUIRIES: 'hm_store_enquiries_v3',
-  TESTIMONIALS: 'hm_store_testimonials_v3',
-  SETTINGS: 'hm_store_settings_v3',
-  HERO: 'hm_store_hero_v3',
+  PRODUCTS: 'hm_store_products_v4',
+  CATEGORIES: 'hm_store_categories_v4',
+  ADS: 'hm_store_ads_v4',
+  BLOGS: 'hm_store_blogs_v4',
+  MEDIA: 'hm_store_media_v4',
+  ENQUIRIES: 'hm_store_enquiries_v4',
+  TESTIMONIALS: 'hm_store_testimonials_v4',
+  SETTINGS: 'hm_store_settings_v4',
+  HERO: 'hm_store_hero_v4',
 };
+
+// Evict stale localStorage caches from previous versions
+if (typeof window !== 'undefined') {
+  try {
+    ['hm_store_categories_v3', 'hm_store_products_v3', 'hm_store_categories_v2', 'hm_store_categories_v1'].forEach((k) => localStorage.removeItem(k));
+  } catch {}
+}
 
 function getStoredOr(key, fallback) {
   try {
@@ -142,7 +149,10 @@ export function StoreProvider({ children }) {
           setSettings((prev) => ({ ...prev, ...remoteData.settings }));
         }
         if (remoteData.categories && remoteData.categories.length > 0) {
-          setCategories(remoteData.categories);
+          const sorted = [...remoteData.categories].sort(
+            (a, b) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99)
+          );
+          setCategories(sorted);
         }
         if (remoteData.products && remoteData.products.length > 0) {
           setProducts(remoteData.products);
@@ -186,13 +196,11 @@ export function StoreProvider({ children }) {
             .then(({ data }) => {
               if (data && data.length > 0) {
                 const mapped = data.map(mapCategoryFromDb);
-                setCategories((prev) => {
-                  const ids = new Set(mapped.map((c) => c.id));
-                  const pendingLocal = prev.filter((c) => !ids.has(c.id));
-                  const combined = [...pendingLocal, ...mapped];
-                  safeSetItem(STORAGE_KEYS.CATEGORIES, combined);
-                  return combined;
-                });
+                const sorted = mapped.sort(
+                  (a, b) => (Number(a.displayOrder) || 99) - (Number(b.displayOrder) || 99)
+                );
+                setCategories(sorted);
+                safeSetItem(STORAGE_KEYS.CATEGORIES, sorted);
               }
             });
         } else if (table === 'media') {
