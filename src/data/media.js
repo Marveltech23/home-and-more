@@ -315,7 +315,7 @@ export const mediaItems = [
   {
     id: 'm1',
     name: 'Modern Slate Sofa Set.jpg',
-    url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
     type: 'image/jpeg',
     size: '1.4 MB',
     dimensions: '1920x1080',
@@ -325,7 +325,7 @@ export const mediaItems = [
   {
     id: 'm2',
     name: 'Accent Armchair Burnt Orange.jpg',
-    url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1586023492125-27b2c045efd7.jpg',
     type: 'image/jpeg',
     size: '1.8 MB',
     dimensions: '1600x1200',
@@ -335,7 +335,7 @@ export const mediaItems = [
   {
     id: 'm3',
     name: 'King Plush Upholstered Bed.jpg',
-    url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1505693416388-ac5ce068fe85.jpg',
     type: 'image/jpeg',
     size: '2.1 MB',
     dimensions: '2048x1536',
@@ -345,7 +345,7 @@ export const mediaItems = [
   {
     id: 'm4',
     name: 'Fiddle Leaf Fig Indoor Plant.jpg',
-    url: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1614594975525-e45190c55d0b.jpg',
     type: 'image/jpeg',
     size: '950 KB',
     dimensions: '1200x1600',
@@ -355,7 +355,7 @@ export const mediaItems = [
   {
     id: 'm5',
     name: 'Natural Timber Texture.jpg',
-    url: 'https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1546484396-fb3fc6f95f98.jpg',
     type: 'image/jpeg',
     size: '3.2 MB',
     dimensions: '2400x1800',
@@ -365,7 +365,7 @@ export const mediaItems = [
   {
     id: 'm6',
     name: 'Nordic Pendant Lamp.jpg',
-    url: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1507473885765-e6ed057f782c.jpg',
     type: 'image/jpeg',
     size: '820 KB',
     dimensions: '1200x1200',
@@ -375,7 +375,7 @@ export const mediaItems = [
   {
     id: 'm7',
     name: 'Round Fluted Table.jpg',
-    url: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1533090161767-e6ffed986c88.jpg',
     type: 'image/jpeg',
     size: '1.2 MB',
     dimensions: '1500x1000',
@@ -385,7 +385,7 @@ export const mediaItems = [
   {
     id: 'm8',
     name: 'Monstera Potted Plant.jpg',
-    url: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1485955900006-10f4d324d411.jpg',
     type: 'image/jpeg',
     size: '1.1 MB',
     dimensions: '1600x1200',
@@ -395,7 +395,7 @@ export const mediaItems = [
   {
     id: 'm9',
     name: 'Minimalist Wooden Wardrobe.jpg',
-    url: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1595428774223-ef52624120d2.jpg',
     type: 'image/jpeg',
     size: '1.6 MB',
     dimensions: '1800x1400',
@@ -405,7 +405,7 @@ export const mediaItems = [
   {
     id: 'm10',
     name: 'Christmas Festive Decor.jpg',
-    url: 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=800&q=80',
+    url: '/images/stock/photo-1543258103-a62bdc069871.jpg',
     type: 'image/jpeg',
     size: '2.4 MB',
     dimensions: '1920x1080',

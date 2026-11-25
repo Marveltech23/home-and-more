@@ -5,7 +5,7 @@ const DEFAULT_TITLE = 'Home & More Furniture | Modern Living. Better You.';
 const DEFAULT_DESC =
   'Shop the finest selection of modern luxury furniture in Abuja, Nigeria at Home & More Furniture. Explore handcrafted sofas, dining sets, orthopedic beds, TV stands, and wardrobes.';
 const DEFAULT_IMAGE =
-  'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80';
+  '/images/stock/photo-1555041469-a586c61ea9bc.jpg';
 
 export default function SEO({
   title,

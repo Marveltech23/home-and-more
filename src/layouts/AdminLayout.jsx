@@ -222,7 +222,7 @@ export default function AdminLayout() {
                 className="flex items-center gap-2.5 p-1 sm:px-3 sm:py-1.5 rounded-full hover:bg-[#F8EBDD]/60 transition-colors"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+                  src="/images/stock/photo-1507003211169-0a1dd7228f2d.jpg"
                   alt="Admin Avatar"
                   className="w-8 h-8 rounded-full object-cover border border-[#F0DFD1]"
                 />

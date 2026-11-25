@@ -23,14 +23,14 @@ import { formatNaira } from '../../utils/format';
 import { isProductPriceVisible } from '../../utils/whatsapp';
 
 const PRESET_IMAGES = [
-  'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?auto=format&fit=crop&w=800&q=80',
-  'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80',
+  '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
+  '/images/stock/photo-1586023492125-27b2c045efd7.jpg',
+  '/images/stock/photo-1617806118233-18e1de247200.jpg',
+  '/images/stock/photo-1505693416388-ac5ce068fe85.jpg',
+  '/images/stock/photo-1595428774223-ef52624120d2.jpg',
+  '/images/stock/photo-1600585154526-990dced4db0d.jpg',
+  '/images/stock/photo-1600585154340-be6161a56a0c.jpg',
+  '/images/stock/photo-1567538096630-e0c55bd6374c.jpg',
 ];
 
 export default function ProductManagement() {

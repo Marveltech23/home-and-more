@@ -127,7 +127,7 @@ export default function DashboardOverview() {
           {/* Subtle background chair silhouette */}
           <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-20 pointer-events-none">
             <img
-              src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=200&q=80"
+              src="/images/stock/photo-1586023492125-27b2c045efd7.jpg"
               alt=""
               className="w-full h-full object-cover rounded-2xl"
             />
@@ -155,7 +155,7 @@ export default function DashboardOverview() {
           </div>
           <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-15 pointer-events-none">
             <img
-              src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=200&q=80"
+              src="/images/stock/photo-1567538096630-e0c55bd6374c.jpg"
               alt=""
               className="w-full h-full object-cover rounded-2xl"
             />
@@ -183,7 +183,7 @@ export default function DashboardOverview() {
           </div>
           <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-20 pointer-events-none">
             <img
-              src="https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=200&q=80"
+              src="/images/stock/photo-1614594975525-e45190c55d0b.jpg"
               alt=""
               className="w-full h-full object-cover rounded-2xl"
             />
@@ -211,7 +211,7 @@ export default function DashboardOverview() {
           </div>
           <div className="absolute -right-4 -bottom-4 w-28 h-28 opacity-15 pointer-events-none">
             <img
-              src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=200&q=80"
+              src="/images/stock/photo-1507473885765-e6ed057f782c.jpg"
               alt=""
               className="w-full h-full object-cover rounded-2xl"
             />

@@ -29,7 +29,7 @@ const commercialProjects = [
     scope: '32 Luxury Guest Suites & Penthouse Lounge',
     description:
       'Engineered and produced custom king channeled headboards, luggage credenzas, sound-dampening acoustic wall panels, and bespoke velvet armchairs for executive suites.',
-    image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
+    image: '/images/stock/photo-1590490360182-c33d57733427.jpg',
     tags: ['Bespoke Headboards', 'Lounge Seating', 'Fire-Retardant Fabric'],
   },
   {
@@ -40,7 +40,7 @@ const commercialProjects = [
     scope: '18-Seater Boardroom, Executive Suites & Reception Pods',
     description:
       'Crafted a solid teak conference table with integrated pop-up data routing, ergonomic executive leather seating, and custom acoustic privacy dividers for open collaboration zones.',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+    image: '/images/stock/photo-1497366216548-37526070297c.jpg',
     tags: ['Teak Conference Table', 'Executive Desks', 'Acoustic Partitions'],
   },
   {
@@ -51,7 +51,7 @@ const commercialProjects = [
     scope: 'Turnkey 7-Bedroom Villa & Outdoor Terrace',
     description:
       'Complete contract manufacturing of custom walk-in architectural wardrobes, a 12-seater solid oak banquet dining table, curved bouclé sectionals, and weather-resistant patio loungers.',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    image: '/images/stock/photo-1600585154340-be6161a56a0c.jpg',
     tags: ['Custom Wardrobes', '12-Seater Dining', 'Patio Daybeds'],
   },
   {
@@ -62,7 +62,7 @@ const commercialProjects = [
     scope: '14 Modern 2-Bedroom Serviced Units',
     description:
       'Standardized production of contemporary slate sofas, fluted TV consoles, storage beds, and durable wipe-clean dining sets delivered and assembled on a rapid 3-week timeline.',
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
+    image: '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
     tags: ['Turnkey Fit-Out', 'Storage Beds', 'Rapid Deployment'],
   },
 ];
@@ -100,7 +100,7 @@ export default function AboutPage() {
         {/* Hero Banner Image */}
         <div className="mt-10 rounded-3xl overflow-hidden shadow-2xl border border-[#F0DFD1] aspect-[16/8]">
           <img
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80"
+            src="/images/stock/photo-1600585154340-be6161a56a0c.jpg"
             alt="Home and More Furniture Showroom"
             className="w-full h-full object-cover"
           />
@@ -163,14 +163,14 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-2xl overflow-hidden shadow-md aspect-[3/4]">
               <img
-                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80"
+                src="/images/stock/photo-1586023492125-27b2c045efd7.jpg"
                 alt="Accent chair craftsmanship"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="rounded-2xl overflow-hidden shadow-md aspect-[3/4] translate-y-6">
               <img
-                src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=600&q=80"
+                src="/images/stock/photo-1617806118233-18e1de247200.jpg"
                 alt="Dining woodworking"
                 className="w-full h-full object-cover"
               />

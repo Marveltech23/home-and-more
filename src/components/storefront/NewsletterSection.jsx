@@ -33,7 +33,7 @@ export default function NewsletterSection() {
           <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden shrink-0 shadow-md border-2 border-white">
               <img
-                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=300&q=80"
+                src="/images/stock/photo-1555041469-a586c61ea9bc.jpg"
                 alt="Comfortable furniture"
                 className="w-full h-full object-cover"
                 loading="lazy"

@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Image as ImageIcon } from 'lucide-react';
+
+// In-memory registry of already-decoded image URLs so route transitions never flash skeletons
+const loadedSrcRegistry = new Set();
 
 export default function SafeImage({
   src,
@@ -12,16 +15,31 @@ export default function SafeImage({
   fit = 'cover', // 'cover' | 'contain'
   ...props
 }) {
-  const isDataUrl = typeof src === 'string' && src.startsWith('data:');
-  const [hasError, setHasError] = useState(false);
-  // Base64 images are already in-memory, so do not delay them with loading state
-  const [isLoading, setIsLoading] = useState(!isDataUrl);
+  const imgRef = useRef(null);
+  const isInstant =
+    typeof src === 'string' && (src.startsWith('data:') || loadedSrcRegistry.has(src));
 
-  // Reset error state if src changes
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(!isInstant);
+
+  // Reset error/loading state only when src actually changes
   useEffect(() => {
     setHasError(false);
-    setIsLoading(!isDataUrl);
-  }, [src, isDataUrl]);
+    if (!src) {
+      setIsLoading(false);
+      return;
+    }
+    if (
+      src.startsWith('data:') ||
+      loadedSrcRegistry.has(src) ||
+      (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0)
+    ) {
+      loadedSrcRegistry.add(src);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [src]);
 
   if (!src || hasError) {
     if (fallbackSrc && !hasError) {
@@ -29,7 +47,8 @@ export default function SafeImage({
         <img
           src={fallbackSrc}
           alt={alt}
-          loading={isDataUrl ? undefined : loading}
+          loading={loading}
+          decoding="async"
           className={`${className} object-${fit}`}
           onError={() => setHasError(true)}
           {...props}
@@ -56,18 +75,23 @@ export default function SafeImage({
   return (
     <div className={`relative overflow-hidden ${aspectRatio} ${className}`}>
       {isLoading && (
-        <div className="absolute inset-0 bg-[#F8EBDD]/60 animate-pulse flex items-center justify-center" />
+        <div className="absolute inset-0 bg-[#F8EBDD]/50 animate-pulse flex items-center justify-center" />
       )}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
-        loading={isDataUrl ? undefined : loading}
-        onLoad={() => setIsLoading(false)}
+        loading={isInstant ? undefined : loading}
+        decoding="async"
+        onLoad={() => {
+          if (src) loadedSrcRegistry.add(src);
+          setIsLoading(false);
+        }}
         onError={() => {
           setIsLoading(false);
           setHasError(true);
         }}
-        className={`w-full h-full object-${fit} transition-opacity duration-300 ${
+        className={`w-full h-full object-${fit} transition-opacity duration-200 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         {...props}

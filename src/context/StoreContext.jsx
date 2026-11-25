@@ -9,6 +9,7 @@ import { testimonials as initialTestimonials } from '../data/testimonials';
 import { siteSettings as initialSettings, heroSlides as initialHeroSlides } from '../data/siteSettings';
 import { useToast } from '../components/common/Toast';
 import { setBrowserFavicon } from '../utils/dynamicFavicon';
+import { warmLocalImageCache } from '../utils/imageCache';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import {
   fetchAllSupabaseData,
@@ -44,21 +45,28 @@ const StoreContext = createContext(null);
 
 // Shared localStorage keys
 const STORAGE_KEYS = {
-  PRODUCTS: 'hm_store_products_v5',
-  CATEGORIES: 'hm_store_categories_v5',
-  ADS: 'hm_store_ads_v5',
-  BLOGS: 'hm_store_blogs_v5',
-  MEDIA: 'hm_store_media_v5',
-  ENQUIRIES: 'hm_store_enquiries_v5',
-  TESTIMONIALS: 'hm_store_testimonials_v5',
+  PRODUCTS: 'hm_store_products_v6',
+  CATEGORIES: 'hm_store_categories_v6',
+  ADS: 'hm_store_ads_v6',
+  BLOGS: 'hm_store_blogs_v6',
+  MEDIA: 'hm_store_media_v6',
+  ENQUIRIES: 'hm_store_enquiries_v6',
+  TESTIMONIALS: 'hm_store_testimonials_v6',
   SETTINGS: 'hm_store_settings_v6',
-  HERO: 'hm_store_hero_v5',
+  HERO: 'hm_store_hero_v6',
 };
 
 // Evict stale localStorage caches from previous versions
 if (typeof window !== 'undefined') {
   try {
     [
+      'hm_store_products_v5',
+      'hm_store_categories_v5',
+      'hm_store_ads_v5',
+      'hm_store_blogs_v5',
+      'hm_store_media_v5',
+      'hm_store_testimonials_v5',
+      'hm_store_hero_v5',
       'hm_store_settings_v5',
       'hm_store_settings_v4',
       'hm_store_settings_v3',
@@ -129,6 +137,19 @@ export function StoreProvider({ children }) {
   useEffect(() => {
     setBrowserFavicon(settings?.logoUrl);
   }, [settings?.logoUrl]);
+
+  // Save all active storefront images into local browser Cache Storage in the background
+  useEffect(() => {
+    const urls = [
+      ...categories.map((c) => c.image),
+      ...products.flatMap((p) => [p.image, ...(Array.isArray(p.gallery) ? p.gallery : [])]),
+      ...advertisements.flatMap((a) => [a.desktopImage, a.mobileImage]),
+      ...blogs.flatMap((b) => [b.image, b.featuredImage]),
+      ...testimonials.map((t) => t.avatar),
+      ...heroSlides.map((h) => h.image),
+    ];
+    warmLocalImageCache(urls);
+  }, [categories, products, advertisements, blogs, testimonials, heroSlides]);
 
   const notifyChange = useCallback(() => {
     try {
@@ -372,7 +393,7 @@ export function StoreProvider({ children }) {
         status: productData.status || 'published',
         image:
           productData.image ||
-          'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
+          '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
         gallery: productData.gallery?.length ? productData.gallery : [productData.image],
         createdAt: new Date().toISOString(),
       };
@@ -452,7 +473,7 @@ export function StoreProvider({ children }) {
         displayOrder: Number(categoryData.displayOrder) || 1,
         image:
           categoryData.image ||
-          'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80',
+          '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
       };
 
       setCategories((prev) => {
@@ -505,7 +526,7 @@ export function StoreProvider({ children }) {
       const desktop =
         adData.desktopImage ||
         adData.image ||
-        'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=1600&q=80';
+        '/images/stock/photo-1543258103-a62bdc069871.jpg';
       const mobile = adData.mobileImage || desktop;
 
       const newAd = {
@@ -605,7 +626,7 @@ export function StoreProvider({ children }) {
       const img =
         blogData.featuredImage ||
         blogData.image ||
-        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80';
+        '/images/stock/photo-1600585154340-be6161a56a0c.jpg';
       const dt = blogData.publishedAt || blogData.date || new Date().toISOString().split('T')[0];
 
       const newBlog = {
@@ -787,7 +808,7 @@ export function StoreProvider({ children }) {
         createdAt: new Date().toISOString().split('T')[0],
         photo:
           data.photo ||
-          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+          '/images/stock/photo-1534528741775-53994a69daeb.jpg',
       };
       setTestimonials((prev) => [newTestimonial, ...prev]);
       syncTestimonialToDb(newTestimonial);

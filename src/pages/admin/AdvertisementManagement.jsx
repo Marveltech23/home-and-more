@@ -25,18 +25,18 @@ import { useStore } from '../../context/StoreContext';
 const PRESET_BANNERS = [
   {
     label: 'Christmas Festive (Current)',
-    desktop: 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=1600&q=80',
-    mobile: 'https://images.unsplash.com/photo-1543258103-a62bdc069871?auto=format&fit=crop&w=800&q=80',
+    desktop: '/images/stock/photo-1543258103-a62bdc069871.jpg',
+    mobile: '/images/stock/photo-1543258103-a62bdc069871.jpg',
   },
   {
     label: 'New Year Living Room',
-    desktop: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
-    mobile: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    desktop: '/images/stock/photo-1600585154340-be6161a56a0c.jpg',
+    mobile: '/images/stock/photo-1600585154340-be6161a56a0c.jpg',
   },
   {
     label: 'Mid-Season Clearance',
-    desktop: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=80',
-    mobile: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
+    desktop: '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
+    mobile: '/images/stock/photo-1555041469-a586c61ea9bc.jpg',
   },
 ];
 
