@@ -399,15 +399,14 @@ export default function AdvertisementManagement() {
             </div>
             <div>
               <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-                Main Subtitle *
+                Main Subtitle
               </label>
               <input
                 type="text"
                 value={subtitle}
                 onChange={(e) => setSubtitle(e.target.value)}
-                placeholder="Special Offers"
+                placeholder="Special Offers (optional for graphic banners)"
                 className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-                required
               />
             </div>
           </div>
@@ -427,22 +426,21 @@ export default function AdvertisementManagement() {
 
           <div>
             <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-              Description *
+              Description
             </label>
             <textarea
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Get Amazing Discounts on Premium Furniture"
+              placeholder="Optional — leave blank if your uploaded banner graphic already contains your ad text"
               className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-              required
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
-                Button Text *
+                Button Text
               </label>
               <input
                 type="text"
@@ -450,7 +448,6 @@ export default function AdvertisementManagement() {
                 onChange={(e) => setButtonText(e.target.value)}
                 placeholder="Shop Christmas Offers"
                 className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A]"
-                required
               />
             </div>
             <div>
@@ -478,7 +475,8 @@ export default function AdvertisementManagement() {
                 onChange={(e) => setPlacement(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A] bg-white"
               >
-                <option value="hero_bottom">Homepage Hero Bottom</option>
+                <option value="top_banner">Top Strip (Before Hero — 1920×108 / 1024×57)</option>
+                <option value="hero_bottom">Homepage Middle Banner (1920×600 / 1024×318)</option>
                 <option value="shop_banner">Shop Page Header</option>
                 <option value="popup">Promotional Modal Popup</option>
               </select>
@@ -511,7 +509,11 @@ export default function AdvertisementManagement() {
           <div className="space-y-4 pt-2 border-t border-[#F0DFD1]">
             <ImageUploadInput
               label="Desktop Banner Image"
-              helpText="Upload wide format banner from your Mac or computer (recommended: 1600x600)."
+              helpText={
+                placement === 'top_banner'
+                  ? 'Top Strip (Before Hero): Recommended 1920 × 108 px (or 1024 × 57 px, ratio 18:1).'
+                  : 'Middle Banner: Recommended 1920 × 600 px (or 1024 × 318 px, ratio 3.2:1). Uploaded graphics display full-bleed with no text overlay.'
+              }
               value={desktopImage}
               onChange={(newVal) => setDesktopImage(newVal)}
               presets={PRESET_BANNERS.map((b) => ({ desktop: b.desktop, label: b.label }))}

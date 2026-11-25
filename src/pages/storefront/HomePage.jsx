@@ -1,4 +1,5 @@
 import SEO from '../../components/common/SEO';
+import TopPromoStrip from '../../components/storefront/TopPromoStrip';
 import HeroBanner from '../../components/storefront/HeroBanner';
 import CategoryPills from '../../components/storefront/CategoryPills';
 import PopularPicks from '../../components/storefront/PopularPicks';
@@ -18,6 +19,9 @@ export default function HomePage() {
         description="Shop the finest selection of modern luxury furniture in Abuja, Nigeria at Home & More Furniture. Explore handcrafted sofas, bedroom sets, center tables, dining sets, and executive office collections."
         canonical="/"
       />
+
+      {/* 0. Top Strip Promotional Banner (Before Hero — 1024x57 / 18:1 ratio) */}
+      <TopPromoStrip />
 
       {/* 1. Full-Bleed Architectural Showroom Hero */}
       <HeroBanner />
