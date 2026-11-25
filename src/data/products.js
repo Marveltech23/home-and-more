@@ -106,7 +106,7 @@ export const products = [
     dimensions: '3-Seaters: 230cm W x 94cm D x 84cm H | Armchairs: 80cm W x 84cm D',
     material: 'Performance Linen-Blend Fabric, Kiln-Dried Hardwood, High-Resilience Foam',
     colors: ['Slate Grey & Cream', 'Warm Sand & Taupe'],
-    featured: false,
+    featured: true,
     status: 'published',
   },
   {
@@ -144,7 +144,7 @@ export const products = [
     dimensions: '3-Seaters: 240cm W x 96cm D x 82cm H | Armchairs: 86cm W x 88cm D',
     material: 'Turkish Plush Velvet, Vertical Channel Stitching, Solid Hardwood Frame',
     colors: ['Ivory Cream & Espresso', 'Sand & Champagne'],
-    featured: false,
+    featured: true,
     status: 'published',
   },
   {
@@ -210,7 +210,7 @@ export const products = [
     dimensions: '3-Seaters: 230cm W x 94cm D x 84cm H | Armchairs: 85cm W x 86cm D',
     material: 'Ribbed Performance Velvet, Kiln-Dried Hardwood Frame, Solid Walnut Legs',
     colors: ['Navy Blue & Cream Beige', 'All Cream', 'All Navy'],
-    featured: false,
+    featured: true,
     status: 'published',
   },
   {
@@ -229,7 +229,7 @@ export const products = [
     dimensions: '3-Seaters: 235cm W x 96cm D x 80cm H | Armchairs: 82cm W x 84cm D',
     material: 'Soft-Touch Nubuck Upholstery, Hand-Tufted Chesterfield Frame, Brass Legs',
     colors: ['Chocolate & Caramel Tan', 'Espresso Brown'],
-    featured: false,
+    featured: true,
     status: 'published',
   },
 

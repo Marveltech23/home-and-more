@@ -4,8 +4,11 @@ import EmptyState from '../common/EmptyState';
 import { useStore } from '../../context/StoreContext';
 
 export default function PopularPicks() {
-  const { featuredProducts, settings } = useStore();
-  const displayProducts = featuredProducts.slice(0, 4);
+  const { featuredProducts, products, settings } = useStore();
+  const publishedFallback = products.filter(
+    (p) => p.status === 'published' && !featuredProducts.some((fp) => fp.id === p.id)
+  );
+  const displayProducts = [...featuredProducts, ...publishedFallback].slice(0, 8);
 
   return (
     <section className="container-page mt-14 sm:mt-16" aria-label="Our Popular Picks">
