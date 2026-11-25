@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Heart, Trash2, ArrowRight } from 'lucide-react';
+import { Heart, Trash2 } from 'lucide-react';
 import ProductCard from '../../components/storefront/ProductCard';
 import EmptyState from '../../components/common/EmptyState';
 import SEO from '../../components/common/SEO';
@@ -7,19 +7,52 @@ import { WhatsAppIcon } from '../../components/common/BrandIcons';
 import { useWishlist } from '../../context/WishlistContext';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
-import { buildWhatsAppLink } from '../../utils/whatsapp';
+import {
+  buildWhatsAppLink,
+  DEFAULT_WHATSAPP_NUMBER,
+  isProductPriceVisible,
+} from '../../utils/whatsapp';
 
 export default function WishlistPage() {
   const { items, clear } = useWishlist();
   const { products, settings } = useStore();
 
   const savedProducts = products.filter((p) => items.includes(p.id));
+  const allPricesVisible = savedProducts.every((p) => isProductPriceVisible(p, settings));
   const totalValue = savedProducts.reduce((sum, p) => sum + p.price, 0);
 
-  // Bulk WhatsApp enquiry message
-  const itemsListText = savedProducts.map((p) => `• ${p.name} (${formatNaira(p.price)})`).join('\n');
-  const bulkWhatsAppMsg = `${settings.whatsappGreeting} my saved wishlist:\n${itemsListText}\nTotal: ${formatNaira(totalValue)}. Are these available for delivery in Abuja?`;
-  const whatsappUrl = buildWhatsAppLink(settings.whatsappNumber, bulkWhatsAppMsg);
+  const origin =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'https://www.homeandmorefurniture.com';
+
+  // Bulk WhatsApp enquiry message carrying full product details
+  const itemsListText = savedProducts
+    .map((p) => {
+      const showPrice = isProductPriceVisible(p, settings);
+      const priceBit = showPrice ? ` — ${formatNaira(p.price)}` : '';
+      const skuBit = p.sku ? ` (SKU: ${p.sku})` : '';
+      return `• *${p.name}*${skuBit}${priceBit}\n  ${origin}/product/${p.slug}`;
+    })
+    .join('\n');
+
+  const bulkWhatsAppMsg = [
+    'Hello Home & More Furniture,',
+    '',
+    'I would like to buy / enquire about these items from my saved wishlist:',
+    '',
+    itemsListText,
+    ...(allPricesVisible && totalValue > 0 ? ['', `*Estimated Total:* ${formatNaira(totalValue)}`] : []),
+    '',
+    allPricesVisible
+      ? 'Please confirm availability and delivery details in Abuja.'
+      : 'Please share the prices, availability, and delivery details in Abuja.',
+  ].join('\n');
+
+  const whatsappUrl = buildWhatsAppLink(
+    settings.whatsappNumber || DEFAULT_WHATSAPP_NUMBER,
+    bulkWhatsAppMsg
+  );
 
   return (
     <div className="container-page py-8 sm:py-12 space-y-8">
@@ -58,7 +91,7 @@ export default function WishlistPage() {
               className="btn-whatsapp text-xs py-2 px-4 shadow-sm"
             >
               <WhatsAppIcon className="w-4 h-4 fill-white" />
-              <span>Enquire All on WhatsApp</span>
+              <span>Order All on WhatsApp</span>
             </a>
           </div>
         )}

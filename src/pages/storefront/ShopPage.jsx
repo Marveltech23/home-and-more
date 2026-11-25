@@ -10,8 +10,9 @@ import { categories as initialCategories } from '../../data/categories';
 import { formatNaira } from '../../utils/format';
 
 export default function ShopPage() {
-  const { products, categories } = useStore();
+  const { products, categories, settings } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
+  const pricesEnabled = settings?.showPrices !== false;
 
   const sortedCategories = useMemo(() => {
     return (categories && categories.length > 0 ? categories : initialCategories)
@@ -72,8 +73,8 @@ export default function ShopPage() {
           if (!matchesName && !matchesDesc && !matchesTagline) return false;
         }
 
-        // Max price filter
-        if (p.price > priceRange) return false;
+        // Max price filter (only when storefront prices are visible)
+        if (pricesEnabled && p.price > priceRange) return false;
 
         // Stock filter
         if (inStockOnly && p.stock <= 0) return false;
@@ -81,15 +82,15 @@ export default function ShopPage() {
         return true;
       })
       .sort((a, b) => {
-        if (sortBy === 'price-low') return a.price - b.price;
-        if (sortBy === 'price-high') return b.price - a.price;
+        if (pricesEnabled && sortBy === 'price-low') return a.price - b.price;
+        if (pricesEnabled && sortBy === 'price-high') return b.price - a.price;
         if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
         // Default: featured first, then newest
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
         return 0;
       });
-  }, [products, selectedCategory, searchQuery, priceRange, inStockOnly, sortBy]);
+  }, [products, selectedCategory, searchQuery, priceRange, inStockOnly, sortBy, pricesEnabled]);
 
   const activeCategoryObj = sortedCategories.find((c) => c.slug === selectedCategory);
 
@@ -198,8 +199,8 @@ export default function ShopPage() {
               className="px-3.5 py-2 rounded-full border border-[#F0DFD1] bg-white text-xs sm:text-sm font-semibold text-[#24150F] focus:outline-none focus:border-[#F36B0A]"
             >
               <option value="featured">Featured Picks</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
+              {pricesEnabled && <option value="price-low">Price: Low to High</option>}
+              {pricesEnabled && <option value="price-high">Price: High to Low</option>}
               <option value="name-asc">Alphabetical (A - Z)</option>
             </select>
           </div>
@@ -229,26 +230,28 @@ export default function ShopPage() {
               </button>
             </div>
 
-            {/* Price Slider */}
-            <div>
-              <div className="flex items-center justify-between text-xs font-semibold text-[#24150F] mb-2">
-                <span>Max Budget:</span>
-                <span className="text-[#F36B0A]">{formatNaira(priceRange)}</span>
+            {/* Price Slider (only shown when prices are visible) */}
+            {pricesEnabled && (
+              <div>
+                <div className="flex items-center justify-between text-xs font-semibold text-[#24150F] mb-2">
+                  <span>Max Budget:</span>
+                  <span className="text-[#F36B0A]">{formatNaira(priceRange)}</span>
+                </div>
+                <input
+                  type="range"
+                  min="50000"
+                  max="3000000"
+                  step="50000"
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(Number(e.target.value))}
+                  className="w-full accent-[#F36B0A] cursor-pointer"
+                />
+                <div className="flex justify-between text-[11px] text-[#82746B] mt-1">
+                  <span>₦50,000</span>
+                  <span>₦3,000,000+</span>
+                </div>
               </div>
-              <input
-                type="range"
-                min="50000"
-                max="3000000"
-                step="50000"
-                value={priceRange}
-                onChange={(e) => setPriceRange(Number(e.target.value))}
-                className="w-full accent-[#F36B0A] cursor-pointer"
-              />
-              <div className="flex justify-between text-[11px] text-[#82746B] mt-1">
-                <span>₦50,000</span>
-                <span>₦3,000,000+</span>
-              </div>
-            </div>
+            )}
 
             {/* In Stock Only Checkbox */}
             <div className="pt-3 border-t border-[#F0DFD1]">
@@ -290,22 +293,24 @@ export default function ShopPage() {
                 </button>
               </div>
 
-              {/* Price Slider */}
-              <div>
-                <div className="flex items-center justify-between text-xs font-semibold text-[#24150F] mb-2">
-                  <span>Max Budget:</span>
-                  <span className="text-[#F36B0A]">{formatNaira(priceRange)}</span>
+              {/* Price Slider (only shown when prices are visible) */}
+              {pricesEnabled && (
+                <div>
+                  <div className="flex items-center justify-between text-xs font-semibold text-[#24150F] mb-2">
+                    <span>Max Budget:</span>
+                    <span className="text-[#F36B0A]">{formatNaira(priceRange)}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="50000"
+                    max="3000000"
+                    step="50000"
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(Number(e.target.value))}
+                    className="w-full accent-[#F36B0A]"
+                  />
                 </div>
-                <input
-                  type="range"
-                  min="50000"
-                  max="3000000"
-                  step="50000"
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(Number(e.target.value))}
-                  className="w-full accent-[#F36B0A]"
-                />
-              </div>
+              )}
 
               {/* In Stock */}
               <label className="flex items-center gap-2.5 text-sm font-medium text-[#24150F]">

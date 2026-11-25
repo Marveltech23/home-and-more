@@ -1,21 +1,26 @@
 import { Link } from 'react-router-dom';
-import { Heart, ArrowRight } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import SafeImage from '../common/SafeImage';
 import { WhatsAppIcon } from '../common/BrandIcons';
 import { useWishlist } from '../../context/WishlistContext';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
-import { buildWhatsAppLink } from '../../utils/whatsapp';
+import { buildProductWhatsAppLink, isProductPriceVisible } from '../../utils/whatsapp';
 
 export default function ProductCard({ product, settings: propSettings }) {
-  const { settings: contextSettings } = useStore();
+  const { settings: contextSettings, categories } = useStore();
   const settings = propSettings || contextSettings;
   const { has, toggle } = useWishlist();
 
   if (!product) return null;
 
   const saved = has(product.id);
-  const message = `${settings?.whatsappGreeting || 'Hello, I want to enquire about'} ${product.name} (${formatNaira(product.price)}).`;
+  const priceVisible = isProductPriceVisible(product, settings);
+  const whatsappHref = buildProductWhatsAppLink(product, {
+    settings,
+    categories,
+    showPrice: priceVisible,
+  });
 
   return (
     <article className="card group flex flex-col overflow-hidden bg-white rounded-2xl border border-[#F0DFD1] shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
@@ -50,8 +55,8 @@ export default function ProductCard({ product, settings: propSettings }) {
           />
         </button>
 
-        {/* Stock / Discount Tag */}
-        {product.discountPrice && (
+        {/* Discount Tag (only shown when price is visible) */}
+        {priceVisible && product.discountPrice && (
           <span className="absolute left-5 top-5 bg-[#29160D] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
             Sale
           </span>
@@ -59,32 +64,36 @@ export default function ProductCard({ product, settings: propSettings }) {
       </div>
 
       {/* Info Area */}
-      <div className="flex flex-1 flex-col p-4 sm:p-5 pt-3">
-        <h3 className="font-bold text-[#24150F] text-base group-hover:text-[#F36B0A] transition-colors line-clamp-1">
-          <Link to={`/shop/${product.slug}`}>{product.name}</Link>
-        </h3>
+      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 pt-3">
+        <div>
+          <h3 className="font-bold text-[#24150F] text-base group-hover:text-[#F36B0A] transition-colors line-clamp-1">
+            <Link to={`/shop/${product.slug}`}>{product.name}</Link>
+          </h3>
 
-        <div className="mt-1 flex items-baseline gap-2">
-          <span className="text-lg font-bold text-[#F36B0A]">
-            {formatNaira(product.price)}
-          </span>
-          {product.discountPrice && (
-            <span className="text-xs text-[#82746B] line-through">
-              {formatNaira(product.discountPrice)}
-            </span>
+          {priceVisible && (
+            <div className="mt-1 flex items-baseline gap-2">
+              <span className="text-lg font-bold text-[#F36B0A]">
+                {formatNaira(product.price)}
+              </span>
+              {product.discountPrice && (
+                <span className="text-xs text-[#82746B] line-through">
+                  {formatNaira(product.discountPrice)}
+                </span>
+              )}
+            </div>
           )}
         </div>
 
         {/* WhatsApp Buy Button */}
         <div className="mt-4 pt-1">
           <a
-            href={buildWhatsAppLink(settings?.whatsappNumber, message)}
+            href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#F36B0A] to-[#D94D00] px-4 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm transition-all hover:brightness-105 hover:shadow-md"
           >
             <WhatsAppIcon className="w-4 h-4 fill-white" />
-            <span>Buy via WhatsApp</span>
+            <span>{priceVisible ? 'Buy via WhatsApp' : 'Order via WhatsApp'}</span>
           </a>
         </div>
       </div>

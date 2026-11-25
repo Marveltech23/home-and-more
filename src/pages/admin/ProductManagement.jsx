@@ -8,6 +8,7 @@ import {
   Filter,
   Package,
   Eye,
+  EyeOff,
   CheckCircle2,
   XCircle,
   ExternalLink,
@@ -19,6 +20,7 @@ import ConfirmDialog from '../../components/common/ConfirmDialog';
 import ImageUploadInput from '../../components/common/ImageUploadInput';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira } from '../../utils/format';
+import { isProductPriceVisible } from '../../utils/whatsapp';
 
 const PRESET_IMAGES = [
   'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
@@ -32,8 +34,24 @@ const PRESET_IMAGES = [
 ];
 
 export default function ProductManagement() {
-  const { products, categories, media, addProduct, updateProduct, deleteProduct } = useStore();
+  const {
+    products,
+    categories,
+    media,
+    settings,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    toggleGlobalPrices,
+    setProductPriceVisibility,
+    toggleProductPriceVisibility,
+  } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const globalPricesVisible = settings?.showPrices !== false;
+  const hiddenPriceIds = Array.isArray(settings?.hiddenPriceProductIds)
+    ? settings.hiddenPriceProductIds
+    : [];
 
   const mediaPresets = media?.length
     ? media.map((m) => ({ url: m.url, label: m.name }))
@@ -60,6 +78,7 @@ export default function ProductManagement() {
   const [material, setMaterial] = useState('');
   const [featured, setFeatured] = useState(false);
   const [status, setStatus] = useState('published');
+  const [showProductPrice, setShowProductPrice] = useState(true);
 
   // Delete State
   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, id: null, name: '' });
@@ -91,6 +110,7 @@ export default function ProductManagement() {
     setMaterial('Kiln-dried Hardwood, Premium Fabric');
     setFeatured(false);
     setStatus('published');
+    setShowProductPrice(true);
     setIsModalOpen(true);
   };
 
@@ -108,6 +128,7 @@ export default function ProductManagement() {
     setMaterial(p.material || '');
     setFeatured(Boolean(p.featured));
     setStatus(p.status || 'published');
+    setShowProductPrice(!hiddenPriceIds.includes(p.id));
     setIsModalOpen(true);
   };
 
@@ -117,7 +138,7 @@ export default function ProductManagement() {
       name: name.trim(),
       sku: sku.trim(),
       categorySlug,
-      price: Number(price),
+      price: Number(price) || 0,
       discountPrice: discountPrice ? Number(discountPrice) : null,
       stock: Number(stock),
       image,
@@ -130,8 +151,12 @@ export default function ProductManagement() {
 
     if (editingId) {
       updateProduct(editingId, productPayload);
+      setProductPriceVisibility(editingId, showProductPrice, { silent: true });
     } else {
-      addProduct(productPayload);
+      const created = addProduct(productPayload);
+      if (created?.id && !showProductPrice) {
+        setProductPriceVisibility(created.id, false, { silent: true });
+      }
     }
 
     setIsModalOpen(false);
@@ -172,14 +197,39 @@ export default function ProductManagement() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleOpenAdd}
-          className="btn-primary text-xs sm:text-sm py-2.5 px-5 shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Product</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleGlobalPrices}
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs sm:text-sm font-semibold border transition-all shadow-xs ${
+              globalPricesVisible
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                : 'bg-[#29160D] text-white border-[#29160D] hover:bg-[#3a1f12]'
+            }`}
+            title="Toggle whether prices are visible or hidden across the entire storefront"
+          >
+            {globalPricesVisible ? (
+              <>
+                <Eye className="w-4 h-4 text-emerald-600" />
+                <span>Storefront Prices: Visible</span>
+              </>
+            ) : (
+              <>
+                <EyeOff className="w-4 h-4 text-[#F36B0A]" />
+                <span>Storefront Prices: Hidden</span>
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleOpenAdd}
+            className="btn-primary text-xs sm:text-sm py-2.5 px-5 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add New Product</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -261,12 +311,51 @@ export default function ProductManagement() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="font-bold text-[#F36B0A]">{formatNaira(p.price)}</span>
-                      {p.discountPrice && (
-                        <span className="block text-[11px] text-[#82746B] line-through">
-                          {formatNaira(p.discountPrice)}
-                        </span>
-                      )}
+                      {(() => {
+                        const visible = isProductPriceVisible(p, settings);
+                        return (
+                          <div className="space-y-1">
+                            <div>
+                              <span
+                                className={`font-bold ${
+                                  visible ? 'text-[#F36B0A]' : 'text-[#82746B] line-through opacity-60'
+                                }`}
+                              >
+                                {formatNaira(p.price)}
+                              </span>
+                              {p.discountPrice && visible && (
+                                <span className="block text-[11px] text-[#82746B] line-through">
+                                  {formatNaira(p.discountPrice)}
+                                </span>
+                              )}
+                            </div>
+                            {globalPricesVisible ? (
+                              <button
+                                type="button"
+                                onClick={() => toggleProductPriceVisibility(p.id)}
+                                className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border transition-colors ${
+                                  visible
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                                    : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
+                                }`}
+                                title={
+                                  visible
+                                    ? 'Click to hide price on storefront (WhatsApp only)'
+                                    : 'Click to show price on storefront'
+                                }
+                              >
+                                {visible ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                                <span>{visible ? 'Price Visible' : 'Price Hidden'}</span>
+                              </button>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 border border-stone-200">
+                                <EyeOff className="w-3 h-3" />
+                                <span>Hidden Globally</span>
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </td>
 
                     <td className="py-3.5 px-4">
@@ -481,17 +570,29 @@ export default function ProductManagement() {
             </div>
           </div>
 
-          {/* Featured & Publish Status */}
+          {/* Featured, Price Visibility & Publish Status */}
           <div className="pt-2 border-t border-[#F0DFD1] flex flex-wrap items-center justify-between gap-4">
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#24150F]">
-              <input
-                type="checkbox"
-                checked={featured}
-                onChange={(e) => setFeatured(e.target.checked)}
-                className="rounded border-[#F0DFD1] text-[#F36B0A] focus:ring-[#F36B0A] w-4 h-4"
-              />
-              <span>Feature on Storefront Homepage</span>
-            </label>
+            <div className="flex flex-wrap items-center gap-5">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#24150F]">
+                <input
+                  type="checkbox"
+                  checked={featured}
+                  onChange={(e) => setFeatured(e.target.checked)}
+                  className="rounded border-[#F0DFD1] text-[#F36B0A] focus:ring-[#F36B0A] w-4 h-4"
+                />
+                <span>Feature on Storefront Homepage</span>
+              </label>
+
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#24150F]">
+                <input
+                  type="checkbox"
+                  checked={showProductPrice}
+                  onChange={(e) => setShowProductPrice(e.target.checked)}
+                  className="rounded border-[#F0DFD1] text-[#F36B0A] focus:ring-[#F36B0A] w-4 h-4"
+                />
+                <span>Show Price on Storefront</span>
+              </label>
+            </div>
 
             <div className="flex items-center gap-4 text-xs font-semibold">
               <label className="flex items-center gap-1.5 cursor-pointer">

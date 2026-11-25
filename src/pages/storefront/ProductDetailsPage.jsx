@@ -23,12 +23,12 @@ import { useStore } from '../../context/StoreContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useToast } from '../../components/common/Toast';
 import { formatNaira } from '../../utils/format';
-import { buildWhatsAppLink } from '../../utils/whatsapp';
+import { buildProductWhatsAppLink, isProductPriceVisible } from '../../utils/whatsapp';
 
 export default function ProductDetailsPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { products, getProductBySlug, settings, addEnquiry } = useStore();
+  const { products, categories, getProductBySlug, settings, addEnquiry } = useStore();
   const { has, toggle } = useWishlist();
   const { addToast } = useToast();
 
@@ -70,17 +70,21 @@ export default function ProductDetailsPage() {
   }
 
   const isSaved = has(product.id);
+  const priceVisible = isProductPriceVisible(product, settings);
 
   // Related products from same category
   const relatedProducts = products
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id && p.status === 'published')
     .slice(0, 4);
 
-  // WhatsApp Enquiry Link
-  const colorText = selectedColor ? ` Color: ${selectedColor}.` : '';
-  const qtyText = quantity > 1 ? ` Qty: ${quantity}.` : '';
-  const whatsappMsg = `${settings.whatsappGreeting} "${product.name}" (${formatNaira(product.price)}).${colorText}${qtyText} Is this available for delivery in Abuja?`;
-  const whatsappUrl = buildWhatsAppLink(settings.whatsappNumber, whatsappMsg);
+  // Rich WhatsApp Purchase Link carrying full product details to +234 803 351 3144
+  const whatsappUrl = buildProductWhatsAppLink(product, {
+    settings,
+    categories,
+    selectedColor,
+    quantity,
+    showPrice: priceVisible,
+  });
 
   const handleEnquirySubmit = (e) => {
     e.preventDefault();
@@ -95,7 +99,7 @@ export default function ProductDetailsPage() {
       email: customerEmail.trim() || 'Not provided',
       productName: product.name,
       productId: product.id,
-      price: product.price * quantity,
+      price: priceVisible ? product.price * quantity : 0,
       message: customerMessage.trim() || `Interested in ${quantity}x ${product.name} (${selectedColor || 'Default'}).`,
     });
     setIsSubmitting(false);
@@ -138,7 +142,7 @@ export default function ProductDetailsPage() {
       '@type': 'Offer',
       url: `https://www.homeandmorefurniture.com/product/${product.slug}`,
       priceCurrency: 'NGN',
-      price: product.price,
+      ...(priceVisible ? { price: product.price } : {}),
       availability: 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       seller: {
@@ -152,7 +156,7 @@ export default function ProductDetailsPage() {
     <div className="container-page py-6 sm:py-10">
       <SEO
         title={`${product.name} | Premium Furniture Abuja`}
-        description={`${product.name} - ${formatNaira(product.price)}. ${product.tagline || product.description || 'Modern luxury furniture handcrafted for Nigerian homes.'} Fast delivery in Abuja.`}
+        description={`${product.name}${priceVisible ? ` - ${formatNaira(product.price)}` : ''}. ${product.tagline || product.description || 'Modern luxury furniture handcrafted for Nigerian homes.'} Fast delivery in Abuja.`}
         canonical={`/product/${product.slug}`}
         image={product.image}
         schema={productSchema}
@@ -246,22 +250,26 @@ export default function ProductDetailsPage() {
               <p className="text-sm font-medium text-[#82746B] mt-1">{product.tagline}</p>
             )}
 
-            {/* Price block */}
-            <div className="mt-4 flex items-baseline gap-3">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[#F36B0A]">
-                {formatNaira(product.price)}
-              </span>
-              {product.discountPrice && (
-                <span className="text-base text-[#82746B] line-through">
-                  {formatNaira(product.discountPrice)}
-                </span>
+            {/* Price & Availability block */}
+            <div className="mt-4 flex flex-wrap items-baseline gap-3">
+              {priceVisible && (
+                <>
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#F36B0A]">
+                    {formatNaira(product.price)}
+                  </span>
+                  {product.discountPrice && (
+                    <span className="text-base text-[#82746B] line-through">
+                      {formatNaira(product.discountPrice)}
+                    </span>
+                  )}
+                </>
               )}
               {product.stock > 0 ? (
-                <span className="ml-2 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
                   In Stock ({product.stock} available)
                 </span>
               ) : (
-                <span className="ml-2 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full">
+                <span className="text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-full">
                   Made to Order
                 </span>
               )}
@@ -336,7 +344,11 @@ export default function ProductDetailsPage() {
               className="w-full flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#F36B0A] to-[#D94D00] text-white py-3.5 px-6 font-bold text-sm sm:text-base shadow-lg shadow-orange-500/20 hover:brightness-105 hover:scale-[1.01] transition-all"
             >
               <WhatsAppIcon className="w-5 h-5 fill-white" />
-              <span>Buy via WhatsApp ({formatNaira(product.price * quantity)})</span>
+              <span>
+                {priceVisible
+                  ? `Buy via WhatsApp (${formatNaira(product.price * quantity)})`
+                  : 'Order via WhatsApp'}
+              </span>
             </a>
 
             {/* Secondary: Request On-Site Callback / Enquiry */}

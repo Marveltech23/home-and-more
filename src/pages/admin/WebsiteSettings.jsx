@@ -10,6 +10,8 @@ import {
   ChevronDown,
   ChevronUp,
   Globe,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import Logo from '../../components/common/Logo';
 import ImageUploadInput from '../../components/common/ImageUploadInput';
@@ -33,8 +35,10 @@ const LOGO_PRESETS = [
 ];
 
 export default function WebsiteSettings() {
-  const { settings, updateSettings, resetToDefaults } = useStore();
+  const { settings, updateSettings, toggleGlobalPrices, resetToDefaults } = useStore();
   const { addToast } = useToast();
+
+  const [showPrices, setShowPrices] = useState(settings.showPrices !== false);
 
   // Brand & Logo State
   const [businessName, setBusinessName] = useState(settings.businessName || 'Home & More Furniture');
@@ -88,6 +92,7 @@ export default function WebsiteSettings() {
       if (settings.social?.facebook) setFacebook(settings.social.facebook);
       if (settings.social?.instagram) setInstagram(settings.social.instagram);
       if (settings.social?.youtube) setYoutube(settings.social.youtube);
+      setShowPrices(settings.showPrices !== false);
     }
   }, [settings]);
 
@@ -121,6 +126,7 @@ export default function WebsiteSettings() {
       address: address.trim(),
       showroomAddress: showroomAddress.trim(),
       factoryAddress: factoryAddress.trim(),
+      showPrices,
       social: {
         facebook: facebook.trim(),
         instagram: instagram.trim(),
@@ -418,7 +424,57 @@ export default function WebsiteSettings() {
           </div>
         </div>
 
-        {/* CARD 2: CONTACT DETAILS & WHATSAPP ROUTING */}
+        {/* CARD 2: STOREFRONT PRICE VISIBILITY */}
+        <div className="card p-6 bg-white border border-[#F0DFD1] space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                {showPrices ? (
+                  <Eye className="w-5 h-5 text-emerald-600" />
+                ) : (
+                  <EyeOff className="w-5 h-5 text-[#F36B0A]" />
+                )}
+                <h2 className="text-base font-bold text-[#24150F]">
+                  Storefront Product Price Visibility
+                </h2>
+              </div>
+              <p className="text-xs text-[#82746B] max-w-xl">
+                {showPrices
+                  ? 'Product prices are currently VISIBLE across the storefront. Customers see Naira prices alongside the WhatsApp order button.'
+                  : 'Product prices are currently HIDDEN across the storefront. Customers click WhatsApp directly to message your business number with full product details.'}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              role="switch"
+              aria-checked={showPrices}
+              onClick={() => {
+                setShowPrices((prev) => !prev);
+                toggleGlobalPrices();
+              }}
+              className={`relative inline-flex h-10 items-center gap-2.5 rounded-full px-4 text-xs font-bold border transition-all shrink-0 ${
+                showPrices
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                  : 'bg-[#29160D] text-white border-[#29160D] hover:bg-[#3a1f12]'
+              }`}
+            >
+              {showPrices ? (
+                <>
+                  <Eye className="w-4 h-4 text-emerald-600" />
+                  <span>Prices Visible (Click to Hide)</span>
+                </>
+              ) : (
+                <>
+                  <EyeOff className="w-4 h-4 text-[#F36B0A]" />
+                  <span>Prices Hidden (Click to Show)</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* CARD 3: CONTACT DETAILS & WHATSAPP ROUTING */}
         <div className="card p-6 bg-white border border-[#F0DFD1] space-y-4">
           <h2 className="text-base font-bold text-[#24150F] pb-2 border-b border-[#F0DFD1]">
             Contact Channels &amp; WhatsApp Integration

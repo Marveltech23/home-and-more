@@ -51,7 +51,7 @@ const STORAGE_KEYS = {
   MEDIA: 'hm_store_media_v5',
   ENQUIRIES: 'hm_store_enquiries_v5',
   TESTIMONIALS: 'hm_store_testimonials_v5',
-  SETTINGS: 'hm_store_settings_v5',
+  SETTINGS: 'hm_store_settings_v6',
   HERO: 'hm_store_hero_v5',
 };
 
@@ -59,6 +59,9 @@ const STORAGE_KEYS = {
 if (typeof window !== 'undefined') {
   try {
     [
+      'hm_store_settings_v5',
+      'hm_store_settings_v4',
+      'hm_store_settings_v3',
       'hm_store_categories_v4',
       'hm_store_products_v4',
       'hm_store_media_v4',
@@ -844,17 +847,80 @@ export function StoreProvider({ children }) {
   );
 
   // ==========================================
-  // WEBSITE SETTINGS ACTION
+  // WEBSITE SETTINGS & PRICE VISIBILITY ACTIONS
   // ==========================================
   const updateSettings = useCallback(
-    (newSettings) => {
-      const merged = { ...settings, ...newSettings };
-      setSettings(merged);
-      syncSettingsToDb(merged);
+    (newSettings, { silent = false } = {}) => {
+      setSettings((prev) => {
+        const merged = { ...prev, ...newSettings };
+        safeSetItem(STORAGE_KEYS.SETTINGS, merged);
+        syncSettingsToDb(merged);
+        return merged;
+      });
       notifyChange();
-      addToast({ message: 'Website settings saved!', type: 'success' });
+      if (!silent) {
+        addToast({ message: 'Website settings saved!', type: 'success' });
+      }
     },
-    [settings, addToast, notifyChange]
+    [addToast, notifyChange]
+  );
+
+  const toggleGlobalPrices = useCallback(() => {
+    let nextVisible = true;
+    setSettings((prev) => {
+      nextVisible = prev.showPrices === false;
+      const merged = { ...prev, showPrices: nextVisible };
+      safeSetItem(STORAGE_KEYS.SETTINGS, merged);
+      syncSettingsToDb(merged);
+      return merged;
+    });
+    notifyChange();
+    addToast({
+      message: nextVisible
+        ? 'Storefront prices are now VISIBLE'
+        : 'Storefront prices are now HIDDEN (WhatsApp direct mode)',
+      type: 'success',
+    });
+  }, [addToast, notifyChange]);
+
+  const setProductPriceVisibility = useCallback(
+    (productId, isVisible, { silent = false } = {}) => {
+      if (!productId) return;
+      setSettings((prev) => {
+        const currentHidden = Array.isArray(prev.hiddenPriceProductIds)
+          ? prev.hiddenPriceProductIds
+          : [];
+        const nextHidden = isVisible
+          ? currentHidden.filter((id) => id !== productId)
+          : Array.from(new Set([...currentHidden, productId]));
+        const merged = { ...prev, hiddenPriceProductIds: nextHidden };
+        safeSetItem(STORAGE_KEYS.SETTINGS, merged);
+        syncSettingsToDb(merged);
+        return merged;
+      });
+      notifyChange();
+      if (!silent) {
+        addToast({
+          message: isVisible
+            ? 'Product price set to VISIBLE on storefront'
+            : 'Product price set to HIDDEN (WhatsApp direct)',
+          type: 'info',
+        });
+      }
+    },
+    [addToast, notifyChange]
+  );
+
+  const toggleProductPriceVisibility = useCallback(
+    (productId) => {
+      if (!productId) return;
+      const currentHidden = Array.isArray(settings.hiddenPriceProductIds)
+        ? settings.hiddenPriceProductIds
+        : [];
+      const currentlyHidden = currentHidden.includes(productId);
+      setProductPriceVisibility(productId, currentlyHidden);
+    },
+    [settings.hiddenPriceProductIds, setProductPriceVisibility]
   );
 
   // RESET TO DEFAULT
@@ -947,8 +1013,11 @@ export function StoreProvider({ children }) {
         deleteTestimonial,
         toggleTestimonialPublish,
 
-        // Settings
+        // Settings & Price Visibility
         updateSettings,
+        toggleGlobalPrices,
+        setProductPriceVisibility,
+        toggleProductPriceVisibility,
         resetToDefaults,
         reloadFromStorage,
       }}

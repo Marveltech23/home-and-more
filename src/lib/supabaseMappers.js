@@ -274,6 +274,10 @@ export function mapSettingsFromDb(s) {
     address:
       s.address || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
     currency: '₦',
+    showPrices: social.showPrices !== undefined ? Boolean(social.showPrices) : true,
+    hiddenPriceProductIds: Array.isArray(social.hiddenPriceProductIds)
+      ? social.hiddenPriceProductIds
+      : [],
     social: {
       facebook: social.facebook || 'https://facebook.com/homeandmorefurniture',
       instagram: social.instagram || 'https://instagram.com/homeandmorefurniture',
@@ -307,6 +311,10 @@ export function mapSettingsToDb(s) {
       logoSubtitle: s.logoSubtitle !== undefined ? s.logoSubtitle : 'FURNITURE',
       showroomAddress: s.showroomAddress || '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
       factoryAddress: s.factoryAddress || 'Plot D10 Zauda Pazeri Dei-Dei, Abuja',
+      showPrices: s.showPrices !== undefined ? Boolean(s.showPrices) : true,
+      hiddenPriceProductIds: Array.isArray(s.hiddenPriceProductIds)
+        ? s.hiddenPriceProductIds
+        : [],
     },
     updated_at: new Date().toISOString(),
   };

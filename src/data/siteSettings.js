@@ -13,6 +13,8 @@ export const siteSettings = {
   address: '204 Pa Michael Imoudu Ave, 32 Cres, 3rd Avenue Gwarinpa, 900108, Abuja, Nigeria',
   whatsappGreeting: 'Hello Home & More Furniture, I would like to enquire about',
   currency: '₦',
+  showPrices: true,
+  hiddenPriceProductIds: [],
   announcement: {
     badge1: 'Quality Guaranteed',
     badge2: 'Fast Delivery in Abuja',
