@@ -27,15 +27,22 @@ export default function AdBannerRenderer({
   // - Side-by-side 2-slot desktop: 16:7 wide showroom ratio (~620x270)
   // - Single active full-width desktop: 1024:318 (3.22:1) wide ratio
   // - Mobile: 16:9 / clean vertical stack without stretching
+  const hasSeparateMobileImg =
+    Boolean(ad.mobileImage) && ad.mobileImage !== ad.desktopImage;
+
   const aspectClass =
     previewDevice === 'mobile'
-      ? 'aspect-[16/9]'
+      ? isSingleFullWidth && mode === 'image' && !hasSeparateMobileImg
+        ? 'aspect-[1024/318]'
+        : 'aspect-[16/9]'
       : previewDevice === 'desktop'
       ? isSingleFullWidth
         ? 'aspect-[1024/318]'
         : 'aspect-[16/7]'
       : isSingleFullWidth
-      ? 'aspect-[16/9] sm:aspect-[1024/318]'
+      ? mode === 'image' && !hasSeparateMobileImg
+        ? 'aspect-[1024/318]'
+        : 'aspect-[16/9] sm:aspect-[1024/318]'
       : 'aspect-[16/9] md:aspect-[16/8] lg:aspect-[16/7]';
 
   const wrapWithLink = (children) => {

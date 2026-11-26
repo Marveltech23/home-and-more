@@ -542,8 +542,8 @@ export default function AdvertisementManagement() {
                     </h2>
                     <p className="text-xs text-[#786B62] mt-0.5">
                       {isTopStrip
-                        ? 'Recommended Desktop: 1920 × 108 px (or 1024 × 57 px, 18:1 ratio).'
-                        : 'Recommended Desktop: 1200 × 525 px (16:7 side-by-side) or 1920 × 600 px (full-width single).'}
+                        ? 'Recommended Desktop: 1920 × 108 px (or 1024 × 57 px, exact 18:1 ratio).'
+                        : 'Recommended Desktop: 1920 × 600 px (or 1024 × 318 px, exact 3.22:1 panoramic ratio).'}
                     </p>
                   </div>
                   {form.desktopImage && (
@@ -991,6 +991,7 @@ export default function AdvertisementManagement() {
                     <AdBannerRenderer
                       ad={form}
                       previewDevice={previewDevice}
+                      isSingleFullWidth={editingSlot === 'slot_1'}
                       disableNavigation
                     />
                   )}
@@ -1084,6 +1085,7 @@ export default function AdvertisementManagement() {
             <AdBannerRenderer
               ad={displayAd}
               previewDevice="desktop"
+              isSingleFullWidth={slotKey === 'slot_1'}
               disableNavigation
             />
           </div>
@@ -1143,19 +1145,13 @@ export default function AdvertisementManagement() {
         </Link>
       </div>
 
-      {/* 2 Independent Homepage Promotional Slots */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Primary Full-Width Middle Banner (1920x600 / 1024x318) */}
+      <div className="grid grid-cols-1 gap-6">
         {renderSlotCard(
           'slot_1',
-          'Advertisement 1',
-          'Left / primary promotional banner on the homepage (expands full-width if Advertisement 2 is disabled).',
+          'Middle Promotional Banner (Full-Width)',
+          'Full-width panoramic homepage banner (exact 1024 × 318 / 1920 × 600 px ratio). Upload your designed graphic in Image Mode or build one in Text Mode.',
           slot1Ad
-        )}
-        {renderSlotCard(
-          'slot_2',
-          'Advertisement 2',
-          'Right / secondary promotional banner displayed side-by-side with Advertisement 1 on desktop & stacked on mobile.',
-          slot2Ad
         )}
       </div>
 

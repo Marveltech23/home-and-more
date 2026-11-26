@@ -25,42 +25,19 @@ export default function PromotionalAd() {
     (a) => a.isActive !== false && a.status !== 'draft' && isWithinSchedule(a)
   );
 
-  const slot1 =
+  // Single full-width panoramic middle banner (exact 1024x318 / 1920x600 proportion)
+  const middleAd =
     liveAds.find((a) => a.slotPosition === 'slot_1' || a.placement === 'slot_1') ||
     liveAds.find((a) => a.placement === 'hero_bottom');
 
-  const slot2 = liveAds.find(
-    (a) =>
-      (a.slotPosition === 'slot_2' || a.placement === 'slot_2') &&
-      (!slot1 || a.id !== slot1.id)
-  );
-
-  const visibleSlots = [slot1, slot2].filter(Boolean);
-
-  if (visibleSlots.length === 0) return null;
-
-  const isSingle = visibleSlots.length === 1;
+  if (!middleAd) return null;
 
   return (
     <section
       className="container-page pb-14 sm:pb-16"
-      aria-label="Featured Showroom Promotions"
+      aria-label={middleAd.name || 'Featured Showroom Promotion'}
     >
-      <div
-        className={
-          isSingle
-            ? 'grid grid-cols-1'
-            : 'grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6'
-        }
-      >
-        {visibleSlots.map((ad) => (
-          <AdBannerRenderer
-            key={ad.id}
-            ad={ad}
-            isSingleFullWidth={isSingle}
-          />
-        ))}
-      </div>
+      <AdBannerRenderer ad={middleAd} isSingleFullWidth />
     </section>
   );
 }
