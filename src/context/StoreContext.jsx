@@ -213,6 +213,34 @@ export function StoreProvider({ children }) {
     };
   }, []);
 
+  // Load customer enquiries only after an authenticated admin signs in
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        supabase
+          .from('enquiries')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .then(({ data }) => {
+            if (data) {
+              const mapped = data.map(mapEnquiryFromDb);
+              setEnquiries(mapped);
+              safeSetItem(STORAGE_KEYS.ENQUIRIES, mapped);
+            }
+          });
+      } else if (event === 'SIGNED_OUT') {
+        setEnquiries([]);
+        try {
+          localStorage.removeItem(STORAGE_KEYS.ENQUIRIES);
+        } catch {}
+      }
+    });
+    return () => subscription?.unsubscribe();
+  }, []);
+
   // SUPABASE REALTIME SUBSCRIPTION
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) return;

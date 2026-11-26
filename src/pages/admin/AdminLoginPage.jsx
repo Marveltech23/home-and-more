@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Lock, Mail, Eye, EyeOff, ShieldAlert, ArrowLeft, ArrowRight, KeyRound } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, ShieldAlert, ArrowLeft, ArrowRight, ShieldCheck } from 'lucide-react';
 import Logo from '../../components/common/Logo';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/common/Toast';
+import { sanitizeAdminRedirect } from '../../utils/security';
 
 export default function AdminLoginPage() {
-  const { login, authError, defaultAdminEmail, defaultAdminPassword } = useAuth();
+  const { login, authError, isAuthenticated } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,11 +17,28 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const from = location.state?.from?.pathname || '/admin';
+  const from = sanitizeAdminRedirect(location.state?.from?.pathname, '/admin');
+
+  // Add noindex meta so search engines never index the admin login route
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) {
+    if (!email.trim() || !password) {
       return;
     }
 
@@ -29,74 +47,43 @@ export default function AdminLoginPage() {
     setIsLoading(false);
 
     if (result.success) {
-      addToast({ message: 'Welcome back, Super Admin!', type: 'success' });
+      addToast({ message: 'Signed in to Admin Portal.', type: 'success' });
       navigate(from, { replace: true });
     }
   };
 
-  const handleAutofill = () => {
-    setEmail(defaultAdminEmail);
-    setPassword(defaultAdminPassword);
-  };
-
   return (
-    <div className="min-h-screen bg-[#FFFAF5] flex flex-col justify-center items-center p-4 sm:p-6 relative overflow-hidden">
-      {/* Ambient background glows */}
-      <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#F36B0A]/10 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#29160D]/10 blur-3xl pointer-events-none" />
-
+    <div className="min-h-screen bg-[#FAF7F3] flex flex-col justify-center items-center p-4 sm:p-6 relative overflow-hidden">
       {/* Top return link */}
       <div className="w-full max-w-md mb-6 flex items-center justify-between">
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#82746B] hover:text-[#F36B0A] transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#786B62] hover:text-[#F36B0A] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Storefront</span>
         </Link>
-        <span className="text-[11px] font-bold text-[#82746B] bg-white px-2.5 py-1 rounded-full border border-[#F0DFD1]">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#786B62] bg-white px-2.5 py-1 rounded-full border border-[#EAE2D9]">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#1EAA52]" />
           Protected Area
         </span>
       </div>
 
       {/* Login Card */}
-      <div className="w-full max-w-md card p-8 sm:p-10 bg-white border border-[#F0DFD1] shadow-2xl rounded-3xl relative z-10 space-y-6">
+      <div className="w-full max-w-md p-8 sm:p-10 bg-white border border-[#EAE2D9] shadow-xl rounded-2xl relative z-10 space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <div className="inline-block">
             <Logo variant="dark" size="lg" />
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold text-[#24150F] tracking-tight">
+            <h1 className="font-editorial text-2xl font-semibold text-[#24150F] tracking-tight">
               Admin Portal
             </h1>
-            <p className="text-xs text-[#82746B] mt-1">
-              Sign in with your authorized store manager credentials to manage catalog, ads, and orders.
+            <p className="text-xs text-[#786B62] mt-1">
+              Sign in with your authorized store manager account to manage catalog, ads, and enquiries.
             </p>
           </div>
-        </div>
-
-        {/* Demo Credentials Info Pill */}
-        <div className="p-3.5 rounded-2xl bg-[#FFF3EA] border border-[#F36B0A]/25 space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#F36B0A] flex items-center gap-1">
-              <KeyRound className="w-3.5 h-3.5" />
-              Admin Credentials:
-            </span>
-            <button
-              type="button"
-              onClick={handleAutofill}
-              className="text-[11px] font-bold text-[#F36B0A] hover:underline"
-            >
-              Auto-fill demo
-            </button>
-          </div>
-          <p className="text-xs text-[#24150F] font-mono">
-            Email: <span className="font-semibold">{defaultAdminEmail}</span>
-          </p>
-          <p className="text-xs text-[#24150F] font-mono">
-            Password: <span className="font-semibold">{defaultAdminPassword}</span>
-          </p>
         </div>
 
         {/* Error message */}
@@ -110,43 +97,51 @@ export default function AdminLoginPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
+            <label
+              htmlFor="admin-email"
+              className="block text-xs font-bold uppercase text-[#24150F] mb-1"
+            >
               Admin Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#82746B]" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#786B62]" />
               <input
+                id="admin-email"
                 type="email"
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@homeandmore.ng"
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A] bg-[#FFFAF5]/40"
+                placeholder="Enter your admin email"
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#EAE2D9] text-sm focus:outline-none focus:border-[#F36B0A] transition-colors"
                 required
-                autoComplete="email"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase text-[#24150F] mb-1">
+            <label
+              htmlFor="admin-password"
+              className="block text-xs font-bold uppercase text-[#24150F] mb-1"
+            >
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#82746B]" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#786B62]" />
               <input
+                id="admin-password"
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-10 pr-10 py-3 rounded-xl border border-[#F0DFD1] text-xs sm:text-sm focus:outline-none focus:border-[#F36B0A] bg-[#FFFAF5]/40"
+                placeholder="Enter your password"
+                className="w-full pl-10 pr-12 py-3 rounded-xl border border-[#EAE2D9] text-sm focus:outline-none focus:border-[#F36B0A] transition-colors"
                 required
-                autoComplete="current-password"
               />
               <button
                 type="button"
-                onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#82746B] hover:text-[#24150F]"
-                aria-label="Toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#786B62] hover:text-[#24150F]"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -156,18 +151,12 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full btn-primary text-sm py-3.5 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 mt-2"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#F36B0A] hover:bg-[#D94D00] text-white font-semibold text-sm shadow-sm transition-all disabled:opacity-60"
           >
             <span>{isLoading ? 'Verifying...' : 'Sign In to Dashboard'}</span>
-            <ArrowRight className="w-4 h-4" />
+            {!isLoading && <ArrowRight className="w-4 h-4" />}
           </button>
         </form>
-
-        <div className="pt-4 border-t border-[#F0DFD1] text-center">
-          <p className="text-[11px] text-[#82746B]">
-            Only registered Home &amp; More administrators may access this portal. Customer storefront browsing does not require login.
-          </p>
-        </div>
       </div>
     </div>
   );

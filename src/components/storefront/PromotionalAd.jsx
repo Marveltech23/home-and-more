@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import SafeImage from '../common/SafeImage';
 import { useStore } from '../../context/StoreContext';
+import { sanitizeUrl } from '../../utils/security';
 
 export default function PromotionalAd() {
   const { advertisements, activeAds } = useStore();
@@ -13,7 +14,7 @@ export default function PromotionalAd() {
 
   const desktopImg = ad.desktopImage || ad.mobileImage;
   const mobileImg = ad.mobileImage || ad.desktopImage;
-  const href = ad.buttonUrl || '/shop';
+  const href = sanitizeUrl(ad.buttonUrl, '/shop');
   const isExternal = /^https?:\/\//i.test(href);
 
   // If the admin uploaded a custom graphic banner (not a generic stock photo),

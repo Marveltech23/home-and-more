@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
+import { sanitizeUrl } from '../../utils/security';
 
 export default function TopPromoStrip() {
   const { activeAds } = useStore();
@@ -12,7 +13,7 @@ export default function TopPromoStrip() {
 
   const desktopImg = ad.desktopImage || ad.mobileImage;
   const mobileImg = ad.mobileImage || ad.desktopImage;
-  const href = ad.buttonUrl || '/shop';
+  const href = sanitizeUrl(ad.buttonUrl, '/shop');
   const isExternal = /^https?:\/\//i.test(href);
 
   const isPlaceholder =

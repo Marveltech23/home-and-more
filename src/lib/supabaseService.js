@@ -28,6 +28,10 @@ export async function fetchAllSupabaseData() {
   }
 
   try {
+    // Only fetch customer enquiries when an authenticated admin session is active
+    const { data: sessionData } = await supabase.auth.getSession();
+    const isAdminSession = Boolean(sessionData?.session?.user);
+
     const [
       settingsRes,
       categoriesRes,
@@ -44,7 +48,9 @@ export async function fetchAllSupabaseData() {
       supabase.from('advertisements').select('*').order('created_at', { ascending: false }),
       supabase.from('blogs').select('*').order('published_at', { ascending: false }),
       supabase.from('testimonials').select('*').order('created_at', { ascending: false }),
-      supabase.from('enquiries').select('*').order('created_at', { ascending: false }),
+      isAdminSession
+        ? supabase.from('enquiries').select('*').order('created_at', { ascending: false })
+        : Promise.resolve({ data: null }),
       supabase.from('media').select('*').order('created_at', { ascending: false }),
     ]);
 
