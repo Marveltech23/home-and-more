@@ -31,7 +31,7 @@ create policy "Public can submit valid enquiry"
   for insert
   to anon, authenticated
   with check (
-    char_length(trim(coalesce(name, ''))) between 2 and 120
+    char_length(trim(coalesce(customer_name, ''))) between 2 and 120
     and char_length(trim(coalesce(message, ''))) between 3 and 3000
   );
 
