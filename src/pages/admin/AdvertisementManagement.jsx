@@ -203,6 +203,7 @@ export default function AdvertisementManagement() {
   const [editingSlot, setEditingSlot] = useState(null);
   const [previewDevice, setPreviewDevice] = useState('desktop');
   const [validationError, setValidationError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState(() => buildDefaultSlotForm('slot_1'));
 
   // Resolve existing records for Advertisement 1, Advertisement 2, and Top Strip
@@ -317,7 +318,7 @@ export default function AdvertisementManagement() {
     return '';
   };
 
-  const handleSave = (targetStatus) => {
+  const handleSave = async (targetStatus) => {
     if (targetStatus === 'published') {
       const err = validateForPublish();
       if (err) {
@@ -360,13 +361,22 @@ export default function AdvertisementManagement() {
         ? slot2Ad
         : topStripAd;
 
-    if (existing) {
-      updateAd(existing.id, payload);
-    } else {
-      addAd(payload);
-    }
+    setIsSaving(true);
+    try {
+      const res = existing
+        ? await updateAd(existing.id, payload)
+        : await addAd(payload);
 
-    closeEditor();
+      if (res && res.ok === false) {
+        setValidationError(
+          `Could not save to database: ${res.error || 'Please sign out and sign back in.'}`
+        );
+        return;
+      }
+      closeEditor();
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleQuickToggle = (slotPosition, existingAd) => {
@@ -422,19 +432,21 @@ export default function AdvertisementManagement() {
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               type="button"
+              disabled={isSaving}
               onClick={() => handleSave('draft')}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#EAE2D9] bg-white hover:bg-[#FAF7F3] text-[#24150F] text-xs font-bold transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#EAE2D9] bg-white hover:bg-[#FAF7F3] text-[#24150F] text-xs font-bold transition-colors disabled:opacity-60"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>Save as Draft</span>
+              <span>{isSaving ? 'Saving...' : 'Save as Draft'}</span>
             </button>
             <button
               type="button"
+              disabled={isSaving}
               onClick={() => handleSave('published')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F36B0A] hover:bg-[#D94D00] text-white text-xs font-bold shadow-sm transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F36B0A] hover:bg-[#D94D00] text-white text-xs font-bold shadow-sm transition-colors disabled:opacity-60"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>Publish Advertisement</span>
+              <span>{isSaving ? 'Publishing...' : 'Publish Advertisement'}</span>
             </button>
           </div>
         </div>

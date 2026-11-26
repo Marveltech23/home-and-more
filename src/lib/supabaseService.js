@@ -143,12 +143,20 @@ export async function deleteProductFromDb(idOrSlug) {
 // ADVERTISEMENT DB OPERATIONS
 // ==========================================
 export async function syncAdToDb(ad) {
-  if (!isSupabaseConfigured || !supabase) return;
+  if (!isSupabaseConfigured || !supabase) return { ok: true, error: null };
   try {
     const payload = mapAdToDb(ad);
-    await supabase.from('advertisements').upsert(payload, { onConflict: 'id' });
+    const { error } = await supabase
+      .from('advertisements')
+      .upsert(payload, { onConflict: 'id' });
+    if (error) {
+      console.error('Supabase ad upsert error:', error);
+      return { ok: false, error: error.message || 'Database save failed' };
+    }
+    return { ok: true, error: null };
   } catch (e) {
-    console.warn('Supabase ad upsert error:', e);
+    console.error('Supabase ad upsert exception:', e);
+    return { ok: false, error: e?.message || 'Network error while saving' };
   }
 }
 

@@ -442,8 +442,8 @@ export function StoreProvider({ children }) {
 
   const updateProduct = useCallback(
     (id, updates) => {
-      let updatedProduct = null;
       setProducts((prev) => {
+        let updatedProduct = null;
         const next = prev.map((p) => {
           if (p.id !== id && p.slug !== id) return p;
           const price = updates.price !== undefined ? Number(updates.price) : p.price;
@@ -457,11 +457,11 @@ export function StoreProvider({ children }) {
           return updatedProduct;
         });
         safeSetItem(STORAGE_KEYS.PRODUCTS, next);
+        if (updatedProduct) {
+          syncProductToDb(updatedProduct);
+        }
         return next;
       });
-      if (updatedProduct) {
-        syncProductToDb(updatedProduct);
-      }
       notifyChange();
       addToast({ message: 'Product updated successfully!', type: 'success' });
     },
@@ -520,17 +520,19 @@ export function StoreProvider({ children }) {
 
   const updateCategory = useCallback(
     (id, updates) => {
-      let updatedCategory = null;
-      setCategories((prev) =>
-        prev.map((c) => {
+      setCategories((prev) => {
+        let updatedCategory = null;
+        const next = prev.map((c) => {
           if (c.id !== id && c.slug !== id) return c;
           updatedCategory = { ...c, ...updates };
           return updatedCategory;
-        })
-      );
-      if (updatedCategory) {
-        syncCategoryToDb(updatedCategory);
-      }
+        });
+        safeSetItem(STORAGE_KEYS.CATEGORIES, next);
+        if (updatedCategory) {
+          syncCategoryToDb(updatedCategory);
+        }
+        return next;
+      });
       notifyChange();
       addToast({ message: 'Category updated successfully!', type: 'success' });
     },
@@ -551,7 +553,7 @@ export function StoreProvider({ children }) {
   // ADVERTISEMENT ACTIONS
   // ==========================================
   const addAd = useCallback(
-    (adData) => {
+    async (adData) => {
       const desktop =
         adData.desktopImage !== undefined
           ? adData.desktopImage
@@ -579,8 +581,15 @@ export function StoreProvider({ children }) {
         safeSetItem(STORAGE_KEYS.ADS, next);
         return next;
       });
-      syncAdToDb(newAd);
+      const dbRes = await syncAdToDb(newAd);
       notifyChange();
+      if (dbRes && !dbRes.ok) {
+        addToast({
+          message: `Saved locally, but database sync failed: ${dbRes.error}`,
+          type: 'error',
+        });
+        return { ok: false, error: dbRes.error, ad: newAd };
+      }
       addToast({
         message:
           newAd.status === 'draft'
@@ -588,42 +597,51 @@ export function StoreProvider({ children }) {
             : `Advertisement "${newAd.name || newAd.title}" published!`,
         type: 'success',
       });
-      return newAd;
+      return { ok: true, error: null, ad: newAd };
     },
     [addToast, notifyChange]
   );
 
   const updateAd = useCallback(
-    (id, updates) => {
-      let updatedAd = null;
+    async (id, updates) => {
       const nowIso = new Date().toISOString();
+      const existing = advertisements.find((a) => a.id === id) || { id };
+      const desktop =
+        updates.desktopImage !== undefined
+          ? updates.desktopImage
+          : updates.image !== undefined
+          ? updates.image
+          : existing.desktopImage || '';
+      const mobile =
+        updates.mobileImage !== undefined ? updates.mobileImage : existing.mobileImage || '';
+
+      const updatedAd = {
+        ...existing,
+        ...updates,
+        id,
+        desktopImage: desktop,
+        mobileImage: mobile,
+        updatedAt: nowIso,
+      };
+
       setAdvertisements((prev) => {
-        const next = prev.map((a) => {
-          if (a.id !== id) return a;
-          const desktop =
-            updates.desktopImage !== undefined
-              ? updates.desktopImage
-              : updates.image !== undefined
-              ? updates.image
-              : a.desktopImage;
-          const mobile =
-            updates.mobileImage !== undefined ? updates.mobileImage : a.mobileImage;
-          updatedAd = {
-            ...a,
-            ...updates,
-            desktopImage: desktop,
-            mobileImage: mobile,
-            updatedAt: nowIso,
-          };
-          return updatedAd;
-        });
+        const exists = prev.some((a) => a.id === id);
+        const next = exists
+          ? prev.map((a) => (a.id === id ? updatedAd : a))
+          : [updatedAd, ...prev];
         safeSetItem(STORAGE_KEYS.ADS, next);
         return next;
       });
-      if (updatedAd) {
-        syncAdToDb(updatedAd);
-      }
+
+      const dbRes = await syncAdToDb(updatedAd);
       notifyChange();
+      if (dbRes && !dbRes.ok) {
+        addToast({
+          message: `Database sync failed: ${dbRes.error}`,
+          type: 'error',
+        });
+        return { ok: false, error: dbRes.error, ad: updatedAd };
+      }
       addToast({
         message:
           updates.status === 'draft'
@@ -631,8 +649,9 @@ export function StoreProvider({ children }) {
             : 'Advertisement published & live!',
         type: 'success',
       });
+      return { ok: true, error: null, ad: updatedAd };
     },
-    [addToast, notifyChange]
+    [advertisements, addToast, notifyChange]
   );
 
   const deleteAd = useCallback(
@@ -650,24 +669,28 @@ export function StoreProvider({ children }) {
   );
 
   const toggleAdStatus = useCallback(
-    (id) => {
-      let updatedAd = null;
+    async (id) => {
+      const existing = advertisements.find((a) => a.id === id);
+      if (!existing) return;
+      const updatedAd = {
+        ...existing,
+        isActive: !existing.isActive,
+        updatedAt: new Date().toISOString(),
+      };
       setAdvertisements((prev) => {
-        const next = prev.map((a) => {
-          if (a.id !== id) return a;
-          updatedAd = { ...a, isActive: !a.isActive };
-          return updatedAd;
-        });
+        const next = prev.map((a) => (a.id === id ? updatedAd : a));
         safeSetItem(STORAGE_KEYS.ADS, next);
         return next;
       });
-      if (updatedAd) {
-        syncAdToDb(updatedAd);
-      }
+      const dbRes = await syncAdToDb(updatedAd);
       notifyChange();
+      if (dbRes && !dbRes.ok) {
+        addToast({ message: `Database sync failed: ${dbRes.error}`, type: 'error' });
+        return;
+      }
       addToast({ message: 'Advertisement status updated', type: 'info' });
     },
-    [addToast, notifyChange]
+    [advertisements, addToast, notifyChange]
   );
 
   // ==========================================
@@ -720,8 +743,8 @@ export function StoreProvider({ children }) {
 
   const updateBlog = useCallback(
     (id, updates) => {
-      let updatedBlog = null;
       setBlogs((prev) => {
+        let updatedBlog = null;
         const next = prev.map((b) => {
           if (b.id !== id && b.slug !== id) return b;
           const img = updates.featuredImage || updates.image || b.featuredImage || b.image;
@@ -737,11 +760,11 @@ export function StoreProvider({ children }) {
           return updatedBlog;
         });
         safeSetItem(STORAGE_KEYS.BLOGS, next);
+        if (updatedBlog) {
+          syncBlogToDb(updatedBlog);
+        }
         return next;
       });
-      if (updatedBlog) {
-        syncBlogToDb(updatedBlog);
-      }
       notifyChange();
       addToast({ message: 'Blog article updated!', type: 'success' });
     },
@@ -880,17 +903,18 @@ export function StoreProvider({ children }) {
 
   const updateTestimonial = useCallback(
     (id, updates) => {
-      let updatedTestimonial = null;
-      setTestimonials((prev) =>
-        prev.map((t) => {
+      setTestimonials((prev) => {
+        let updatedTestimonial = null;
+        const next = prev.map((t) => {
           if (t.id !== id) return t;
           updatedTestimonial = { ...t, ...updates };
           return updatedTestimonial;
-        })
-      );
-      if (updatedTestimonial) {
-        syncTestimonialToDb(updatedTestimonial);
-      }
+        });
+        if (updatedTestimonial) {
+          syncTestimonialToDb(updatedTestimonial);
+        }
+        return next;
+      });
       notifyChange();
       addToast({ message: 'Testimonial updated!', type: 'success' });
     },
@@ -909,17 +933,18 @@ export function StoreProvider({ children }) {
 
   const toggleTestimonialPublish = useCallback(
     (id) => {
-      let updatedTestimonial = null;
-      setTestimonials((prev) =>
-        prev.map((t) => {
+      setTestimonials((prev) => {
+        let updatedTestimonial = null;
+        const next = prev.map((t) => {
           if (t.id !== id) return t;
           updatedTestimonial = { ...t, isPublished: !t.isPublished };
           return updatedTestimonial;
-        })
-      );
-      if (updatedTestimonial) {
-        syncTestimonialToDb(updatedTestimonial);
-      }
+        });
+        if (updatedTestimonial) {
+          syncTestimonialToDb(updatedTestimonial);
+        }
+        return next;
+      });
       notifyChange();
       addToast({ message: 'Testimonial status toggled', type: 'info' });
     },
