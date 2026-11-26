@@ -553,20 +553,25 @@ export function StoreProvider({ children }) {
   const addAd = useCallback(
     (adData) => {
       const desktop =
-        adData.desktopImage ||
-        adData.image ||
-        '/images/stock/photo-1543258103-a62bdc069871.jpg';
-      const mobile = adData.mobileImage || desktop;
+        adData.desktopImage !== undefined
+          ? adData.desktopImage
+          : adData.image || '';
+      const mobile =
+        adData.mobileImage !== undefined ? adData.mobileImage : desktop;
+      const nowIso = new Date().toISOString();
 
       const newAd = {
         ...adData,
         id: adData.id || `a_${Date.now()}`,
         isActive: adData.isActive !== undefined ? adData.isActive : true,
+        status: adData.status || 'published',
         clicks: 0,
-        placement: adData.placement || 'hero_bottom',
+        placement: adData.slotPosition || adData.placement || 'slot_1',
+        slotPosition: adData.slotPosition || adData.placement || 'slot_1',
         desktopImage: desktop,
         mobileImage: mobile,
-        createdAt: new Date().toISOString(),
+        createdAt: nowIso,
+        updatedAt: nowIso,
       };
 
       setAdvertisements((prev) => {
@@ -576,7 +581,13 @@ export function StoreProvider({ children }) {
       });
       syncAdToDb(newAd);
       notifyChange();
-      addToast({ message: `Advertisement "${newAd.title}" published!`, type: 'success' });
+      addToast({
+        message:
+          newAd.status === 'draft'
+            ? `Advertisement "${newAd.name || newAd.title}" saved as draft.`
+            : `Advertisement "${newAd.name || newAd.title}" published!`,
+        type: 'success',
+      });
       return newAd;
     },
     [addToast, notifyChange]
@@ -585,12 +596,25 @@ export function StoreProvider({ children }) {
   const updateAd = useCallback(
     (id, updates) => {
       let updatedAd = null;
+      const nowIso = new Date().toISOString();
       setAdvertisements((prev) => {
         const next = prev.map((a) => {
           if (a.id !== id) return a;
-          const desktop = updates.desktopImage || updates.image || a.desktopImage;
-          const mobile = updates.mobileImage || desktop || a.mobileImage;
-          updatedAd = { ...a, ...updates, desktopImage: desktop, mobileImage: mobile };
+          const desktop =
+            updates.desktopImage !== undefined
+              ? updates.desktopImage
+              : updates.image !== undefined
+              ? updates.image
+              : a.desktopImage;
+          const mobile =
+            updates.mobileImage !== undefined ? updates.mobileImage : a.mobileImage;
+          updatedAd = {
+            ...a,
+            ...updates,
+            desktopImage: desktop,
+            mobileImage: mobile,
+            updatedAt: nowIso,
+          };
           return updatedAd;
         });
         safeSetItem(STORAGE_KEYS.ADS, next);
@@ -600,7 +624,13 @@ export function StoreProvider({ children }) {
         syncAdToDb(updatedAd);
       }
       notifyChange();
-      addToast({ message: 'Advertisement updated!', type: 'success' });
+      addToast({
+        message:
+          updates.status === 'draft'
+            ? 'Advertisement saved as draft.'
+            : 'Advertisement published & live!',
+        type: 'success',
+      });
     },
     [addToast, notifyChange]
   );

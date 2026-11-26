@@ -88,25 +88,84 @@ export function mapProductToDb(p) {
 }
 
 // ==========================================
-// 3. ADVERTISEMENTS MAPPER
+// 3. ADVERTISEMENTS MAPPER (2-Slot Image & Text/Design Mode)
 // ==========================================
+const AD_CONFIG_PREFIX = '__adcfg__:';
+
+function parseAdConfig(a) {
+  // Prefer dedicated JSONB column if migration has been run
+  if (a?.design_config && typeof a.design_config === 'object') {
+    return { cfg: a.design_config, plainTagline: a.tagline || '' };
+  }
+  // Fallback: unpack structured JSON stored safely in tagline column
+  if (typeof a?.tagline === 'string' && a.tagline.startsWith(AD_CONFIG_PREFIX)) {
+    try {
+      const parsed = JSON.parse(a.tagline.slice(AD_CONFIG_PREFIX.length));
+      if (parsed && typeof parsed === 'object') {
+        return { cfg: parsed, plainTagline: parsed.plainTagline || '' };
+      }
+    } catch {
+      // Ignore malformed JSON
+    }
+  }
+  return { cfg: {}, plainTagline: a?.tagline || '' };
+}
+
 export function mapAdFromDb(a) {
   if (!a) return null;
+  const { cfg, plainTagline } = parseAdConfig(a);
+  const rawPlacement = a.placement || 'slot_1';
+  const normalizedSlot =
+    rawPlacement === 'hero_bottom' ? 'slot_1' : rawPlacement;
+
+  const hasCustomImage =
+    Boolean(a.desktop_image) &&
+    !String(a.desktop_image).startsWith('/images/stock/') &&
+    !String(a.desktop_image).includes('images.unsplash.com');
+
+  const displayMode = cfg.displayMode || (hasCustomImage ? 'image' : 'text');
+
   return {
     id: a.id,
-    title: a.title,
+    name: cfg.name || a.title || (normalizedSlot === 'slot_2' ? 'Advertisement 2' : 'Advertisement 1'),
+    slotPosition: cfg.slotPosition || normalizedSlot,
+    placement: rawPlacement,
+    displayMode, // 'image' | 'text'
+    status: cfg.status || (a.is_active === false ? 'draft' : 'published'), // 'published' | 'draft'
+    // Image Mode fields
+    desktopImage: a.desktop_image || '',
+    mobileImage: a.mobile_image || '',
+    altText: cfg.altText || a.title || 'Promotional Advertisement',
+    imageFit: cfg.imageFit || 'cover', // 'cover' | 'contain'
+    // Text / Design Mode fields
+    title: a.title || '',
+    headline: cfg.headline !== undefined ? cfg.headline : a.title || '',
     subtitle: a.subtitle || '',
-    tagline: a.tagline || '',
+    promotionalLabel: cfg.promotionalLabel !== undefined ? cfg.promotionalLabel : a.subtitle || '',
+    discountText: cfg.discountText || '',
+    tagline: plainTagline,
     description: a.description || '',
-    buttonText: a.button_text || 'Shop Now',
+    buttonText: a.button_text || '',
+    ctaText: cfg.ctaText !== undefined ? cfg.ctaText : a.button_text || '',
     buttonUrl: a.button_url || '/shop',
-    placement: a.placement || 'hero_bottom',
-    desktopImage: a.desktop_image,
-    mobileImage: a.mobile_image || a.desktop_image,
+    destinationUrl: a.button_url || '/shop',
+    // Design settings
+    backgroundColor: cfg.backgroundColor || (normalizedSlot === 'slot_2' ? '#24150F' : '#F4ECE2'),
+    backgroundImage: cfg.backgroundImage || '',
+    headlineColor: cfg.headlineColor || (normalizedSlot === 'slot_2' ? '#FFFFFF' : '#24150F'),
+    descriptionColor: cfg.descriptionColor || (normalizedSlot === 'slot_2' ? '#E7DCD1' : '#5E5148'),
+    buttonBackgroundColor: cfg.buttonBackgroundColor || '#F36B0A',
+    buttonTextColor: cfg.buttonTextColor || '#FFFFFF',
+    textAlignment: cfg.textAlignment || 'left', // 'left' | 'center' | 'right'
+    contentPosition: cfg.contentPosition || 'left', // 'left' | 'center' | 'right'
+    bannerStyle: cfg.bannerStyle || 'editorial', // 'editorial' | 'framed' | 'bold'
+    // Schedule & status
     startDate: a.start_date || '',
     endDate: a.end_date || '',
     isActive: a.is_active ?? true,
     clicks: a.clicks || 0,
+    createdAt: a.created_at || '',
+    updatedAt: cfg.updatedAt || a.updated_at || a.created_at || '',
   };
 }
 
@@ -114,19 +173,47 @@ export function mapAdToDb(a) {
   if (!a) return {};
   const out = {};
   if (a.id !== undefined) out.id = a.id;
-  if (a.title !== undefined) out.title = a.title;
-  if (a.subtitle !== undefined) out.subtitle = a.subtitle;
-  if (a.tagline !== undefined) out.tagline = a.tagline;
-  if (a.description !== undefined) out.description = a.description;
-  if (a.buttonText !== undefined) out.button_text = a.buttonText;
-  if (a.buttonUrl !== undefined) out.button_url = a.buttonUrl;
-  if (a.placement !== undefined) out.placement = a.placement;
-  if (a.desktopImage !== undefined) out.desktop_image = a.desktopImage;
-  if (a.mobileImage !== undefined) out.mobile_image = a.mobileImage;
+
+  const titleVal = a.headline || a.title || a.name || 'Promotional Banner';
+  out.title = titleVal;
+  out.subtitle = a.promotionalLabel !== undefined ? a.promotionalLabel : a.subtitle || '';
+  out.description = a.description || '';
+  out.button_text = a.ctaText !== undefined ? a.ctaText : a.buttonText || '';
+  out.button_url = a.destinationUrl !== undefined ? a.destinationUrl : a.buttonUrl || '/shop';
+  out.placement = a.slotPosition || a.placement || 'slot_1';
+  out.desktop_image = a.desktopImage || a.backgroundImage || '';
+  out.mobile_image = a.mobileImage || '';
   if (a.startDate !== undefined) out.start_date = a.startDate || null;
   if (a.endDate !== undefined) out.end_date = a.endDate || null;
   if (a.isActive !== undefined) out.is_active = Boolean(a.isActive);
   if (a.clicks !== undefined) out.clicks = Number(a.clicks) || 0;
+
+  // Persist rich Image/Text design settings cleanly inside tagline column (works immediately without requiring DDL)
+  const designConfig = {
+    name: a.name || titleVal,
+    slotPosition: a.slotPosition || a.placement || 'slot_1',
+    displayMode: a.displayMode || 'image',
+    status: a.status || 'published',
+    altText: a.altText || titleVal,
+    imageFit: a.imageFit || 'cover',
+    headline: a.headline !== undefined ? a.headline : titleVal,
+    promotionalLabel: a.promotionalLabel !== undefined ? a.promotionalLabel : a.subtitle || '',
+    discountText: a.discountText || '',
+    ctaText: a.ctaText !== undefined ? a.ctaText : a.buttonText || '',
+    backgroundColor: a.backgroundColor || '#F4ECE2',
+    backgroundImage: a.backgroundImage || '',
+    headlineColor: a.headlineColor || '#24150F',
+    descriptionColor: a.descriptionColor || '#5E5148',
+    buttonBackgroundColor: a.buttonBackgroundColor || '#F36B0A',
+    buttonTextColor: a.buttonTextColor || '#FFFFFF',
+    textAlignment: a.textAlignment || 'left',
+    contentPosition: a.contentPosition || 'left',
+    bannerStyle: a.bannerStyle || 'editorial',
+    plainTagline: a.tagline || '',
+    updatedAt: a.updatedAt || new Date().toISOString(),
+  };
+
+  out.tagline = `${AD_CONFIG_PREFIX}${JSON.stringify(designConfig)}`;
   return out;
 }
 
