@@ -160,6 +160,7 @@ export function mapAdFromDb(a) {
     contentPosition: cfg.contentPosition || 'left', // 'left' | 'center' | 'right'
     bannerStyle: cfg.bannerStyle || 'editorial', // 'editorial' | 'framed' | 'bold'
     // Schedule & status
+    slideOrder: Number(cfg.slideOrder) || (normalizedSlot === 'slot_2' ? 2 : 1),
     startDate: a.start_date || '',
     endDate: a.end_date || '',
     isActive: a.is_active ?? true,
@@ -209,6 +210,7 @@ export function mapAdToDb(a) {
     textAlignment: a.textAlignment || 'left',
     contentPosition: a.contentPosition || 'left',
     bannerStyle: a.bannerStyle || 'editorial',
+    slideOrder: Number(a.slideOrder) || 1,
     plainTagline: a.tagline || '',
     updatedAt: a.updatedAt || new Date().toISOString(),
   };
@@ -365,6 +367,10 @@ export function mapSettingsFromDb(s) {
     hiddenPriceProductIds: Array.isArray(social.hiddenPriceProductIds)
       ? social.hiddenPriceProductIds
       : [],
+    middleCarouselMaxSlides: Math.min(
+      5,
+      Math.max(1, Number(social.middleCarouselMaxSlides) || 5)
+    ),
     social: {
       facebook: social.facebook || 'https://facebook.com/homeandmorefurniture',
       instagram: social.instagram || 'https://instagram.com/homeandmorefurniture',
@@ -402,6 +408,10 @@ export function mapSettingsToDb(s) {
       hiddenPriceProductIds: Array.isArray(s.hiddenPriceProductIds)
         ? s.hiddenPriceProductIds
         : [],
+      middleCarouselMaxSlides: Math.min(
+        5,
+        Math.max(1, Number(s.middleCarouselMaxSlides) || 5)
+      ),
     },
     updated_at: new Date().toISOString(),
   };

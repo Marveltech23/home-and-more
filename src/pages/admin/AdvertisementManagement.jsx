@@ -20,6 +20,10 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  Plus,
+  ArrowUp,
+  ArrowDown,
+  SlidersHorizontal,
 } from 'lucide-react';
 import Badge from '../../components/common/Badge';
 import ImageUploadInput from '../../components/common/ImageUploadInput';
@@ -196,34 +200,34 @@ function formatUpdatedAt(dateStr) {
 }
 
 export default function AdvertisementManagement() {
-  const { advertisements, addAd, updateAd, toggleAdStatus } = useStore();
+  const { advertisements, addAd, updateAd, deleteAd, toggleAdStatus, settings, updateSettings } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Active editing slot: null (Overview) | 'slot_1' | 'slot_2' | 'top_banner'
+  // Active editing mode: null (Overview) | 'carousel' | 'top_banner'
   const [editingSlot, setEditingSlot] = useState(null);
+  const [editingAdId, setEditingAdId] = useState(null);
   const [previewDevice, setPreviewDevice] = useState('desktop');
   const [validationError, setValidationError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState(() => buildDefaultSlotForm('slot_1'));
 
-  // Resolve existing records for Advertisement 1, Advertisement 2, and Top Strip
-  const slot1Ad = useMemo(
+  const maxCarouselSlides = Math.min(5, Math.max(1, Number(settings?.middleCarouselMaxSlides) || 5));
+
+  // All Middle Carousel slides (1 to 5), sorted by slideOrder
+  const carouselSlides = useMemo(
     () =>
-      (advertisements || []).find(
-        (a) => a.slotPosition === 'slot_1' || a.placement === 'slot_1' || a.placement === 'hero_bottom'
-      ) || null,
+      (advertisements || [])
+        .filter((a) => a.placement !== 'top_banner' && a.slotPosition !== 'top_banner')
+        .sort((a, b) => (Number(a.slideOrder) || 99) - (Number(b.slideOrder) || 99)),
     [advertisements]
   );
 
-  const slot2Ad = useMemo(
-    () =>
-      (advertisements || []).find(
-        (a) =>
-          (a.slotPosition === 'slot_2' || a.placement === 'slot_2') &&
-          (!slot1Ad || a.id !== slot1Ad.id)
-      ) || null,
-    [advertisements, slot1Ad]
-  );
+  const activeCarouselIds = useMemo(() => {
+    const live = carouselSlides
+      .filter((a) => a.isActive !== false && a.status !== 'draft')
+      .slice(0, maxCarouselSlides);
+    return new Set(live.map((a) => a.id));
+  }, [carouselSlides, maxCarouselSlides]);
 
   const topStripAd = useMemo(
     () =>
@@ -236,27 +240,24 @@ export default function AdvertisementManagement() {
   useEffect(() => {
     const action = searchParams.get('action');
     if (action === 'add' && !editingSlot) {
-      openEditor(slot1Ad ? 'slot_2' : 'slot_1');
+      openNewCarouselSlide();
     }
   }, [searchParams]);
 
-  const openEditor = (slotPosition) => {
+  const openEditor = (slotType, existingAd = null) => {
     setValidationError('');
     setPreviewDevice('desktop');
-    const existing =
-      slotPosition === 'slot_1'
-        ? slot1Ad
-        : slotPosition === 'slot_2'
-        ? slot2Ad
-        : topStripAd;
+    const isTop = slotType === 'top_banner';
+    const existing = isTop ? topStripAd : existingAd;
+    const defaults = buildDefaultSlotForm(isTop ? 'top_banner' : 'slot_1');
 
-    const defaults = buildDefaultSlotForm(slotPosition);
     if (existing) {
+      setEditingAdId(existing.id);
       setForm({
         ...defaults,
         ...existing,
-        slotPosition,
-        placement: slotPosition,
+        slotPosition: isTop ? 'top_banner' : existing.slotPosition || 'slot_1',
+        placement: isTop ? 'top_banner' : existing.placement || 'slot_1',
         name: existing.name || defaults.name,
         destinationUrl: existing.destinationUrl || existing.buttonUrl || defaults.destinationUrl,
         headline: existing.headline || existing.title || defaults.headline,
@@ -264,17 +265,55 @@ export default function AdvertisementManagement() {
         ctaText: existing.ctaText ?? existing.buttonText ?? defaults.ctaText,
       });
     } else {
+      setEditingAdId(null);
       setForm(defaults);
     }
-    setEditingSlot(slotPosition);
+    setEditingSlot(slotType);
+  };
+
+  const openNewCarouselSlide = () => {
+    if (carouselSlides.length >= 5) return;
+    const nextOrder = carouselSlides.length + 1;
+    setValidationError('');
+    setPreviewDevice('desktop');
+    setEditingAdId(null);
+    setForm({
+      ...buildDefaultSlotForm('slot_1'),
+      id: `a_slide_${Date.now()}`,
+      name: `Middle Carousel Slide ${nextOrder}`,
+      slotPosition: `slot_${nextOrder}`,
+      placement: `slot_${nextOrder}`,
+      displayMode: 'image',
+      desktopImage: '',
+      mobileImage: '',
+      headline: `Showroom Offer #${nextOrder}`,
+      slideOrder: nextOrder,
+      startDate: '',
+      endDate: '',
+    });
+    setEditingSlot('carousel');
   };
 
   const closeEditor = () => {
     setEditingSlot(null);
+    setEditingAdId(null);
     setValidationError('');
     if (searchParams.get('action')) {
       setSearchParams({});
     }
+  };
+
+  const handleMoveSlide = async (index, direction) => {
+    const targetIdx = index + direction;
+    if (targetIdx < 0 || targetIdx >= carouselSlides.length) return;
+    const a = carouselSlides[index];
+    const b = carouselSlides[targetIdx];
+    const orderA = Number(a.slideOrder) || index + 1;
+    const orderB = Number(b.slideOrder) || targetIdx + 1;
+    await Promise.all([
+      updateAd(a.id, { slideOrder: orderB }),
+      updateAd(b.id, { slideOrder: orderA }),
+    ]);
   };
 
   const updateField = (key, value) => {
@@ -333,6 +372,9 @@ export default function AdvertisementManagement() {
     const cleanUrl = sanitizeUrl(form.destinationUrl, '/shop');
     const isPublished = targetStatus === 'published';
 
+    const isTop = editingSlot === 'top_banner';
+    const resolvedSlot = isTop ? 'top_banner' : form.slotPosition || 'slot_1';
+
     const payload = {
       ...form,
       name: form.name.trim(),
@@ -347,24 +389,18 @@ export default function AdvertisementManagement() {
       destinationUrl: cleanUrl,
       buttonUrl: cleanUrl,
       altText: form.altText?.trim() || form.headline?.trim() || form.name.trim(),
-      slotPosition: editingSlot,
-      placement: editingSlot,
+      slotPosition: resolvedSlot,
+      placement: resolvedSlot,
+      slideOrder: Number(form.slideOrder) || carouselSlides.length + 1,
       status: targetStatus,
       isActive: isPublished ? form.isActive !== false : false,
       updatedAt: new Date().toISOString(),
     };
 
-    const existing =
-      editingSlot === 'slot_1'
-        ? slot1Ad
-        : editingSlot === 'slot_2'
-        ? slot2Ad
-        : topStripAd;
-
     setIsSaving(true);
     try {
-      const res = existing
-        ? await updateAd(existing.id, payload)
+      const res = editingAdId
+        ? await updateAd(editingAdId, payload)
         : await addAd(payload);
 
       if (res && res.ok === false) {
@@ -399,12 +435,9 @@ export default function AdvertisementManagement() {
   // ==========================================
   if (editingSlot) {
     const isTopStrip = editingSlot === 'top_banner';
-    const slotLabel =
-      editingSlot === 'slot_1'
-        ? 'Advertisement 1 (Homepage Left / Primary)'
-        : editingSlot === 'slot_2'
-        ? 'Advertisement 2 (Homepage Right / Secondary)'
-        : 'Top Strip Banner (Before Hero — 1920 × 108 px)';
+    const slotLabel = isTopStrip
+      ? 'Top Strip Banner (Before Hero — 1920 × 108 px)'
+      : form.name || 'Middle Carousel Slide (1920 × 600 px)';
 
     return (
       <div className="space-y-6">
@@ -1003,7 +1036,7 @@ export default function AdvertisementManagement() {
                     <AdBannerRenderer
                       ad={form}
                       previewDevice={previewDevice}
-                      isSingleFullWidth={editingSlot === 'slot_1'}
+                      isSingleFullWidth={!isTopStrip}
                       disableNavigation
                     />
                   )}
@@ -1157,14 +1190,191 @@ export default function AdvertisementManagement() {
         </Link>
       </div>
 
-      {/* Primary Full-Width Middle Banner (1920x600 / 1024x318) */}
-      <div className="grid grid-cols-1 gap-6">
-        {renderSlotCard(
-          'slot_1',
-          'Middle Promotional Banner (Full-Width)',
-          'Full-width panoramic homepage banner (exact 1024 × 318 / 1920 × 600 px ratio). Upload your designed graphic in Image Mode or build one in Text Mode.',
-          slot1Ad
-        )}
+      {/* MIDDLE PROMOTIONAL CAROUSEL (1 to 5 Full-Width Slides — 1920x600 / 1024x318) */}
+      <div className="bg-white rounded-2xl border border-[#EAE2D9] p-5 sm:p-6 space-y-5">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#EAE2D9]">
+          <div>
+            <h2 className="text-lg font-extrabold text-[#24150F]">
+              Middle Promotional Carousel (1–5 Slides)
+            </h2>
+            <p className="text-xs text-[#786B62] mt-0.5">
+              Full-width left/right sliding carousel (exact <strong>1920 × 600 px</strong> / <strong>1024 × 318 px</strong> panoramic ratio). Add up to 5 slides and choose how many appear on the storefront.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Backend Slide Count Selector */}
+            <div className="flex items-center gap-2 bg-[#FAF7F3] border border-[#EAE2D9] rounded-xl px-3 py-1.5">
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#F36B0A]" />
+              <span className="text-[11px] font-bold text-[#24150F] whitespace-nowrap">
+                Show on Storefront:
+              </span>
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((count) => (
+                  <button
+                    key={count}
+                    type="button"
+                    onClick={() => updateSettings({ middleCarouselMaxSlides: count })}
+                    className={`w-7 h-7 rounded-lg text-xs font-bold transition-colors ${
+                      maxCarouselSlides === count
+                        ? 'bg-[#F36B0A] text-white shadow-xs'
+                        : 'bg-white text-[#786B62] border border-[#EAE2D9] hover:border-[#F36B0A] hover:text-[#F36B0A]'
+                    }`}
+                    title={`Show up to ${count} slide${count > 1 ? 's' : ''} on the storefront`}
+                  >
+                    {count}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              disabled={carouselSlides.length >= 5}
+              onClick={openNewCarouselSlide}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F36B0A] hover:bg-[#D94D00] text-white text-xs font-bold shadow-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Slide ({carouselSlides.length}/5)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Slide Cards List */}
+        <div className="grid grid-cols-1 gap-5">
+          {carouselSlides.map((slide, idx) => {
+            const isLive = slide.isActive !== false && slide.status !== 'draft';
+            const isShowingOnFront = activeCarouselIds.has(slide.id);
+
+            return (
+              <div
+                key={slide.id}
+                className="rounded-2xl border border-[#EAE2D9] bg-[#FAF7F3]/50 overflow-hidden"
+              >
+                <div className="p-4 sm:p-5 space-y-3.5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#24150F] text-white text-[11px] font-bold">
+                        Slide #{idx + 1}
+                      </span>
+                      <h3 className="text-sm sm:text-base font-extrabold text-[#24150F]">
+                        {slide.name || slide.title || `Carousel Slide ${idx + 1}`}
+                      </h3>
+                      {isShowingOnFront ? (
+                        <Badge variant="success">Showing on Storefront</Badge>
+                      ) : isLive ? (
+                        <Badge variant="warning">Hidden (Limit: {maxCarouselSlides})</Badge>
+                      ) : slide.status === 'draft' ? (
+                        <Badge variant="warning">Draft</Badge>
+                      ) : (
+                        <Badge variant="neutral">Disabled</Badge>
+                      )}
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-[#EAE2D9] text-[11px] font-semibold text-[#786B62]">
+                        {slide.displayMode === 'image' ? (
+                          <>
+                            <ImageIcon className="w-3 h-3 text-[#F36B0A]" />
+                            <span>Image Mode</span>
+                          </>
+                        ) : (
+                          <>
+                            <Type className="w-3 h-3 text-[#F36B0A]" />
+                            <span>Text Mode</span>
+                          </>
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => handleMoveSlide(idx, -1)}
+                        className="p-1.5 rounded-lg border border-[#EAE2D9] bg-white text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] disabled:opacity-40"
+                        title="Move slide earlier"
+                      >
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === carouselSlides.length - 1}
+                        onClick={() => handleMoveSlide(idx, 1)}
+                        className="p-1.5 rounded-lg border border-[#EAE2D9] bg-white text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] disabled:opacity-40"
+                        title="Move slide later"
+                      >
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleQuickToggle(slide.slotPosition || 'slot_1', slide)}
+                        className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${
+                          isLive
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                            : 'bg-white text-[#786B62] border-[#EAE2D9] hover:border-[#F36B0A] hover:text-[#F36B0A]'
+                        }`}
+                      >
+                        {isLive ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Enabled</span>
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="w-3.5 h-3.5" />
+                            <span>Disabled</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Full-width 1024x318 Preview */}
+                  <div className="rounded-xl bg-white p-2.5 border border-[#EAE2D9]">
+                    <AdBannerRenderer
+                      ad={slide}
+                      previewDevice="desktop"
+                      isSingleFullWidth
+                      disableNavigation
+                    />
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-[#786B62]">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#F36B0A]" />
+                        <span>Updated: {formatUpdatedAt(slide.updatedAt || slide.createdAt)}</span>
+                      </span>
+                      <span>
+                        Links to: <strong className="text-[#24150F]">{slide.destinationUrl || '/shop'}</strong>
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {carouselSlides.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => deleteAd(slide.id)}
+                          className="inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-rose-200 bg-white hover:bg-rose-50 text-rose-600 text-xs font-bold transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => openEditor('carousel', slide)}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#F36B0A] hover:bg-[#D94D00] text-white text-xs font-bold shadow-xs transition-colors"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                        <span>Edit Slide #{idx + 1}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Top Strip Banner (Before Hero) Management Panel */}
