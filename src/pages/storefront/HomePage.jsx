@@ -10,8 +10,12 @@ import HomeBlogSection from '../../components/storefront/HomeBlogSection';
 import Testimonials from '../../components/storefront/Testimonials';
 import NewsletterSection from '../../components/storefront/NewsletterSection';
 import BenefitsStrip from '../../components/storefront/BenefitsStrip';
+import { useStore } from '../../context/StoreContext';
 
 export default function HomePage() {
+  const { settings } = useStore();
+  const carouselPos = settings?.middleCarouselPosition || 'after_rooms';
+
   return (
     <div className="flex flex-col gap-0">
       <SEO
@@ -26,22 +30,38 @@ export default function HomePage() {
       {/* 1. Full-Bleed Architectural Showroom Hero */}
       <HeroBanner />
 
+      {carouselPos === 'after_hero' && (
+        <div className="pt-10 sm:pt-12">
+          <PromotionalAd />
+        </div>
+      )}
+
       {/* 2. Shop by Category (All 11 Departments with Media Library Imagery) */}
       <CategoryPills />
+
+      {carouselPos === 'after_categories' && <PromotionalAd />}
 
       {/* 3. Our Popular Picks (2 x 4 Grid with Quick Category Tabs) */}
       <PopularPicks />
 
+      {carouselPos === 'after_popular' && <PromotionalAd />}
+
       {/* 4. Shop by Room (3-Column Full-Bleed Lookbook) */}
       <FeaturedCollections />
 
-      {/* 5. Showroom Promotional Offer */}
-      <PromotionalAd />
+      {/* 5. Showroom Promotional Carousel (Default Position) */}
+      {carouselPos === 'after_rooms' && <PromotionalAd />}
 
       {/* 6. "Home & More in Real Life" — Abuja Showroom & Factory Storytelling */}
       <ShowroomStoryBanner />
 
-      {/* 7. From Our Design Journal */}
+      {carouselPos === 'after_story' && (
+        <div className="pt-10 sm:pt-12">
+          <PromotionalAd />
+        </div>
+      )}
+
+      {/* 7. Latest from Our Blog */}
       <HomeBlogSection />
 
       {/* 8. Verified Client Stories */}

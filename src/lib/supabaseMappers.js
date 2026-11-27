@@ -371,6 +371,7 @@ export function mapSettingsFromDb(s) {
       5,
       Math.max(1, Number(social.middleCarouselMaxSlides) || 5)
     ),
+    middleCarouselPosition: social.middleCarouselPosition || 'after_rooms',
     social: {
       facebook: social.facebook || 'https://facebook.com/homeandmorefurniture',
       instagram: social.instagram || 'https://instagram.com/homeandmorefurniture',
@@ -412,6 +413,7 @@ export function mapSettingsToDb(s) {
         5,
         Math.max(1, Number(s.middleCarouselMaxSlides) || 5)
       ),
+      middleCarouselPosition: s.middleCarouselPosition || 'after_rooms',
     },
     updated_at: new Date().toISOString(),
   };

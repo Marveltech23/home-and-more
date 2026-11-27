@@ -693,6 +693,34 @@ export function StoreProvider({ children }) {
     [advertisements, addToast, notifyChange]
   );
 
+  const reorderAds = useCallback(
+    async (orderedSlideIds) => {
+      if (!Array.isArray(orderedSlideIds) || orderedSlideIds.length === 0) return;
+      const nowIso = new Date().toISOString();
+      const orderMap = new Map(orderedSlideIds.map((id, idx) => [id, idx + 1]));
+
+      const updatedList = advertisements.map((a) => {
+        if (!orderMap.has(a.id)) return a;
+        return { ...a, slideOrder: orderMap.get(a.id), updatedAt: nowIso };
+      });
+
+      setAdvertisements(updatedList);
+      safeSetItem(STORAGE_KEYS.ADS, updatedList);
+
+      const changedAds = updatedList.filter((a) => orderMap.has(a.id));
+      const results = await Promise.all(changedAds.map((ad) => syncAdToDb(ad)));
+      notifyChange();
+
+      const failed = results.find((r) => r && !r.ok);
+      if (failed) {
+        addToast({ message: `Order save failed: ${failed.error}`, type: 'error' });
+        return;
+      }
+      addToast({ message: 'Slide positions swapped & updated on storefront!', type: 'success' });
+    },
+    [advertisements, addToast, notifyChange]
+  );
+
   // ==========================================
   // BLOG ACTIONS
   // ==========================================
@@ -1097,6 +1125,7 @@ export function StoreProvider({ children }) {
         updateAd,
         deleteAd,
         toggleAdStatus,
+        reorderAds,
 
         // Blog CRUD
         addBlog,

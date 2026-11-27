@@ -200,7 +200,7 @@ function formatUpdatedAt(dateStr) {
 }
 
 export default function AdvertisementManagement() {
-  const { advertisements, addAd, updateAd, deleteAd, toggleAdStatus, settings, updateSettings } = useStore();
+  const { advertisements, addAd, updateAd, deleteAd, toggleAdStatus, reorderAds, settings, updateSettings } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Active editing mode: null (Overview) | 'carousel' | 'top_banner'
@@ -306,14 +306,20 @@ export default function AdvertisementManagement() {
   const handleMoveSlide = async (index, direction) => {
     const targetIdx = index + direction;
     if (targetIdx < 0 || targetIdx >= carouselSlides.length) return;
-    const a = carouselSlides[index];
-    const b = carouselSlides[targetIdx];
-    const orderA = Number(a.slideOrder) || index + 1;
-    const orderB = Number(b.slideOrder) || targetIdx + 1;
-    await Promise.all([
-      updateAd(a.id, { slideOrder: orderB }),
-      updateAd(b.id, { slideOrder: orderA }),
-    ]);
+    const ids = carouselSlides.map((s) => s.id);
+    const temp = ids[index];
+    ids[index] = ids[targetIdx];
+    ids[targetIdx] = temp;
+    await reorderAds(ids);
+  };
+
+  const handleSetSlidePosition = async (fromIndex, newPosition1Based) => {
+    const toIndex = Math.max(0, Math.min(carouselSlides.length - 1, Number(newPosition1Based) - 1));
+    if (fromIndex === toIndex) return;
+    const ids = carouselSlides.map((s) => s.id);
+    const [moved] = ids.splice(fromIndex, 1);
+    ids.splice(toIndex, 0, moved);
+    await reorderAds(ids);
   };
 
   const updateField = (key, value) => {
@@ -1203,6 +1209,24 @@ export default function AdvertisementManagement() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            {/* Homepage Section Position Selector */}
+            <div className="flex items-center gap-2 bg-[#FAF7F3] border border-[#EAE2D9] rounded-xl px-3 py-1.5">
+              <span className="text-[11px] font-bold text-[#24150F] whitespace-nowrap">
+                Page Position:
+              </span>
+              <select
+                value={settings?.middleCarouselPosition || 'after_rooms'}
+                onChange={(e) => updateSettings({ middleCarouselPosition: e.target.value })}
+                className="bg-white border border-[#EAE2D9] rounded-lg px-2 py-1 text-xs font-semibold text-[#24150F] focus:outline-none focus:border-[#F36B0A]"
+              >
+                <option value="after_hero">Below Hero Banner</option>
+                <option value="after_categories">Below Shop by Category</option>
+                <option value="after_popular">Below Popular Picks</option>
+                <option value="after_rooms">Below Shop by Room</option>
+                <option value="after_story">Below Showroom Story</option>
+              </select>
+            </div>
+
             {/* Backend Slide Count Selector */}
             <div className="flex items-center gap-2 bg-[#FAF7F3] border border-[#EAE2D9] rounded-xl px-3 py-1.5">
               <SlidersHorizontal className="w-3.5 h-3.5 text-[#F36B0A]" />
@@ -1284,24 +1308,41 @@ export default function AdvertisementManagement() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {carouselSlides.length > 1 && (
+                        <select
+                          value={idx + 1}
+                          onChange={(e) => handleSetSlidePosition(idx, e.target.value)}
+                          aria-label={`Change position of ${slide.name || `Slide ${idx + 1}`}`}
+                          className="px-2 py-1.5 rounded-lg border border-[#EAE2D9] bg-white text-xs font-bold text-[#24150F] focus:outline-none focus:border-[#F36B0A]"
+                          title="Move slide to exact position"
+                        >
+                          {carouselSlides.map((_, posIdx) => (
+                            <option key={posIdx} value={posIdx + 1}>
+                              Pos #{posIdx + 1}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                       <button
                         type="button"
                         disabled={idx === 0}
                         onClick={() => handleMoveSlide(idx, -1)}
-                        className="p-1.5 rounded-lg border border-[#EAE2D9] bg-white text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] disabled:opacity-40"
-                        title="Move slide earlier"
+                        className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg border border-[#EAE2D9] bg-white text-xs font-semibold text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] disabled:opacity-40"
+                        title="Swap with previous slide"
                       >
                         <ArrowUp className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Up</span>
                       </button>
                       <button
                         type="button"
                         disabled={idx === carouselSlides.length - 1}
                         onClick={() => handleMoveSlide(idx, 1)}
-                        className="p-1.5 rounded-lg border border-[#EAE2D9] bg-white text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] disabled:opacity-40"
-                        title="Move slide later"
+                        className="inline-flex items-center gap-1 px-2 py-1.5 rounded-lg border border-[#EAE2D9] bg-white text-xs font-semibold text-[#24150F] hover:border-[#F36B0A] hover:text-[#F36B0A] disabled:opacity-40"
+                        title="Swap with next slide"
                       >
                         <ArrowDown className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">Down</span>
                       </button>
                       <button
                         type="button"
